@@ -1,329 +1,285 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Mithun Multi-Tool App</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mithun Multi-Tool App</title>
 
-<style>
+  <style>
     body {
-        margin: 0;
-        font-family: Arial, sans-serif;
-        background: linear-gradient(135deg, #7f7fff, #ff7f7f);
-        color: white;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #7f7fff, #ff7f7f);
+      color: white;
     }
-
     .tabs {
-        display: flex;
-        background: #000000aa;
-        padding: 10px;
-        gap: 10px;
-        justify-content: center;
+      display: flex;
+      background: #000000aa;
+      padding: 10px;
+      gap: 10px;
+      justify-content: center;
     }
-
     .tab-btn {
-        background: #222;
-        padding: 12px 18px;
-        border-radius: 8px;
-        cursor: pointer;
-        color: white;
-        border: 2px solid cyan;
-        font-weight: bold;
+      background: #222;
+      padding: 12px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      color: white;
+      border: 2px solid cyan;
+      font-weight: bold;
     }
-
     .tab-btn:hover {
-        background: cyan;
-        color: black;
+      background: cyan;
+      color: black;
     }
-
     .tab-content {
-        display: none;
-        padding: 20px;
+      display: none;
+      padding: 20px;
     }
-
     .active {
-        display: block;
+      display: block;
     }
-
-    .button-box {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-        margin-top: 40px;
-        align-items: center;
-    }
-
-    .big-btn {
-        width: 80%;
-        padding: 20px;
-        font-size: 20px;
-        background: #ffffff;
-        color: black;
-        border-radius: 12px;
-        cursor: pointer;
-        font-weight: bold;
-        border: 3px solid #000;
-    }
-
-    .big-btn:hover {
-        background: yellow;
-    }
-
     input, select, button {
-        padding: 10px;
-        margin: 5px;
-        border-radius: 8px;
-        border: none;
+      padding: 10px;
+      margin: 5px;
+      border-radius: 8px;
+      border: none;
     }
-
     button {
-        cursor: pointer;
-        font-weight: bold;
+      cursor: pointer;
+      font-weight: bold;
     }
-
     .result {
-        margin-top: 15px;
-        font-size: 20px;
-        font-weight: bold;
+      margin-top: 15px;
+      font-size: 20px;
+      font-weight: bold;
     }
-</style>
-
-<script>
-function openTab(tabName) {
-    document.querySelectorAll(".tab-content").forEach(t => t.classList.remove("active"));
-    document.getElementById(tabName).classList.add("active");
-}
-
-/* WORLD CAPITAL DATA (same as given) */
-const capitals = {
-   "Afghanistan":"Kabul","Albania":"Tirana","Algeria":"Algiers","Andorra":"Andorra la Vella",
-   "Angola":"Luanda","Argentina":"Buenos Aires","Armenia":"Yerevan","Australia":"Canberra",
-   "Austria":"Vienna","Azerbaijan":"Baku","Bahamas":"Nassau","Bahrain":"Manama",
-   "Bangladesh":"Dhaka","Barbados":"Bridgetown","Belarus":"Minsk","Belgium":"Brussels",
-   "Belize":"Belmopan","Benin":"Porto-Novo","Bhutan":"Thimphu","Bolivia":"Sucre",
-   "Bosnia and Herzegovina":"Sarajevo","Botswana":"Gaborone","Brazil":"Brasília",
-   "Brunei":"Bandar Seri Begawan","Bulgaria":"Sofia","Burkina Faso":"Ouagadougou",
-   "Burundi":"Gitega","Cambodia":"Phnom Penh","Cameroon":"Yaoundé","Canada":"Ottawa",
-   "Cape Verde":"Praia","Chad":"N'Djamena","Chile":"Santiago","China":"Beijing",
-   "Colombia":"Bogotá","Comoros":"Moroni","Congo":"Brazzaville","Costa Rica":"San José",
-   "Croatia":"Zagreb","Cuba":"Havana","Cyprus":"Nicosia","Czech Republic":"Prague",
-   "Denmark":"Copenhagen","Djibouti":"Djibouti","Dominica":"Roseau","Dominican Republic":"Santo Domingo",
-   "Ecuador":"Quito","Egypt":"Cairo","El Salvador":"San Salvador","Estonia":"Tallinn",
-   "Ethiopia":"Addis Ababa","Fiji":"Suva","Finland":"Helsinki","France":"Paris",
-   "Gabon":"Libreville","Gambia":"Banjul","Georgia":"Tbilisi","Germany":"Berlin",
-   "Ghana":"Accra","Greece":"Athens","Grenada":"St. George's","Guatemala":"Guatemala City",
-   "Guinea":"Conakry","Guyana":"Georgetown","Haiti":"Port-au-Prince","Honduras":"Tegucigalpa",
-   "Hungary":"Budapest","Iceland":"Reykjavik","India":"New Delhi","Indonesia":"Jakarta",
-   "Iran":"Tehran","Iraq":"Baghdad","Ireland":"Dublin","Israel":"Jerusalem","Italy":"Rome",
-   "Jamaica":"Kingston","Japan":"Tokyo","Jordan":"Amman","Kazakhstan":"Astana",
-   "Kenya":"Nairobi","Kiribati":"South Tarawa","Kuwait":"Kuwait City","Kyrgyzstan":"Bishkek",
-   "Laos":"Vientiane","Latvia":"Riga","Lebanon":"Beirut","Lesotho":"Maseru",
-   "Liberia":"Monrovia","Libya":"Tripoli","Liechtenstein":"Vaduz","Lithuania":"Vilnius",
-   "Luxembourg":"Luxembourg","Madagascar":"Antananarivo","Malawi":"Lilongwe","Malaysia":"Kuala Lumpur",
-   "Maldives":"Malé","Mali":"Bamako","Malta":"Valletta","Mexico":"Mexico City",
-   "Moldova":"Chișinău","Monaco":"Monaco","Mongolia":"Ulaanbaatar","Montenegro":"Podgorica",
-   "Morocco":"Rabat","Mozambique":"Maputo","Myanmar":"Naypyidaw","Namibia":"Windhoek",
-   "Nepal":"Kathmandu","Netherlands":"Amsterdam","New Zealand":"Wellington","Nicaragua":"Managua",
-   "Niger":"Niamey","Nigeria":"Abuja","North Korea":"Pyongyang","North Macedonia":"Skopje",
-   "Norway":"Oslo","Oman":"Muscat","Pakistan":"Islamabad","Panama":"Panama City",
-   "Paraguay":"Asunción","Peru":"Lima","Philippines":"Manila","Poland":"Warsaw",
-   "Portugal":"Lisbon","Qatar":"Doha","Romania":"Bucharest","Russia":"Moscow","Rwanda":"Kigali",
-   "Saudi Arabia":"Riyadh","Senegal":"Dakar","Serbia":"Belgrade","Seychelles":"Victoria",
-   "Singapore":"Singapore","Slovakia":"Bratislava","Slovenia":"Ljubljana","Somalia":"Mogadishu",
-   "South Africa":"Pretoria","South Korea":"Seoul","Spain":"Madrid","Sri Lanka":"Colombo",
-   "Sudan":"Khartoum","Sweden":"Stockholm","Switzerland":"Bern","Syria":"Damascus",
-   "Taiwan":"Taipei","Tajikistan":"Dushanbe","Tanzania":"Dodoma","Thailand":"Bangkok",
-   "Turkey":"Ankara","Turkmenistan":"Ashgabat","Uganda":"Kampala","Ukraine":"Kyiv",
-   "UAE":"Abu Dhabi","UK":"London","USA":"Washington, D.C.","Uruguay":"Montevideo",
-   "Uzbekistan":"Tashkent","Vatican City":"Vatican City","Venezuela":"Caracas","Vietnam":"Hanoi",
-   "Yemen":"Sana'a","Zambia":"Lusaka","Zimbabwe":"Harare"
-};
-
-function findCapital() {
-    let c = document.getElementById("countryInput").value.trim();
-    c = c.charAt(0).toUpperCase() + c.slice(1).toLowerCase();
-    document.getElementById("capitalResult").innerText =
-      capitals[c] ? "Capital: " + capitals[c] : "Country not found";
-}
-
-/* OPERATIONS (same as you had) */
-function oddEven() {
-    let n = document.getElementById("oddInput").value;
-    document.getElementById("oddResult").innerText = (n % 2 === 0) ? "Even" : "Odd";
-}
-
-function calculate() {
-    let a = parseFloat(document.getElementById("numA").value);
-    let b = parseFloat(document.getElementById("numB").value);
-    let op = document.getElementById("op").value;
-    let res;
-    if(op==="+") res=a+b;
-    if(op==="−"||op==="-") res=a-b;
-    if(op==="*") res=a*b;
-    if(op==="/") res=a/b;
-    document.getElementById("calcResult").innerText="Answer: "+res;
-}
-
-function numberSeries() {
-    let s = parseInt(document.getElementById("seriesStart").value);
-    let e = parseInt(document.getElementById("seriesEnd").value);
-    let out = "";
-    for(let i=s;i<=e;i++) out += i+" ";
-    document.getElementById("seriesResult").innerText = out;
-}
-
-/* HCF / LCM */
-function hcfLCM(mode){
-    let n = document.getElementById("multiNums").value.split(",").map(Number);
-    if(n.length<2){ alert("Enter at least 2 numbers!"); return; }
-
-    function gcd(a,b){ return b===0?a:gcd(b,a%b); }
-    function lcm(a,b){ return (a*b)/gcd(a,b); }
-
-    let ans = n[0];
-    for(let i=1;i<n.length;i++){
-        ans = mode==="hcf" ? gcd(ans,n[i]) : lcm(ans,n[i]);
+    .tool-box {
+      background: rgba(255,255,255,0.9);
+      color: black;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
     }
-    document.getElementById("hcfResult").innerText =
-       mode==="hcf" ? "HCF = "+ans : "LCM = "+ans;
-}
+  </style>
 
-function sqRoot(){
-    let x = document.getElementById("rootNum").value;
-    document.getElementById("rootResult").innerText = "√ = "+Math.sqrt(x);
-}
-
-function cubeRoot(){
-    let x = document.getElementById("rootNum").value;
-    document.getElementById("rootResult").innerText = "³√ = "+Math.cbrt(x);
-}
-
-function factorial(){
-    let n = parseInt(document.getElementById("factNum").value);
-    let f = 1;
-    for(let i=1;i<=n;i++) f*=i;
-    document.getElementById("factResult").innerText = "Factorial = "+f;
-}
-
-function primeCheck(){
-    let n = parseInt(document.getElementById("primeNum").value);
-    if(n<2){ document.getElementById("primeResult").innerText="Not Prime"; return;}
-    for(let i=2;i<=Math.sqrt(n);i++){
-        if(n%i===0){ document.getElementById("primeResult").innerText="Not Prime"; return;}
+  <script>
+    function openTab(tabName) {
+      document.querySelectorAll(".tab-content").forEach(t => t.classList.remove("active"));
+      document.getElementById(tabName).classList.add("active");
     }
-    document.getElementById("primeResult").innerText="Prime";
-}
 
-/* QUIZ */
-function submitQuiz(){
-    let score=0;
-    if(document.getElementById("q1").value==="tajmahal") score++;
-    if(document.getElementById("q2").value==="Moscow") score++;
-    if(document.getElementById("q3").value==="droupatimurmu") score++;
-    document.getElementById("quizResult").innerText="Your Score: "+score+"/3";
-}
+    /* WORLD CAPITAL DATA */
+    const capitals = {
+      "Afghanistan":"Kabul","Albania":"Tirana","Algeria":"Algiers","Andorra":"Andorra la Vella",
+      "Angola":"Luanda","Argentina":"Buenos Aires","Armenia":"Yerevan","Australia":"Canberra",
+      "Austria":"Vienna","Azerbaijan":"Baku","Bahamas":"Nassau","Bahrain":"Manama",
+      "Bangladesh":"Dhaka","Barbados":"Bridgetown","Belarus":"Minsk","Belgium":"Brussels",
+      "Belize":"Belmopan","Benin":"Porto-Novo","Bhutan":"Thimphu","Bolivia":"Sucre",
+      "Bosnia and Herzegovina":"Sarajevo","Botswana":"Gaborone","Brazil":"Brasília",
+      "Brunei":"Bandar Seri Begawan","Bulgaria":"Sofia","Burkina Faso":"Ouagadougou",
+      "Burundi":"Gitega","Cambodia":"Phnom Penh","Cameroon":"Yaoundé","Canada":"Ottawa",
+      "Cape Verde":"Praia","Chad":"N'Djamena","Chile":"Santiago","China":"Beijing",
+      "Colombia":"Bogotá","Comoros":"Moroni","Congo":"Brazzaville","Costa Rica":"San José",
+      "Croatia":"Zagreb","Cuba":"Havana","Cyprus":"Nicosia","Czech Republic":"Prague",
+      "Denmark":"Copenhagen","Djibouti":"Djibouti","Dominica":"Roseau","Dominican Republic":"Santo Domingo",
+      "Ecuador":"Quito","Egypt":"Cairo","El Salvador":"San Salvador","Estonia":"Tallinn",
+      "Ethiopia":"Addis Ababa","Fiji":"Suva","Finland":"Helsinki","France":"Paris",
+      "Gabon":"Libreville","Gambia":"Banjul","Georgia":"Tbilisi","Germany":"Berlin",
+      "Ghana":"Accra","Greece":"Athens","Grenada":"St. George's","Guatemala":"Guatemala City",
+      "Guinea":"Conakry","Guyana":"Georgetown","Haiti":"Port-au-Prince","Honduras":"Tegucigalpa",
+      "Hungary":"Budapest","Iceland":"Reykjavik","India":"New Delhi","Indonesia":"Jakarta",
+      "Iran":"Tehran","Iraq":"Baghdad","Ireland":"Dublin","Israel":"Jerusalem","Italy":"Rome",
+      "Jamaica":"Kingston","Japan":"Tokyo","Jordan":"Amman","Kazakhstan":"Astana",
+      "Kenya":"Nairobi","Kiribati":"South Tarawa","Kuwait":"Kuwait City","Kyrgyzstan":"Bishkek",
+      "Laos":"Vientiane","Latvia":"Riga","Lebanon":"Beirut","Lesotho":"Maseru",
+      "Liberia":"Monrovia","Libya":"Tripoli","Liechtenstein":"Vaduz","Lithuania":"Vilnius",
+      "Luxembourg":"Luxembourg","Madagascar":"Antananarivo","Malawi":"Lilongwe","Malaysia":"Kuala Lumpur",
+      "Maldives":"Malé","Mali":"Bamako","Malta":"Valletta","Mexico":"Mexico City",
+      "Moldova":"Chișinău","Monaco":"Monaco","Mongolia":"Ulaanbaatar","Montenegro":"Podgorica",
+      "Morocco":"Rabat","Mozambique":"Maputo","Myanmar":"Naypyidaw","Namibia":"Windhoek",
+      "Nepal":"Kathmandu","Netherlands":"Amsterdam","New Zealand":"Wellington","Nicaragua":"Managua",
+      "Niger":"Niamey","Nigeria":"Abuja","North Korea":"Pyongyang","North Macedonia":"Skopje",
+      "Norway":"Oslo","Oman":"Muscat","Pakistan":"Islamabad","Panama":"Panama City",
+      "Paraguay":"Asunción","Peru":"Lima","Philippines":"Manila","Poland":"Warsaw",
+      "Portugal":"Lisbon","Qatar":"Doha","Romania":"Bucharest","Russia":"Moscow","Rwanda":"Kigali",
+      "Saudi Arabia":"Riyadh","Senegal":"Dakar","Serbia":"Belgrade","Seychelles":"Victoria",
+      "Singapore":"Singapore","Slovakia":"Bratislava","Slovenia":"Ljubljana","Somalia":"Mogadishu",
+      "South Africa":"Pretoria","South Korea":"Seoul","Spain":"Madrid","Sri Lanka":"Colombo",
+      "Sudan":"Khartoum","Sweden":"Stockholm","Switzerland":"Bern","Syria":"Damascus",
+      "Taiwan":"Taipei","Tajikistan":"Dushanbe","Tanzania":"Dodoma","Thailand":"Bangkok",
+      "Turkey":"Ankara","Turkmenistan":"Ashgabat","Uganda":"Kampala","Ukraine":"Kyiv",
+      "UAE":"Abu Dhabi","UK":"London","USA":"Washington, D.C.","Uruguay":"Montevideo",
+      "Uzbekistan":"Tashkent","Vatican City":"Vatican City","Venezuela":"Caracas","Vietnam":"Hanoi",
+      "Yemen":"Sana'a","Zambia":"Lusaka","Zimbabwe":"Harare"
+    };
 
-/* ---------------- LIFE TOOLS ---------------- */
+    function findCapital(){
+      let c = document.getElementById("countryInput").value.trim();
+      c = c.charAt(0).toUpperCase() + c.slice(1).toLowerCase();
+      document.getElementById("capitalResult").innerText =
+        capitals[c] ? "Capital: " + capitals[c] : "Country not found";
+    }
 
-/* Percentage Calculator */
-function calcPercent(){
-    let base = parseFloat(document.getElementById("pBase").value);
-    let pct = parseFloat(document.getElementById("pPercent").value);
-    document.getElementById("percentResult").innerText =
-      "Result = " + (base * pct / 100);
-}
+    /* OPERATIONS FUNCTIONS */
 
-/* Age Calculator */
-function calcAge(){
-    let dob = document.getElementById("dob").value;
-    if(!dob){ alert("Select date"); return; }
-    let birth = new Date(dob);
-    let now = new Date();
-    let age = now.getFullYear() - birth.getFullYear();
-    document.getElementById("ageResult").innerText = "Age: " + age + " years";
-}
+    function oddEven(){
+      let n = document.getElementById("oddInput").value;
+      document.getElementById("oddResult").innerText = (n % 2 === 0) ? "Even" : "Odd";
+    }
 
-/* Unit Converter */
-function convertUnits(){
-    let val = parseFloat(document.getElementById("unitInput").value);
-    let type = document.getElementById("unitType").value;
-    let result="";
+    function calculateOp(){
+      let a = parseFloat(document.getElementById("numA").value);
+      let b = parseFloat(document.getElementById("numB").value);
+      let op = document.getElementById("opType").value;
+      let res;
+      if(op === "+") res = a + b;
+      if(op === "-" ) res = a - b;
+      if(op === "*") res = a * b;
+      if(op === "/") res = a / b;
+      document.getElementById("calcResult").innerText = "Answer: " + res;
+    }
 
-    if(type==="km-m") result = val * 1000 + " m";
-    if(type==="m-km") result = val / 1000 + " km";
-    if(type==="kg-g") result = val * 1000 + " g";
-    if(type==="g-kg") result = val / 1000 + " kg";
-    if(type==="c-f") result = (val * 9/5 + 32) + " °F";
-    if(type==="f-c") result = ((val - 32) * 5/9) + " °C";
+    function numberSeries(){
+      let s = parseInt(document.getElementById("seriesStart").value);
+      let e = parseInt(document.getElementById("seriesEnd").value);
+      let out = "";
+      for(let i = s; i <= e; i++) out += i + " ";
+      document.getElementById("seriesResult").innerText = out;
+    }
 
-    document.getElementById("unitResult").innerText = result;
-}
+    function hcfLCM(mode){
+      let nums = document.getElementById("multiNums").value.split(",").map(Number);
+      if(nums.length < 2) { alert("Enter at least 2 numbers"); return; }
+      function gcd(a,b){ return b === 0 ? a : gcd(b, a % b); }
+      function lcm(a,b){ return (a * b) / gcd(a,b); }
+      let ans = nums[0];
+      for (let i = 1; i < nums.length; i++){
+        ans = mode === "hcf" ? gcd(ans, nums[i]) : lcm(ans, nums[i]);
+      }
+      document.getElementById("hcfResult").innerText = mode === "hcf" ? "HCF = " + ans : "LCM = " + ans;
+    }
 
-/* Currency Converter — FIXED RATE */
-function convertMoney(){
-    let inr = parseFloat(document.getElementById("inrInput").value);
-    let usd = inr / 80;
-    document.getElementById("currencyResult").innerText =
+    function sqRoot(){
+      let x = parseFloat(document.getElementById("rootNum").value);
+      document.getElementById("rootResult").innerText = "√ = " + Math.sqrt(x);
+    }
+
+    function cubeRoot(){
+      let x = parseFloat(document.getElementById("rootNum").value);
+      document.getElementById("rootResult").innerText = "³√ = " + Math.cbrt(x);
+    }
+
+    function factorial(){
+      let n = parseInt(document.getElementById("factNum").value);
+      let f = 1;
+      for (let i = 1; i <= n; i++) f *= i;
+      document.getElementById("factResult").innerText = "Factorial = " + f;
+    }
+
+    function primeCheck(){
+      let n = parseInt(document.getElementById("primeNum").value);
+      if (n < 2) {
+        document.getElementById("primeResult").innerText = "Not Prime";
+        return;
+      }
+      for (let i = 2; i <= Math.sqrt(n); i++){
+        if (n % i === 0) {
+          document.getElementById("primeResult").innerText = "Not Prime";
+          return;
+        }
+      }
+      document.getElementById("primeResult").innerText = "Prime";
+    }
+
+    /* LIFE TOOLS (old) */
+    function calcOldPercent(){
+      let base = parseFloat(document.getElementById("pBase").value);
+      let pct = parseFloat(document.getElementById("pPercent").value);
+      document.getElementById("percentResultOld").innerText = "Result = " + (base * pct / 100);
+    }
+
+    function calcAge(){
+      let dob = document.getElementById("dob").value;
+      if (!dob) { alert("Select date"); return; }
+      let birth = new Date(dob);
+      let now = new Date();
+      let age = now.getFullYear() - birth.getFullYear();
+      document.getElementById("ageResult").innerText = "Age: " + age + " years";
+    }
+
+    function convertUnits(){
+      let val = parseFloat(document.getElementById("unitInput").value);
+      let type = document.getElementById("unitType").value;
+      let result = "";
+      if (type === "km-m") result = val * 1000 + " m";
+      if (type === "m-km") result = val / 1000 + " km";
+      if (type === "kg-g") result = val * 1000 + " g";
+      if (type === "g-kg") result = val / 1000 + " kg";
+      if (type === "c-f") result = (val * 9/5 + 32) + " °F";
+      if (type === "f-c") result = ((val - 32) * 5/9) + " °C";
+      document.getElementById("unitResult").innerText = result;
+    }
+
+    function convertMoney(){
+      let inr = parseFloat(document.getElementById("inrInput").value);
+      let usd = inr / 80;
+      document.getElementById("currencyResult").innerText =
         "USD ≈ " + usd.toFixed(2) + " (Approx — not exact)";
-}
-
-/* EMI Calculator */
-function calcEMI(){
-    let p = parseFloat(document.getElementById("loan").value);
-    let r = parseFloat(document.getElementById("rate").value)/1200;
-    let n = parseInt(document.getElementById("months").value);
-
-    let emi = p*r*( (1+r)**n ) / ( (1+r)**n - 1 );
-
-    document.getElementById("emiResult").innerText =
-        "Monthly EMI = ₹" + emi.toFixed(2);
-}
-
-/* Password Generator */
-function generatePass(){
-    let chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%";
-    let pass="";
-    for(let i=0;i<10;i++){
-        pass += chars[Math.floor(Math.random()*chars.length)];
     }
-    document.getElementById("passResult").innerText = pass;
-}
 
-</script>
+    function calcEMI(){
+      let p = parseFloat(document.getElementById("loan").value);
+      let r = parseFloat(document.getElementById("rate").value) / 1200;
+      let n = parseInt(document.getElementById("months").value);
+      let emi = p * r * ((1 + r) ** n) / (((1 + r) ** n) - 1);
+      document.getElementById("emiResult").innerText = "Monthly EMI = ₹" + emi.toFixed(2);
+    }
+
+    function generatePass(){
+      let chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%";
+      let pass = "";
+      for (let i = 0; i < 10; i++){
+        pass += chars[Math.floor(Math.random() * chars.length)];
+      }
+      document.getElementById("passResult").innerText = pass;
+    }
+
+    function submitQuiz(){
+      let score = 0;
+      if (document.getElementById("q1").value === "tajmahal") score++;
+      if (document.getElementById("q2").value === "Moscow") score++;
+      if (document.getElementById("q3").value === "droupatimurmu") score++;
+      document.getElementById("quizResult").innerText = "Your Score: " + score + "/3";
+    }
+  </script>
+
 </head>
-
 <body>
 
-<!-- TABS -->
-<div class="tabs">
+  <div class="tabs">
     <div class="tab-btn" onclick="openTab('home')">Home</div>
     <div class="tab-btn" onclick="openTab('capital')">Capital Finder</div>
     <div class="tab-btn" onclick="openTab('operations')">Operations</div>
     <div class="tab-btn" onclick="openTab('lifetools')">Life Tools</div>
     <div class="tab-btn" onclick="openTab('quiz')">Quiz</div>
-</div>
+  </div>
 
-<!-- HOME TAB -->
-<div id="home" class="tab-content active">
+  <!-- HOME -->
+  <div id="home" class="tab-content active">
     <h1 style="text-align:center;">Welcome Mithun 👋</h1>
-    <div class="button-box">
-        <button class="big-btn" onclick="openTab('capital')">🏙️ Capital Finder</button>
-        <button class="big-btn" onclick="openTab('operations')">🧮 Multi Operations</button>
-        <button class="big-btn" onclick="openTab('lifetools')">📘 Life Math Tools</button>
-        <button class="big-btn" onclick="openTab('quiz')">❓ Quiz</button>
-    </div>
-</div>
+  </div>
 
-<!-- CAPITAL FINDER -->
-<div id="capital" class="tab-content">
+  <!-- CAPITAL FINDER -->
+  <div id="capital" class="tab-content">
     <h2>Capital Finder (Full World)</h2>
     <input id="countryInput" placeholder="Enter country">
     <button onclick="findCapital()">Find</button>
     <div id="capitalResult" class="result"></div>
-</div>
+  </div>
 
-<!-- OPERATIONS -->
-<div id="operations" class="tab-content">
+  <!-- OPERATIONS -->
+  <div id="operations" class="tab-content">
     <h2>Multi Operations</h2>
 
     <h3>Odd or Even</h3>
@@ -333,9 +289,11 @@ function generatePass(){
 
     <h3>Calculator</h3>
     <input id="numA" type="number" placeholder="A">
-    <select id="op"><option>+</option><option>-</option><option>*</option><option>/</option></select>
+    <select id="opType">
+      <option>+</option><option>-</option><option>*</option><option>/</option>
+    </select>
     <input id="numB" type="number" placeholder="B">
-    <button onclick="calculate()">Calculate</button>
+    <button onclick="calculateOp()">Calculate</button>
     <div id="calcResult" class="result"></div>
 
     <h3>Number Series</h3>
@@ -351,97 +309,145 @@ function generatePass(){
     <div id="hcfResult" class="result"></div>
 
     <h3>Square / Cube Root</h3>
-    <input id="rootNum">
+    <input id="rootNum" placeholder="Number">
     <button onclick="sqRoot()">√</button>
     <button onclick="cubeRoot()">³√</button>
     <div id="rootResult" class="result"></div>
 
     <h3>Factorial</h3>
-    <input id="factNum">
+    <input id="factNum" placeholder="Number">
     <button onclick="factorial()">Find</button>
     <div id="factResult" class="result"></div>
 
     <h3>Prime Check</h3>
-    <input id="primeNum">
+    <input id="primeNum" placeholder="Number">
     <button onclick="primeCheck()">Check</button>
     <div id="primeResult" class="result"></div>
-</div>
+  </div>
 
-<!-- LIFE MATH TOOLS -->
-<div id="lifetools" class="tab-content">
+  <!-- LIFE TOOLS -->
+  <div id="lifetools" class="tab-content">
     <h2>📘 Life Math Tools</h2>
 
-    <h3>Percentage Calculator</h3>
-    <input id="pBase" placeholder="Base">
-    <input id="pPercent" placeholder="%">
-    <button onclick="calcPercent()">Calculate</button>
-    <div id="percentResult" class="result"></div>
+    <!-- New Tools at Top -->
+    <div class="tool-box">
+      <h3>Advanced Calculator</h3>
+      <select id="calc_mode">
+        <option value="bodmas">BODMAS Mode</option>
+        <option value="normal">Normal Mode</option>
+      </select>
+      <input id="adv_input" placeholder="Example: 5+7*3 - 2">
+      <button onclick="calculateAdvanced()">Calculate</button>
+      <p id="adv_result" class="result"></p>
+    </div>
 
-    <h3>Age Calculator</h3>
-    <input type="date" id="dob">
-    <button onclick="calcAge()">Find Age</button>
-    <div id="ageResult" class="result"></div>
+    <div class="tool-box">
+      <h3>Percentage Calculator</h3>
+      <input id="percent_value" placeholder="Value">
+      <input id="percent_percent" placeholder="%">
+      <button onclick="calcPercentage()">Calculate</button>
+      <p id="percent_result" class="result"></p>
+    </div>
 
-    <h3>Unit Converter</h3>
-    <input id="unitInput" placeholder="Value">
-    <select id="unitType">
+    <div class="tool-box">
+      <h3>Currency Converter (INR ↔ USD)</h3>
+      <input id="currency_amount" placeholder="Amount">
+      <select id="currency_type">
+        <option value="inr_to_usd">INR → USD</option>
+        <option value="usd_to_inr">USD → INR</option>
+      </select>
+      <button onclick="convertCurrency()">Convert</button>
+      <p id="currency_result" class="result"></p>
+    </div>
+
+    <div class="tool-box">
+      <h3>Land Price Finder</h3>
+      <input id="land_rate" placeholder="Rate per sq ft (₹)">
+      <input id="land_sqft" placeholder="Total sq ft">
+      <button onclick="calcLand()">Calculate</button>
+      <p id="land_result" class="result"></p>
+    </div>
+
+    <!-- Original Life Tools -->
+    <div class="tool-box">
+      <h3>Percentage Calculator (Old)</h3>
+      <input id="pBase" placeholder="Base">
+      <input id="pPercent" placeholder="%">
+      <button onclick="calcOldPercent()">Calculate</button>
+      <p id="percentResultOld" class="result"></p>
+    </div>
+
+    <div class="tool-box">
+      <h3>Age Calculator</h3>
+      <input type="date" id="dob">
+      <button onclick="calcAge()">Find Age</button>
+      <p id="ageResult" class="result"></p>
+    </div>
+
+    <div class="tool-box">
+      <h3>Unit Converter</h3>
+      <input id="unitInput" placeholder="Value">
+      <select id="unitType">
         <option value="km-m">Km → Meter</option>
         <option value="m-km">Meter → Km</option>
         <option value="kg-g">Kg → Gram</option>
         <option value="g-kg">Gram → Kg</option>
         <option value="c-f">C → F</option>
         <option value="f-c">F → C</option>
-    </select>
-    <button onclick="convertUnits()">Convert</button>
-    <div id="unitResult" class="result"></div>
+      </select>
+      <button onclick="convertUnits()">Convert</button>
+      <p id="unitResult" class="result"></p>
+    </div>
 
-    <h3>Currency Converter (₹ → $)</h3>
-    <p style="font-size:14px;color:yellow;">*Disclaimer: Uses 1 USD = ₹80 (average, not exact)</p>
-    <input id="inrInput" placeholder="Enter INR">
-    <button onclick="convertMoney()">Convert</button>
-    <div id="currencyResult" class="result"></div>
+    <div class="tool-box">
+      <h3>Currency Converter (₹ → $)</h3>
+      <input id="inrInput" placeholder="Enter INR">
+      <button onclick="convertMoney()">Convert</button>
+      <p id="currencyResult" class="result"></p>
+    </div>
 
-    <h3>EMI Calculator</h3>
-    <input id="loan" placeholder="Loan Amount">
-    <input id="rate" placeholder="Interest % per year">
-    <input id="months" placeholder="Months">
-    <button onclick="calcEMI()">Calculate EMI</button>
-    <div id="emiResult" class="result"></div>
+    <div class="tool-box">
+      <h3>EMI Calculator</h3>
+      <input id="loan" placeholder="Loan Amount">
+      <input id="rate" placeholder="Interest % per year">
+      <input id="months" placeholder="Months">
+      <button onclick="calcEMI()">Calculate EMI</button>
+      <p id="emiResult" class="result"></p>
+    </div>
 
-    <h3>Password Generator</h3>
-    <button onclick="generatePass()">Generate</button>
-    <div id="passResult" class="result"></div>
-</div>
+    <div class="tool-box">
+      <h3>Password Generator</h3>
+      <button onclick="generatePass()">Generate</button>
+      <p id="passResult" class="result"></p>
+    </div>
 
-<!-- QUIZ -->
-<div id="quiz" class="tab-content">
+  </div>
+
+  <!-- QUIZ -->
+  <div id="quiz" class="tab-content">
     <h2>Quiz Program</h2>
-
     <p>1. Which is a current world wonder?</p>
     <select id="q1">
-        <option value="tajmahal">tajmahal</option>
-        <option value="effieltower">effieltower</option>
-        <option value="collesium">collesium</option>
+      <option value="tajmahal">tajmahal</option>
+      <option value="effieltower">effieltower</option>
+      <option value="collesium">collesium</option>
     </select>
-
     <p>2. What is the capital of Russia?</p>
     <select id="q2">
-        <option value="Beijing">Beijing</option>
-        <option value="Moscow">Moscow</option>
-        <option value="NewDelhi">NewDelhi</option>
+      <option value="Beijing">Beijing</option>
+      <option value="Moscow">Moscow</option>
+      <option value="NewDelhi">NewDelhi</option>
     </select>
-
     <p>3. Who is the president of India?</p>
     <select id="q3">
-        <option value="droupatimurmu">droupatimurmu</option>
-        <option value="modi">modi</option>
-        <option value="abdulkalam">abdulkalam</option>
+      <option value="droupatimurmu">droupatimurmu</option>
+      <option value="modi">modi</option>
+      <option value="abdulkalam">abdulkalam</option>
     </select>
-
     <br><br>
     <button onclick="submitQuiz()">Submit</button>
     <div id="quizResult" class="result"></div>
-</div>
+  </div>
 
 </body>
 </html>
