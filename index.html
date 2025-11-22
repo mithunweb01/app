@@ -1,169 +1,258 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Asia Capital Finder</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mithun Multi-Tool App</title>
+
 <style>
     body {
-        font-family: Arial, sans-serif;
-        background: #f3f7ff;
         margin: 0;
-        padding: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-    }
-
-    .box {
-        background: white;
-        width: 350px;
-        padding: 25px;
-        border-radius: 15px;
-        box-shadow: 0px 0px 15px #0000002a;
-        text-align: center;
-    }
-
-    h1 {
-        color: #2b4eff;
-        font-size: 22px;
-        margin-bottom: 20px;
-    }
-
-    button {
-        width: 90%;
-        padding: 12px;
-        margin: 10px 0;
-        font-size: 16px;
-        background: #2b4eff;
-        border: none;
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #7f7fff, #ff7f7f);
         color: white;
+    }
+
+    .tabs {
+        display: flex;
+        background: #000000aa;
+        padding: 10px;
+        gap: 10px;
+        justify-content: center;
+    }
+
+    .tab-btn {
+        background: #222;
+        padding: 12px 18px;
         border-radius: 8px;
         cursor: pointer;
-        transition: 0.3s;
-    }
-
-    button:hover {
-        background: #1e36b8;
-    }
-
-    input {
-        width: 90%;
-        padding: 10px;
-        margin-top: 10px;
-        border-radius: 6px;
-        border: 1px solid #999;
-        font-size: 16px;
-    }
-
-    #output {
-        margin-top: 20px;
-        font-size: 18px;
-        color: #333;
+        color: white;
+        border: 2px solid cyan;
         font-weight: bold;
     }
 
-    .exit {
-        background: #ff3b3b;
+    .tab-btn:hover {
+        background: cyan;
+        color: black;
     }
 
-    .exit:hover {
-        background: #c82d2d;
+    .tab-content {
+        display: none;
+        padding: 20px;
+    }
+
+    .active {
+        display: block;
+    }
+
+    .button-box {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        margin-top: 40px;
+        align-items: center;
+    }
+
+    .big-btn {
+        width: 80%;
+        padding: 20px;
+        font-size: 20px;
+        background: #ffffff;
+        color: black;
+        border-radius: 12px;
+        cursor: pointer;
+        font-weight: bold;
+        border: 3px solid #000;
+    }
+
+    .big-btn:hover {
+        background: yellow;
+    }
+
+    input, select, button {
+        padding: 10px;
+        margin: 5px;
+        border-radius: 8px;
+        border: none;
+    }
+
+    button {
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .result {
+        margin-top: 15px;
+        font-size: 20px;
+        font-weight: bold;
     }
 </style>
+
+<script>
+function openTab(tabName) {
+    document.querySelectorAll(".tab-content").forEach(t => t.classList.remove("active"));
+    document.getElementById(tabName).classList.add("active");
+}
+
+/* ------------ CAPITAL FINDER LOGIC ---------- */
+const capitals = {
+  "Afghanistan": "Kabul", "Armenia": "Yerevan", "Azerbaijan": "Baku",
+  "Bahrain": "Manama", "Bangladesh": "Dhaka", "Bhutan": "Thimphu",
+  "Brunei": "Bandar Seri Begawan", "Cambodia": "Phnom Penh", "China": "Beijing",
+  "Cyprus": "Nicosia", "Georgia": "Tbilisi", "India": "New Delhi",
+  "Indonesia": "Jakarta", "Iran": "Tehran", "Iraq": "Baghdad",
+  "Israel": "Jerusalem", "Japan": "Tokyo", "Jordan": "Amman",
+  "Kazakhstan": "Astana", "Kuwait": "Kuwait City", "Kyrgyzstan": "Bishkek",
+  "Laos": "Vientiane", "Lebanon": "Beirut", "Malaysia": "Kuala Lumpur",
+  "Maldives": "Malé", "Mongolia": "Ulaanbaatar", "Myanmar": "Naypyidaw",
+  "Nepal": "Kathmandu", "North Korea": "Pyongyang", "Oman": "Muscat",
+  "Pakistan": "Islamabad", "Palestine": "Ramallah", "Philippines": "Manila",
+  "Qatar": "Doha", "Saudi Arabia": "Riyadh", "Singapore": "Singapore",
+  "South Korea": "Seoul", "Sri Lanka": "Colombo", "Syria": "Damascus",
+  "Russia": "Moscow", "Taiwan": "Taipei", "Tajikistan": "Dushanbe",
+  "Thailand": "Bangkok", "Timor-Leste": "Dili", "Turkey": "Ankara",
+  "Turkmenistan": "Ashgabat", "UAE": "Abu Dhabi", "Uzbekistan": "Tashkent",
+  "Vietnam": "Hanoi", "Yemen": "Sana'a"
+};
+
+function findCapital() {
+    let country = document.getElementById("countryInput").value.trim();
+    country = country.charAt(0).toUpperCase() + country.slice(1).toLowerCase();
+    document.getElementById("capitalResult").innerText =
+        capitals[country] ? "Capital: " + capitals[country] : "Country not found";
+}
+
+/* ------------ OPERATIONS LOGIC ---------- */
+function oddEven() {
+    let n = document.getElementById("oddInput").value;
+    document.getElementById("oddResult").innerText =
+        n % 2 === 0 ? "Even" : "Odd";
+}
+
+function calculate() {
+    let a = parseFloat(document.getElementById("numA").value);
+    let b = parseFloat(document.getElementById("numB").value);
+    let op = document.getElementById("op").value;
+    let result;
+
+    if (op === "+") result = a + b;
+    if (op === "-") result = a - b;
+    if (op === "*") result = a * b;
+    if (op === "/") result = a / b;
+
+    document.getElementById("calcResult").innerText = "Answer: " + result;
+}
+
+function numberSeries() {
+    let start = parseInt(document.getElementById("seriesStart").value);
+    let end = parseInt(document.getElementById("seriesEnd").value);
+    let out = "";
+
+    for (let i = start; i <= end; i++) out += i + " ";
+    document.getElementById("seriesResult").innerText = out;
+}
+
+/* ------------ QUIZ LOGIC ---------- */
+function submitQuiz() {
+    let score = 0;
+
+    if (document.getElementById("q1").value === "tajmahal") score++;
+    if (document.getElementById("q2").value === "Moscow") score++;
+    if (document.getElementById("q3").value === "droupatimurmu") score++;
+
+    document.getElementById("quizResult").innerText =
+        "Your Score: " + score + "/3";
+}
+</script>
 </head>
 
 <body>
 
-<div class="box">
-    <h1>Asia Capital Finder</h1>
-
-    <button onclick="showInput()">1. Find Capital</button>
-    <button class="exit" onclick="exitApp()">2. Exit</button>
-
-    <div id="inputArea" style="display:none;">
-        <input type="text" id="country" placeholder="Enter country name">
-        <button onclick="findCapital()">Submit</button>
-    </div>
-
-    <div id="output"></div>
+<!-- -------------- TABS ---------------- -->
+<div class="tabs">
+    <div class="tab-btn" onclick="openTab('home')">Home</div>
+    <div class="tab-btn" onclick="openTab('capital')">Capital Finder</div>
+    <div class="tab-btn" onclick="openTab('operations')">Operations</div>
+    <div class="tab-btn" onclick="openTab('quiz')">Quiz</div>
 </div>
 
-<script>
-    const countries = {
-        "Afghanistan": "Kabul",
-        "Armenia": "Yerevan",
-        "Azerbaijan": "Baku",
-        "Bahrain": "Manama",
-        "Bangladesh": "Dhaka",
-        "Bhutan": "Thimphu",
-        "Brunei": "Bandar Seri Begawan",
-        "Cambodia": "Phnom Penh",
-        "China": "Beijing",
-        "Cyprus": "Nicosia",
-        "Georgia": "Tbilisi",
-        "India": "New Delhi",
-        "Indonesia": "Jakarta",
-        "Iran": "Tehran",
-        "Iraq": "Baghdad",
-        "Israel": "Jerusalem",
-        "Japan": "Tokyo",
-        "Jordan": "Amman",
-        "Kazakhstan": "Astana",
-        "Kuwait": "Kuwait City",
-        "Kyrgyzstan": "Bishkek",
-        "Laos": "Vientiane",
-        "Lebanon": "Beirut",
-        "Malaysia": "Kuala Lumpur",
-        "Maldives": "Malé",
-        "Mongolia": "Ulaanbaatar",
-        "Myanmar (Burma)": "Naypyidaw",
-        "Nepal": "Kathmandu",
-        "North Korea": "Pyongyang",
-        "Oman": "Muscat",
-        "Pakistan": "Islamabad",
-        "Palestine (State of)": "Ramallah",
-        "Philippines": "Manila",
-        "Qatar": "Doha",
-        "Saudi Arabia": "Riyadh",
-        "Singapore": "Singapore",
-        "South Korea": "Seoul",
-        "Sri Lanka": "Sri Jayawardenepura Kotte / Colombo",
-        "Syria": "Damascus",
-        "Russia": "Moscow",
-        "Taiwan": "Taipei",
-        "Tajikistan": "Dushanbe",
-        "Thailand": "Bangkok",
-        "Timor-Leste": "Dili",
-        "Turkey": "Ankara",
-        "Turkmenistan": "Ashgabat",
-        "United Arab Emirates": "Abu Dhabi",
-        "Uzbekistan": "Tashkent",
-        "Vietnam": "Hanoi",
-        "Yemen": "Sana'a"
-    };
+<!-- -------------- HOME TAB ---------------- -->
+<div id="home" class="tab-content active">
+    <h1 style="text-align:center;">Welcome Mithun 👋</h1>
+    <p style="text-align:center; font-size:18px;">Choose a tool below:</p>
 
-    function showInput() {
-        document.getElementById("inputArea").style.display = "block";
-        document.getElementById("output").innerHTML = "";
-    }
+    <div class="button-box">
+        <button class="big-btn" onclick="openTab('capital')">🏙️ Capital Finder</button>
+        <button class="big-btn" onclick="openTab('operations')">🧮 Multi Operations</button>
+        <button class="big-btn" onclick="openTab('quiz')">❓ Quiz Program</button>
+    </div>
+</div>
 
-    function findCapital() {
-        let country = document.getElementById("country").value.trim();
-        country = country.charAt(0).toUpperCase() + country.slice(1).toLowerCase();
+<!-- -------------- CAPITAL FINDER ---------------- -->
+<div id="capital" class="tab-content">
+    <h2>Capital Finder (Asia)</h2>
+    <input id="countryInput" placeholder="Enter a country">
+    <button onclick="findCapital()">Find</button>
+    <div id="capitalResult" class="result"></div>
+</div>
 
-        if (countries[country]) {
-            document.getElementById("output").innerHTML =
-                "The capital of " + country + " is <b>" + countries[country] + "</b>.";
-        } else {
-            document.getElementById("output").innerHTML =
-                "Country not found!";
-        }
-    }
+<!-- -------------- OPERATIONS TAB ---------------- -->
+<div id="operations" class="tab-content">
+    <h2>Multi Operations</h2>
 
-    function exitApp() {
-        document.querySelector(".box").innerHTML = "<h1>Thank you!</h1>";
-    }
-</script>
+    <h3>Odd or Even</h3>
+    <input id="oddInput" type="number" placeholder="Enter number">
+    <button onclick="oddEven()">Check</button>
+    <div id="oddResult" class="result"></div>
+
+    <h3>Calculator</h3>
+    <input id="numA" type="number" placeholder="A">
+    <select id="op">
+        <option value="+">+</option>
+        <option value="-">-</option>
+        <option value="*">*</option>
+        <option value="/">/</option>
+    </select>
+    <input id="numB" type="number" placeholder="B">
+    <button onclick="calculate()">Calculate</button>
+    <div id="calcResult" class="result"></div>
+
+    <h3>Number Series</h3>
+    <input id="seriesStart" type="number" placeholder="Start">
+    <input id="seriesEnd" type="number" placeholder="End">
+    <button onclick="numberSeries()">Generate</button>
+    <div id="seriesResult" class="result"></div>
+</div>
+
+<!-- -------------- QUIZ TAB ---------------- -->
+<div id="quiz" class="tab-content">
+    <h2>Quiz Program</h2>
+
+    <p>1. Which is a current world wonder?</p>
+    <select id="q1">
+        <option value="tajmahal">tajmahal</option>
+        <option value="effieltower">effieltower</option>
+        <option value="collesium">collesium</option>
+    </select>
+
+    <p>2. What is the capital of Russia?</p>
+    <select id="q2">
+        <option value="Beijing">Beijing</option>
+        <option value="Moscow">Moscow</option>
+        <option value="NewDelhi">NewDelhi</option>
+    </select>
+
+    <p>3. Who is the president of India?</p>
+    <select id="q3">
+        <option value="droupatimurmu">droupatimurmu</option>
+        <option value="modi">modi</option>
+        <option value="abdulkalam">abdulkalam</option>
+    </select>
+
+    <br><br>
+    <button onclick="submitQuiz()">Submit</button>
+    <div id="quizResult" class="result"></div>
+</div>
 
 </body>
 </html>
