@@ -94,7 +94,7 @@ function openTab(tabName) {
     document.getElementById(tabName).classList.add("active");
 }
 
-/* ------------ FULL WORLD CAPITALS ---------- */
+/* WORLD CAPITAL DATA (same as given) */
 const capitals = {
    "Afghanistan":"Kabul","Albania":"Tirana","Algeria":"Algiers","Andorra":"Andorra la Vella",
    "Angola":"Luanda","Argentina":"Buenos Aires","Armenia":"Yerevan","Australia":"Canberra",
@@ -146,7 +146,7 @@ function findCapital() {
       capitals[c] ? "Capital: " + capitals[c] : "Country not found";
 }
 
-/* ----------- OPERATIONS ----------- */
+/* OPERATIONS (same as you had) */
 function oddEven() {
     let n = document.getElementById("oddInput").value;
     document.getElementById("oddResult").innerText = (n % 2 === 0) ? "Even" : "Odd";
@@ -172,8 +172,7 @@ function numberSeries() {
     document.getElementById("seriesResult").innerText = out;
 }
 
-/* ---------- NEW ADDED OPERATIONS ---------- */
-
+/* HCF / LCM */
 function hcfLCM(mode){
     let n = document.getElementById("multiNums").value.split(",").map(Number);
     if(n.length<2){ alert("Enter at least 2 numbers!"); return; }
@@ -215,7 +214,7 @@ function primeCheck(){
     document.getElementById("primeResult").innerText="Prime";
 }
 
-/* ------------ QUIZ ------------- */
+/* QUIZ */
 function submitQuiz(){
     let score=0;
     if(document.getElementById("q1").value==="tajmahal") score++;
@@ -223,27 +222,99 @@ function submitQuiz(){
     if(document.getElementById("q3").value==="droupatimurmu") score++;
     document.getElementById("quizResult").innerText="Your Score: "+score+"/3";
 }
+
+/* ---------------- LIFE TOOLS ---------------- */
+
+/* Percentage Calculator */
+function calcPercent(){
+    let base = parseFloat(document.getElementById("pBase").value);
+    let pct = parseFloat(document.getElementById("pPercent").value);
+    document.getElementById("percentResult").innerText =
+      "Result = " + (base * pct / 100);
+}
+
+/* Age Calculator */
+function calcAge(){
+    let dob = document.getElementById("dob").value;
+    if(!dob){ alert("Select date"); return; }
+    let birth = new Date(dob);
+    let now = new Date();
+    let age = now.getFullYear() - birth.getFullYear();
+    document.getElementById("ageResult").innerText = "Age: " + age + " years";
+}
+
+/* Unit Converter */
+function convertUnits(){
+    let val = parseFloat(document.getElementById("unitInput").value);
+    let type = document.getElementById("unitType").value;
+    let result="";
+
+    if(type==="km-m") result = val * 1000 + " m";
+    if(type==="m-km") result = val / 1000 + " km";
+    if(type==="kg-g") result = val * 1000 + " g";
+    if(type==="g-kg") result = val / 1000 + " kg";
+    if(type==="c-f") result = (val * 9/5 + 32) + " °F";
+    if(type==="f-c") result = ((val - 32) * 5/9) + " °C";
+
+    document.getElementById("unitResult").innerText = result;
+}
+
+/* Currency Converter — FIXED RATE */
+function convertMoney(){
+    let inr = parseFloat(document.getElementById("inrInput").value);
+    let usd = inr / 80;
+    document.getElementById("currencyResult").innerText =
+        "USD ≈ " + usd.toFixed(2) + " (Approx — not exact)";
+}
+
+/* EMI Calculator */
+function calcEMI(){
+    let p = parseFloat(document.getElementById("loan").value);
+    let r = parseFloat(document.getElementById("rate").value)/1200;
+    let n = parseInt(document.getElementById("months").value);
+
+    let emi = p*r*( (1+r)**n ) / ( (1+r)**n - 1 );
+
+    document.getElementById("emiResult").innerText =
+        "Monthly EMI = ₹" + emi.toFixed(2);
+}
+
+/* Password Generator */
+function generatePass(){
+    let chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%";
+    let pass="";
+    for(let i=0;i<10;i++){
+        pass += chars[Math.floor(Math.random()*chars.length)];
+    }
+    document.getElementById("passResult").innerText = pass;
+}
+
 </script>
 </head>
 
 <body>
 
+<!-- TABS -->
 <div class="tabs">
     <div class="tab-btn" onclick="openTab('home')">Home</div>
     <div class="tab-btn" onclick="openTab('capital')">Capital Finder</div>
     <div class="tab-btn" onclick="openTab('operations')">Operations</div>
+    <div class="tab-btn" onclick="openTab('lifetools')">Life Tools</div>
     <div class="tab-btn" onclick="openTab('quiz')">Quiz</div>
 </div>
 
+<!-- HOME TAB -->
 <div id="home" class="tab-content active">
     <h1 style="text-align:center;">Welcome Mithun 👋</h1>
     <div class="button-box">
         <button class="big-btn" onclick="openTab('capital')">🏙️ Capital Finder</button>
         <button class="big-btn" onclick="openTab('operations')">🧮 Multi Operations</button>
+        <button class="big-btn" onclick="openTab('lifetools')">📘 Life Math Tools</button>
         <button class="big-btn" onclick="openTab('quiz')">❓ Quiz</button>
     </div>
 </div>
 
+<!-- CAPITAL FINDER -->
 <div id="capital" class="tab-content">
     <h2>Capital Finder (Full World)</h2>
     <input id="countryInput" placeholder="Enter country">
@@ -251,6 +322,7 @@ function submitQuiz(){
     <div id="capitalResult" class="result"></div>
 </div>
 
+<!-- OPERATIONS -->
 <div id="operations" class="tab-content">
     <h2>Multi Operations</h2>
 
@@ -261,12 +333,7 @@ function submitQuiz(){
 
     <h3>Calculator</h3>
     <input id="numA" type="number" placeholder="A">
-    <select id="op">
-        <option>+</option>
-        <option>-</option>
-        <option>*</option>
-        <option>/</option>
-    </select>
+    <select id="op"><option>+</option><option>-</option><option>*</option><option>/</option></select>
     <input id="numB" type="number" placeholder="B">
     <button onclick="calculate()">Calculate</button>
     <div id="calcResult" class="result"></div>
@@ -277,29 +344,76 @@ function submitQuiz(){
     <button onclick="numberSeries()">Generate</button>
     <div id="seriesResult" class="result"></div>
 
-    <h3>HCF / LCM (Enter 2–5 numbers separated by commas)</h3>
-    <input id="multiNums" placeholder="Example: 5,10,20">
-    <button onclick="hcfLCM('hcf')">Find HCF</button>
-    <button onclick="hcfLCM('lcm')">Find LCM</button>
+    <h3>HCF / LCM</h3>
+    <input id="multiNums" placeholder="5,10,20">
+    <button onclick="hcfLCM('hcf')">HCF</button>
+    <button onclick="hcfLCM('lcm')">LCM</button>
     <div id="hcfResult" class="result"></div>
 
-    <h3>Square Root / Cube Root</h3>
-    <input id="rootNum" placeholder="Enter a number">
-    <button onclick="sqRoot()">√ Square Root</button>
-    <button onclick="cubeRoot()">³√ Cube Root</button>
+    <h3>Square / Cube Root</h3>
+    <input id="rootNum">
+    <button onclick="sqRoot()">√</button>
+    <button onclick="cubeRoot()">³√</button>
     <div id="rootResult" class="result"></div>
 
     <h3>Factorial</h3>
-    <input id="factNum" type="number" placeholder="Enter number">
-    <button onclick="factorial()">Find Factorial</button>
+    <input id="factNum">
+    <button onclick="factorial()">Find</button>
     <div id="factResult" class="result"></div>
 
-    <h3>Prime Number Check</h3>
-    <input id="primeNum" type="number" placeholder="Enter number">
-    <button onclick="primeCheck()">Check Prime</button>
+    <h3>Prime Check</h3>
+    <input id="primeNum">
+    <button onclick="primeCheck()">Check</button>
     <div id="primeResult" class="result"></div>
 </div>
 
+<!-- LIFE MATH TOOLS -->
+<div id="lifetools" class="tab-content">
+    <h2>📘 Life Math Tools</h2>
+
+    <h3>Percentage Calculator</h3>
+    <input id="pBase" placeholder="Base">
+    <input id="pPercent" placeholder="%">
+    <button onclick="calcPercent()">Calculate</button>
+    <div id="percentResult" class="result"></div>
+
+    <h3>Age Calculator</h3>
+    <input type="date" id="dob">
+    <button onclick="calcAge()">Find Age</button>
+    <div id="ageResult" class="result"></div>
+
+    <h3>Unit Converter</h3>
+    <input id="unitInput" placeholder="Value">
+    <select id="unitType">
+        <option value="km-m">Km → Meter</option>
+        <option value="m-km">Meter → Km</option>
+        <option value="kg-g">Kg → Gram</option>
+        <option value="g-kg">Gram → Kg</option>
+        <option value="c-f">C → F</option>
+        <option value="f-c">F → C</option>
+    </select>
+    <button onclick="convertUnits()">Convert</button>
+    <div id="unitResult" class="result"></div>
+
+    <h3>Currency Converter (₹ → $)</h3>
+    <p style="font-size:14px;color:yellow;">*Disclaimer: Uses 1 USD = ₹80 (average, not exact)</p>
+    <input id="inrInput" placeholder="Enter INR">
+    <button onclick="convertMoney()">Convert</button>
+    <div id="currencyResult" class="result"></div>
+
+    <h3>EMI Calculator</h3>
+    <input id="loan" placeholder="Loan Amount">
+    <input id="rate" placeholder="Interest % per year">
+    <input id="months" placeholder="Months">
+    <button onclick="calcEMI()">Calculate EMI</button>
+    <div id="emiResult" class="result"></div>
+
+    <h3>Password Generator</h3>
+    <button onclick="generatePass()">Generate</button>
+    <div id="passResult" class="result"></div>
+</div>
+
+<!-- QUIZ -->
 <div id="quiz" class="tab-content">
     <h2>Quiz Program</h2>
 
