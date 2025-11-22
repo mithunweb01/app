@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta name="google-site-verification" content="733sERG2XKU1-F7i2VZrRYvZ6ZwvAX8J6m7Hex4Mmpo" />
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Mithun Multi-Tool App</title>
@@ -95,81 +94,140 @@ function openTab(tabName) {
     document.getElementById(tabName).classList.add("active");
 }
 
-/* ------------ CAPITAL FINDER LOGIC ---------- */
+/* ------------ FULL WORLD CAPITALS ---------- */
 const capitals = {
-  "Afghanistan": "Kabul", "Armenia": "Yerevan", "Azerbaijan": "Baku",
-  "Bahrain": "Manama", "Bangladesh": "Dhaka", "Bhutan": "Thimphu",
-  "Brunei": "Bandar Seri Begawan", "Cambodia": "Phnom Penh", "China": "Beijing",
-  "Cyprus": "Nicosia", "Georgia": "Tbilisi", "India": "New Delhi",
-  "Indonesia": "Jakarta", "Iran": "Tehran", "Iraq": "Baghdad",
-  "Israel": "Jerusalem", "Japan": "Tokyo", "Jordan": "Amman",
-  "Kazakhstan": "Astana", "Kuwait": "Kuwait City", "Kyrgyzstan": "Bishkek",
-  "Laos": "Vientiane", "Lebanon": "Beirut", "Malaysia": "Kuala Lumpur",
-  "Maldives": "Malé", "Mongolia": "Ulaanbaatar", "Myanmar": "Naypyidaw",
-  "Nepal": "Kathmandu", "North Korea": "Pyongyang", "Oman": "Muscat",
-  "Pakistan": "Islamabad", "Palestine": "Ramallah", "Philippines": "Manila",
-  "Qatar": "Doha", "Saudi Arabia": "Riyadh", "Singapore": "Singapore",
-  "South Korea": "Seoul", "Sri Lanka": "Colombo", "Syria": "Damascus",
-  "Russia": "Moscow", "Taiwan": "Taipei", "Tajikistan": "Dushanbe",
-  "Thailand": "Bangkok", "Timor-Leste": "Dili", "Turkey": "Ankara",
-  "Turkmenistan": "Ashgabat", "UAE": "Abu Dhabi", "Uzbekistan": "Tashkent",
-  "Vietnam": "Hanoi", "Yemen": "Sana'a"
+   "Afghanistan":"Kabul","Albania":"Tirana","Algeria":"Algiers","Andorra":"Andorra la Vella",
+   "Angola":"Luanda","Argentina":"Buenos Aires","Armenia":"Yerevan","Australia":"Canberra",
+   "Austria":"Vienna","Azerbaijan":"Baku","Bahamas":"Nassau","Bahrain":"Manama",
+   "Bangladesh":"Dhaka","Barbados":"Bridgetown","Belarus":"Minsk","Belgium":"Brussels",
+   "Belize":"Belmopan","Benin":"Porto-Novo","Bhutan":"Thimphu","Bolivia":"Sucre",
+   "Bosnia and Herzegovina":"Sarajevo","Botswana":"Gaborone","Brazil":"Brasília",
+   "Brunei":"Bandar Seri Begawan","Bulgaria":"Sofia","Burkina Faso":"Ouagadougou",
+   "Burundi":"Gitega","Cambodia":"Phnom Penh","Cameroon":"Yaoundé","Canada":"Ottawa",
+   "Cape Verde":"Praia","Chad":"N'Djamena","Chile":"Santiago","China":"Beijing",
+   "Colombia":"Bogotá","Comoros":"Moroni","Congo":"Brazzaville","Costa Rica":"San José",
+   "Croatia":"Zagreb","Cuba":"Havana","Cyprus":"Nicosia","Czech Republic":"Prague",
+   "Denmark":"Copenhagen","Djibouti":"Djibouti","Dominica":"Roseau","Dominican Republic":"Santo Domingo",
+   "Ecuador":"Quito","Egypt":"Cairo","El Salvador":"San Salvador","Estonia":"Tallinn",
+   "Ethiopia":"Addis Ababa","Fiji":"Suva","Finland":"Helsinki","France":"Paris",
+   "Gabon":"Libreville","Gambia":"Banjul","Georgia":"Tbilisi","Germany":"Berlin",
+   "Ghana":"Accra","Greece":"Athens","Grenada":"St. George's","Guatemala":"Guatemala City",
+   "Guinea":"Conakry","Guyana":"Georgetown","Haiti":"Port-au-Prince","Honduras":"Tegucigalpa",
+   "Hungary":"Budapest","Iceland":"Reykjavik","India":"New Delhi","Indonesia":"Jakarta",
+   "Iran":"Tehran","Iraq":"Baghdad","Ireland":"Dublin","Israel":"Jerusalem","Italy":"Rome",
+   "Jamaica":"Kingston","Japan":"Tokyo","Jordan":"Amman","Kazakhstan":"Astana",
+   "Kenya":"Nairobi","Kiribati":"South Tarawa","Kuwait":"Kuwait City","Kyrgyzstan":"Bishkek",
+   "Laos":"Vientiane","Latvia":"Riga","Lebanon":"Beirut","Lesotho":"Maseru",
+   "Liberia":"Monrovia","Libya":"Tripoli","Liechtenstein":"Vaduz","Lithuania":"Vilnius",
+   "Luxembourg":"Luxembourg","Madagascar":"Antananarivo","Malawi":"Lilongwe","Malaysia":"Kuala Lumpur",
+   "Maldives":"Malé","Mali":"Bamako","Malta":"Valletta","Mexico":"Mexico City",
+   "Moldova":"Chișinău","Monaco":"Monaco","Mongolia":"Ulaanbaatar","Montenegro":"Podgorica",
+   "Morocco":"Rabat","Mozambique":"Maputo","Myanmar":"Naypyidaw","Namibia":"Windhoek",
+   "Nepal":"Kathmandu","Netherlands":"Amsterdam","New Zealand":"Wellington","Nicaragua":"Managua",
+   "Niger":"Niamey","Nigeria":"Abuja","North Korea":"Pyongyang","North Macedonia":"Skopje",
+   "Norway":"Oslo","Oman":"Muscat","Pakistan":"Islamabad","Panama":"Panama City",
+   "Paraguay":"Asunción","Peru":"Lima","Philippines":"Manila","Poland":"Warsaw",
+   "Portugal":"Lisbon","Qatar":"Doha","Romania":"Bucharest","Russia":"Moscow","Rwanda":"Kigali",
+   "Saudi Arabia":"Riyadh","Senegal":"Dakar","Serbia":"Belgrade","Seychelles":"Victoria",
+   "Singapore":"Singapore","Slovakia":"Bratislava","Slovenia":"Ljubljana","Somalia":"Mogadishu",
+   "South Africa":"Pretoria","South Korea":"Seoul","Spain":"Madrid","Sri Lanka":"Colombo",
+   "Sudan":"Khartoum","Sweden":"Stockholm","Switzerland":"Bern","Syria":"Damascus",
+   "Taiwan":"Taipei","Tajikistan":"Dushanbe","Tanzania":"Dodoma","Thailand":"Bangkok",
+   "Turkey":"Ankara","Turkmenistan":"Ashgabat","Uganda":"Kampala","Ukraine":"Kyiv",
+   "UAE":"Abu Dhabi","UK":"London","USA":"Washington, D.C.","Uruguay":"Montevideo",
+   "Uzbekistan":"Tashkent","Vatican City":"Vatican City","Venezuela":"Caracas","Vietnam":"Hanoi",
+   "Yemen":"Sana'a","Zambia":"Lusaka","Zimbabwe":"Harare"
 };
 
 function findCapital() {
-    let country = document.getElementById("countryInput").value.trim();
-    country = country.charAt(0).toUpperCase() + country.slice(1).toLowerCase();
+    let c = document.getElementById("countryInput").value.trim();
+    c = c.charAt(0).toUpperCase() + c.slice(1).toLowerCase();
     document.getElementById("capitalResult").innerText =
-        capitals[country] ? "Capital: " + capitals[country] : "Country not found";
+      capitals[c] ? "Capital: " + capitals[c] : "Country not found";
 }
 
-/* ------------ OPERATIONS LOGIC ---------- */
+/* ----------- OPERATIONS ----------- */
 function oddEven() {
     let n = document.getElementById("oddInput").value;
-    document.getElementById("oddResult").innerText =
-        n % 2 === 0 ? "Even" : "Odd";
+    document.getElementById("oddResult").innerText = (n % 2 === 0) ? "Even" : "Odd";
 }
 
 function calculate() {
     let a = parseFloat(document.getElementById("numA").value);
     let b = parseFloat(document.getElementById("numB").value);
     let op = document.getElementById("op").value;
-    let result;
-
-    if (op === "+") result = a + b;
-    if (op === "-") result = a - b;
-    if (op === "*") result = a * b;
-    if (op === "/") result = a / b;
-
-    document.getElementById("calcResult").innerText = "Answer: " + result;
+    let res;
+    if(op==="+") res=a+b;
+    if(op==="−"||op==="-") res=a-b;
+    if(op==="*") res=a*b;
+    if(op==="/") res=a/b;
+    document.getElementById("calcResult").innerText="Answer: "+res;
 }
 
 function numberSeries() {
-    let start = parseInt(document.getElementById("seriesStart").value);
-    let end = parseInt(document.getElementById("seriesEnd").value);
+    let s = parseInt(document.getElementById("seriesStart").value);
+    let e = parseInt(document.getElementById("seriesEnd").value);
     let out = "";
-
-    for (let i = start; i <= end; i++) out += i + " ";
+    for(let i=s;i<=e;i++) out += i+" ";
     document.getElementById("seriesResult").innerText = out;
 }
 
-/* ------------ QUIZ LOGIC ---------- */
-function submitQuiz() {
-    let score = 0;
+/* ---------- NEW ADDED OPERATIONS ---------- */
 
-    if (document.getElementById("q1").value === "tajmahal") score++;
-    if (document.getElementById("q2").value === "Moscow") score++;
-    if (document.getElementById("q3").value === "droupatimurmu") score++;
+function hcfLCM(mode){
+    let n = document.getElementById("multiNums").value.split(",").map(Number);
+    if(n.length<2){ alert("Enter at least 2 numbers!"); return; }
 
-    document.getElementById("quizResult").innerText =
-        "Your Score: " + score + "/3";
+    function gcd(a,b){ return b===0?a:gcd(b,a%b); }
+    function lcm(a,b){ return (a*b)/gcd(a,b); }
+
+    let ans = n[0];
+    for(let i=1;i<n.length;i++){
+        ans = mode==="hcf" ? gcd(ans,n[i]) : lcm(ans,n[i]);
+    }
+    document.getElementById("hcfResult").innerText =
+       mode==="hcf" ? "HCF = "+ans : "LCM = "+ans;
+}
+
+function sqRoot(){
+    let x = document.getElementById("rootNum").value;
+    document.getElementById("rootResult").innerText = "√ = "+Math.sqrt(x);
+}
+
+function cubeRoot(){
+    let x = document.getElementById("rootNum").value;
+    document.getElementById("rootResult").innerText = "³√ = "+Math.cbrt(x);
+}
+
+function factorial(){
+    let n = parseInt(document.getElementById("factNum").value);
+    let f = 1;
+    for(let i=1;i<=n;i++) f*=i;
+    document.getElementById("factResult").innerText = "Factorial = "+f;
+}
+
+function primeCheck(){
+    let n = parseInt(document.getElementById("primeNum").value);
+    if(n<2){ document.getElementById("primeResult").innerText="Not Prime"; return;}
+    for(let i=2;i<=Math.sqrt(n);i++){
+        if(n%i===0){ document.getElementById("primeResult").innerText="Not Prime"; return;}
+    }
+    document.getElementById("primeResult").innerText="Prime";
+}
+
+/* ------------ QUIZ ------------- */
+function submitQuiz(){
+    let score=0;
+    if(document.getElementById("q1").value==="tajmahal") score++;
+    if(document.getElementById("q2").value==="Moscow") score++;
+    if(document.getElementById("q3").value==="droupatimurmu") score++;
+    document.getElementById("quizResult").innerText="Your Score: "+score+"/3";
 }
 </script>
 </head>
 
 <body>
 
-<!-- -------------- TABS ---------------- -->
 <div class="tabs">
     <div class="tab-btn" onclick="openTab('home')">Home</div>
     <div class="tab-btn" onclick="openTab('capital')">Capital Finder</div>
@@ -177,27 +235,22 @@ function submitQuiz() {
     <div class="tab-btn" onclick="openTab('quiz')">Quiz</div>
 </div>
 
-<!-- -------------- HOME TAB ---------------- -->
 <div id="home" class="tab-content active">
     <h1 style="text-align:center;">Welcome Mithun 👋</h1>
-    <p style="text-align:center; font-size:18px;">Choose a tool below:</p>
-
     <div class="button-box">
         <button class="big-btn" onclick="openTab('capital')">🏙️ Capital Finder</button>
         <button class="big-btn" onclick="openTab('operations')">🧮 Multi Operations</button>
-        <button class="big-btn" onclick="openTab('quiz')">❓ Quiz Program</button>
+        <button class="big-btn" onclick="openTab('quiz')">❓ Quiz</button>
     </div>
 </div>
 
-<!-- -------------- CAPITAL FINDER ---------------- -->
 <div id="capital" class="tab-content">
-    <h2>Capital Finder (Asia)</h2>
-    <input id="countryInput" placeholder="Enter a country">
+    <h2>Capital Finder (Full World)</h2>
+    <input id="countryInput" placeholder="Enter country">
     <button onclick="findCapital()">Find</button>
     <div id="capitalResult" class="result"></div>
 </div>
 
-<!-- -------------- OPERATIONS TAB ---------------- -->
 <div id="operations" class="tab-content">
     <h2>Multi Operations</h2>
 
@@ -209,10 +262,10 @@ function submitQuiz() {
     <h3>Calculator</h3>
     <input id="numA" type="number" placeholder="A">
     <select id="op">
-        <option value="+">+</option>
-        <option value="-">-</option>
-        <option value="*">*</option>
-        <option value="/">/</option>
+        <option>+</option>
+        <option>-</option>
+        <option>*</option>
+        <option>/</option>
     </select>
     <input id="numB" type="number" placeholder="B">
     <button onclick="calculate()">Calculate</button>
@@ -223,9 +276,30 @@ function submitQuiz() {
     <input id="seriesEnd" type="number" placeholder="End">
     <button onclick="numberSeries()">Generate</button>
     <div id="seriesResult" class="result"></div>
+
+    <h3>HCF / LCM (Enter 2–5 numbers separated by commas)</h3>
+    <input id="multiNums" placeholder="Example: 5,10,20">
+    <button onclick="hcfLCM('hcf')">Find HCF</button>
+    <button onclick="hcfLCM('lcm')">Find LCM</button>
+    <div id="hcfResult" class="result"></div>
+
+    <h3>Square Root / Cube Root</h3>
+    <input id="rootNum" placeholder="Enter a number">
+    <button onclick="sqRoot()">√ Square Root</button>
+    <button onclick="cubeRoot()">³√ Cube Root</button>
+    <div id="rootResult" class="result"></div>
+
+    <h3>Factorial</h3>
+    <input id="factNum" type="number" placeholder="Enter number">
+    <button onclick="factorial()">Find Factorial</button>
+    <div id="factResult" class="result"></div>
+
+    <h3>Prime Number Check</h3>
+    <input id="primeNum" type="number" placeholder="Enter number">
+    <button onclick="primeCheck()">Check Prime</button>
+    <div id="primeResult" class="result"></div>
 </div>
 
-<!-- -------------- QUIZ TAB ---------------- -->
 <div id="quiz" class="tab-content">
     <h2>Quiz Program</h2>
 
