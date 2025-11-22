@@ -193,6 +193,70 @@
     }
 
     /* LIFE TOOLS (old) */
+    // ------------------ ADVANCED CALCULATOR ------------------
+function calculateAdvanced() {
+    const exp = document.getElementById("advExpression").value;
+    try {
+        const result = eval(exp);
+        document.getElementById("advResult").innerText = "Result: " + result;
+    } catch {
+        document.getElementById("advResult").innerText = "Invalid Expression";
+    }
+}
+
+// ------------------ PERCENTAGE CALCULATOR ------------------
+function calcPercentage() {
+    const value = parseFloat(document.getElementById("perValue").value);
+    const total = parseFloat(document.getElementById("perTotal").value);
+
+    if (isNaN(value) || isNaN(total) || total === 0) {
+        document.getElementById("perResult").innerText = "Enter valid numbers!";
+        return;
+    }
+
+    const result = (value / total) * 100;
+    document.getElementById("perResult").innerText = "Percentage: " + result.toFixed(2) + "%";
+}
+
+// ------------------ CURRENCY CONVERTER (INR ↔ USD) ------------------
+function convertCurrency() {
+    const mode = document.getElementById("currencyType").value;
+    const amount = parseFloat(document.getElementById("currencyInput").value);
+
+    if (isNaN(amount)) {
+        document.getElementById("currencyResult").innerText = "Enter valid amount!";
+        return;
+    }
+
+    const usdRate = 83; // standard approx
+
+    let result = 0;
+
+    if (mode === "INRtoUSD") {
+        result = amount / usdRate;
+        document.getElementById("currencyResult").innerText =
+            "USD: " + result.toFixed(2);
+    } else {
+        result = amount * usdRate;
+        document.getElementById("currencyResult").innerText =
+            "INR: " + result.toFixed(2);
+    }
+}
+// ------------------ LAND PRICE FINDER ------------------
+function calcLandPrice() {
+    const rate = parseFloat(document.getElementById("landRate").value);
+    const area = parseFloat(document.getElementById("landArea").value);
+
+    if (isNaN(rate) || isNaN(area)) {
+        document.getElementById("landResult").innerText = "Enter valid numbers!";
+        return;
+    }
+
+    const total = rate * area;
+    document.getElementById("landResult").innerText =
+        "Total Land Cost: ₹" + total.toLocaleString();
+}
+
     function calcOldPercent(){
       let base = parseFloat(document.getElementById("pBase").value);
       let pct = parseFloat(document.getElementById("pPercent").value);
