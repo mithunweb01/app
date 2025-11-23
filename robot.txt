@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://mithunweb01.github.io/app/sitemap.xml
