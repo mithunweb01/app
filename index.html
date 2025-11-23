@@ -7,6 +7,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mithun Multi-Tool App</title>
 
+  <!-- Algebrite (algebra solver) -->
+  <script src="https://unpkg.com/algebrite/dist/algebrite.min.js"></script>
+
   <style>
     body {
       margin: 0;
@@ -57,6 +60,7 @@
       font-size: 20px;
       font-weight: bold;
       color: white;
+      white-space: pre-wrap;
     }
     .tool-box {
       background: rgba(255,255,255,0.9);
@@ -75,7 +79,7 @@ function openTab(tabName) {
   document.getElementById(tabName).classList.add("active");
 }
 
-/* ---------------- NEW CAPITAL FINDER ---------------- */
+/* ---------------- CAPITAL FINDER ---------------- */
 
 // similarity for auto-correction
 function similarity(a, b) {
@@ -109,10 +113,7 @@ async function findCapital() {
   const c = document.getElementById("countryInput").value.trim();
   const out = document.getElementById("capitalResult");
 
-  if (!c) {
-    out.innerText = "❌ Enter a country";
-    return;
-  }
+  if (!c) return out.innerText = "❌ Enter a country";
 
   out.innerText = "Loading...";
 
@@ -131,10 +132,7 @@ async function findCapital() {
       }
     });
 
-    if (!best) {
-      out.innerText = "Country not found";
-      return;
-    }
+    if (!best) return out.innerText = "Country not found";
 
     out.innerText =
       "Country: " + best.name.common +
@@ -147,48 +145,23 @@ async function findCapital() {
   }
 }
 
-/* ---------------- NEW AI SOLUTION TAB ---------------- */
+/* ---------------- OPTION A: ALGEBRA SOLVER (OFFLINE) ---------------- */
 
-async function solveAI() {
+function solveAlgebra() {
   const q = document.getElementById("ai_question").value.trim();
   const out = document.getElementById("ai_result");
 
-  if (!q) {
-    out.innerText = "❌ Type a question";
-    return;
-  }
-
-  out.innerText = "Thinking...";
+  if (!q) return out.innerText = "❌ Type an equation";
 
   try {
-    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Authorization": "Bearer  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",
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        model: "llama3-8b-8192",
-        messages: [{ role: "user", content: q }]
-      })
-    });
-
-    const data = await response.json();
-
-    if (!data.choices) {
-      out.innerText = "Error: " + JSON.stringify(data);
-      return;
-    }
-
-    out.innerText = data.choices[0].message.content;
-
-  } catch {
-    out.innerText = "❌ AI server error";
+    let result = Algebrite.run(q);
+    out.innerText = result;
+  } catch (error) {
+    out.innerText = "❌ Unable to solve. Check equation.";
   }
 }
 
 /* ---------------- EXISTING FUNCTIONS (UNCHANGED) ---------------- */
-/* (Your entire original JavaScript is kept exactly same) */
 
 function oddEven(){ let n = document.getElementById("oddInput").value; document.getElementById("oddResult").innerText = (n % 2 === 0) ? "Even" : "Odd"; }
 function calculateOp(){ let a=parseFloat(numA.value), b=parseFloat(numB.value), op=opType.value, r; if(op==="+")r=a+b; if(op==="-")r=a-b; if(op==="*")r=a*b; if(op==="/")r=a/b; calcResult.innerText="Answer: "+r;}
@@ -199,7 +172,6 @@ function cubeRoot(){ rootResult.innerText="³√ = "+Math.cbrt(rootNum.value); }
 function factorial(){ let n=parseInt(factNum.value),f=1; for(let i=1;i<=n;i++)f*=i; factResult.innerText="Factorial = "+f; }
 function primeCheck(){ let n=parseInt(primeNum.value); for(let i=2;i<=Math.sqrt(n);i++) if(n%i===0){primeResult.innerText="Not Prime";return;} primeResult.innerText="Prime";}
 
-/* Life Tools (unchanged) */
 function calculateAdvanced(){try{adv_result.innerText="Result: "+eval(adv_input.value);}catch{adv_result.innerText="Invalid Expression";}}
 function calcPercentage(){let v=parseFloat(percent_value.value),t=parseFloat(percent_percent.value); if(isNaN(v)||isNaN(t)){percent_result.innerText="Enter valid numbers!";return;} percent_result.innerText="Percentage: "+((v/t)*100).toFixed(2)+"%";}
 function convertCurrency(){const m=currency_type.value,a=parseFloat(currency_amount.value),r=83; currency_result.innerText=m==="inr_to_usd"?"USD: "+(a/r).toFixed(2):"INR: "+(a*r).toFixed(2);}
@@ -213,8 +185,8 @@ function generatePass(){let c="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvw
 function submitQuiz(){let s=0;if(q1.value==="tajmahal")s++;if(q2.value==="Moscow")s++;if(q3.value==="droupatimurmu")s++; quizResult.innerText="Your Score: "+s+"/3";}
 
 </script>
-
 </head>
+
 <body>
 
   <div class="tabs">
@@ -231,7 +203,7 @@ function submitQuiz(){let s=0;if(q1.value==="tajmahal")s++;if(q2.value==="Moscow
     <h1 style="text-align:center;">Welcome Mithun 👋</h1>
   </div>
 
-  <!-- NEW CAPITAL FINDER -->
+  <!-- CAPITAL FINDER -->
   <div id="capital" class="tab-content">
     <h2>Capital Finder</h2>
     <input id="countryInput" placeholder="Enter country">
@@ -239,15 +211,15 @@ function submitQuiz(){let s=0;if(q1.value==="tajmahal")s++;if(q2.value==="Moscow
     <div id="capitalResult" class="result"></div>
   </div>
 
-  <!-- NEW SOLUTION TAB -->
+  <!-- ALGEBRA SOLUTION TAB -->
   <div id="solution" class="tab-content">
-    <h2>AI Solution</h2>
-    <textarea id="ai_question" rows="4" placeholder="Type math or word problem..."></textarea>
-    <button onclick="solveAI()">Solve with AI</button>
+    <h2>Algebra Solver</h2>
+    <textarea id="ai_question" rows="4" placeholder="Enter algebra problem. Example: solve(x+y=10, x-y=2)"></textarea>
+    <button onclick="solveAlgebra()">Solve</button>
     <div id="ai_result" class="result"></div>
   </div>
 
-  <!-- OPERATIONS (unchanged) -->
+  <!-- OPERATIONS -->
   <div id="operations" class="tab-content">
     <h2>Multi Operations</h2>
 
@@ -292,10 +264,9 @@ function submitQuiz(){let s=0;if(q1.value==="tajmahal")s++;if(q2.value==="Moscow
     <input id="primeNum">
     <button onclick="primeCheck()">Check</button>
     <div id="primeResult" class="result"></div>
-
   </div>
 
-  <!-- LIFE TOOLS (unchanged) -->
+  <!-- LIFE TOOLS -->
   <div id="lifetools" class="tab-content">
     <h2>📘 Life Math Tools</h2>
 
@@ -333,7 +304,6 @@ function submitQuiz(){let s=0;if(q1.value==="tajmahal")s++;if(q2.value==="Moscow
       <p id="land_result" class="result"></p>
     </div>
 
-    <!-- Old tools -->
     <div class="tool-box">
       <h3>Percentage (Old)</h3>
       <input id="pBase">
