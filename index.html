@@ -20,7 +20,7 @@
 body {
   margin:0;
   background: linear-gradient(135deg, var(--bg1), var(--bg2));
-  font-family: Arial;
+  font-family: Arial, sans-serif; /* Added sans-serif fallback */
   color: var(--text-light);
 }
 /* top nav */
@@ -43,6 +43,7 @@ body {
   cursor:pointer;
   font-weight:bold;
   border:2px solid var(--accent);
+  transition: all 0.3s; /* Added transition for hover effect */
 }
 .tab-btn:hover {
   background:var(--accent);
@@ -67,13 +68,15 @@ input,select,button,textarea {
   padding:10px;
   margin:5px;
   border-radius:8px;
-  border:none;
+  border:1px solid #ccc; /* Added border for definition */
 }
 button {
   background:var(--accent);
   color:#000;
   font-weight:bold;
   cursor:pointer;
+  border:none; /* Removed default button border */
+  transition: opacity 0.2s; /* Added transition for hover effect */
 }
 button:hover { opacity:0.8; }
 
@@ -89,24 +92,35 @@ button:hover { opacity:0.8; }
 </style>
 
 <script>
-function calcBMI(){let w=parseFloat(bmi_w.value),h=parseFloat(bmi_h.value)/100;if(!w||!h){bmi_out.innerText='Enter valid inputs';return;}bmi_out.innerText='BMI = '+(w/(h*h)).toFixed(2);}
+function calcBMI(){let w=parseFloat(bmi_w.value),h=parseFloat(bmi_h.value)/100;if(!w||!h){bmi_out.innerText='Enter valid inputs';return;}bmi_out.innerText='BMI = '+(w/(h*h)).toFixed(2);
+}
 
-function pickName(){let arr=name_list.value.split(',').map(s=>s.trim()).filter(Boolean);if(arr.length===0){pick_out.innerText='Enter names';return;}pick_out.innerText=arr[Math.floor(Math.random()*arr.length)];}
+function pickName(){let arr=name_list.value.split(',').map(s=>s.trim()).filter(Boolean);if(arr.length===0){pick_out.innerText='Enter names';return;}pick_out.innerText=arr[Math.floor(Math.random()*arr.length)];
+}
 
 let sw=0,swInt;
-function swStart(){clearInterval(swInt);swInt=setInterval(()=>{sw++;sw_out.innerText=(sw/100).toFixed(2)+'s';},10);}
-function swStop(){clearInterval(swInt);}
-function swReset(){sw=0;sw_out.innerText='0.00s';}
+function swStart(){clearInterval(swInt);swInt=setInterval(()=>{sw++;sw_out.innerText=(sw/100).toFixed(2)+'s';},10);
+}
+function swStop(){clearInterval(swInt);
+}
+function swReset(){sw=0;sw_out.innerText='0.00s';
+}
 
 let tInt;
-function startTimer(){let t=parseInt(timer_in.value);if(!t)return;clearInterval(tInt);timer_out.innerText=t+'s';tInt=setInterval(()=>{t--;timer_out.innerText=t+'s';if(t<=0){clearInterval(tInt);timer_out.innerText='Time Up!';}},1000);}
+function startTimer(){let t=parseInt(timer_in.value);if(!t)return;clearInterval(tInt);timer_out.innerText=t+'s';tInt=setInterval(()=>{t--;timer_out.innerText=t+'s';if(t<=0){clearInterval(tInt);timer_out.innerText='Time Up!';}},1000);
+}
 
-function saveNote(){localStorage.setItem('mithun_note',note_in.value);note_out.innerText='Saved';}
-function loadNote(){note_in.value=localStorage.getItem('mithun_note')||'';note_out.innerText='Loaded';}
+function saveNote(){localStorage.setItem('mithun_note',note_in.value);note_out.innerText='Saved';
+}
+function loadNote(){note_in.value=localStorage.getItem('mithun_note')||'';note_out.innerText='Loaded';
+}
 
-function upperText(){text_out.value=text_in.value.toUpperCase();}
-function lowerText(){text_out.value=text_in.value.toLowerCase();}
-function removeSpaces(){text_out.value=text_in.value.replace(/\s+/g,'');}
+function upperText(){text_out.value=text_in.value.toUpperCase();
+}
+function lowerText(){text_out.value=text_in.value.toLowerCase();
+}
+function removeSpaces(){text_out.value=text_in.value.replace(/\s+/g,'');
+}
 
 async function mergePDF(){
   let files=document.getElementById('pdf_in').files;
@@ -120,7 +134,6 @@ async function mergePDF(){
   */
 }
 
-// Fixed QR CODE MAKER - Removed the duplicate function definition
 function makeQR(){
   let t = document.getElementById('qr_text').value.trim();
   let qr_box = document.getElementById('qr_box');
@@ -227,47 +240,47 @@ function solveAlgebra(){
   }catch(e){ out.innerText='Unable to solve: '+e.message; } // Added error message
 }
 
-function oddEven(){ let n=oddInput.value; oddResult.innerText = (n%2===0?'Even':'Odd'); }
-function calculateOp(){ let a=parseFloat(numA.value),b=parseFloat(numB.value),op=opType.value,r;
+function oddEven(){ let n=document.getElementById('oddInput').value; document.getElementById('oddResult').innerText = (n%2===0?'Even':'Odd'); }
+function calculateOp(){ let a=parseFloat(document.getElementById('numA').value),b=parseFloat(document.getElementById('numB').value),op=document.getElementById('opType').value,r;
   if(op==='+')r=a+b; if(op==='-')r=a-b; if(op==='*')r=a*b; if(op==='/')r=a/b;
-  calcResult.innerText='Answer: '+r;
+  document.getElementById('calcResult').innerText='Answer: '+r;
 }
-function numberSeries(){ let s=parseInt(seriesStart.value),e=parseInt(seriesEnd.value),o=''; for(let i=s;i<=e;i++)o+=i+' '; seriesResult.innerText=o; }
+function numberSeries(){ let s=parseInt(document.getElementById('seriesStart').value),e=parseInt(document.getElementById('seriesEnd').value),o=''; for(let i=s;i<=e;i++)o+=i+' '; document.getElementById('seriesResult').innerText=o; }
 function hcfLCM(m){
-  let n=multiNums.value.split(',').map(Number);
+  let n=document.getElementById('multiNums').value.split(',').map(Number);
   function g(a,b){return b===0?a:g(b,a%b);}
   function l(a,b){return(a*b)/g(a,b);}
   let ans=n[0];
   for(let i=1;i<n.length;i++) ans=(m==='hcf'?g(ans,n[i]):l(ans,n[i]));
-  hcfResult.innerText = (m==='hcf'?'HCF = ':'LCM = ')+ans;
+  document.getElementById('hcfResult').innerText = (m==='hcf'?'HCF = ':'LCM = ')+ans;
 }
-function sqRoot(){ rootResult.innerText='√ = '+Math.sqrt(rootNum.value); }
-function cubeRoot(){ rootResult.innerText='³√ = '+Math.cbrt(rootNum.value); }
-function factorial(){ let n=parseInt(factNum.value),f=1; for(let i=1;i<=n;i++)f*=i; factResult.innerText='Factorial = '+f; }
-function primeCheck(){ let n=parseInt(primeNum.value); for(let i=2;i<=Math.sqrt(n);i++) if(n%i===0) return primeResult.innerText='Not Prime'; primeResult.innerText='Prime';}
+function sqRoot(){ document.getElementById('rootResult').innerText='√ = '+Math.sqrt(document.getElementById('rootNum').value); }
+function cubeRoot(){ document.getElementById('rootResult').innerText='³√ = '+Math.cbrt(document.getElementById('rootNum').value); }
+function factorial(){ let n=parseInt(document.getElementById('factNum').value),f=1; for(let i=1;i<=n;i++)f*=i; document.getElementById('factResult').innerText='Factorial = '+f; }
+function primeCheck(){ let n=parseInt(document.getElementById('primeNum').value); for(let i=2;i<=Math.sqrt(n);i++) if(n%i===0) return document.getElementById('primeResult').innerText='Not Prime'; document.getElementById('primeResult').innerText='Prime';}
 
-function calculateAdvanced(){ try{adv_result.innerText='Result: '+eval(adv_input.value);}catch{adv_result.innerText='Invalid Expression';}}
-function calcPercentage(){let v=parseFloat(percent_value.value),t=parseFloat(percent_percent.value); percent_result.innerText = (v/t*100).toFixed(2)+'%';}
-function convertCurrency(){const m=currency_type.value,a=parseFloat(currency_amount.value),r=83; currency_result.innerText = (m==='inr_to_usd'?'USD: '+(a/r).toFixed(2):'INR: '+(a*r).toFixed(2));}
-function calcLand(){land_result.innerText='Total = ₹'+(land_rate.value*land_sqft.value).toLocaleString();}
-function calcOldPercent(){percentResultOld.innerText='Result = '+(pBase.value*pPercent.value/100);}
-function calcAge(){let b=new Date(dob.value),n=new Date(); ageResult.innerText='Age: '+(n.getFullYear()-b.getFullYear());}
+function calculateAdvanced(){ try{document.getElementById('adv_result').innerText='Result: '+eval(document.getElementById('adv_input').value);}catch{document.getElementById('adv_result').innerText='Invalid Expression';}}
+function calcPercentage(){let v=parseFloat(document.getElementById('percent_value').value),t=parseFloat(document.getElementById('percent_percent').value); document.getElementById('percent_result').innerText = (v/t*100).toFixed(2)+'%';}
+function convertCurrency(){const m=document.getElementById('currency_type').value,a=parseFloat(document.getElementById('currency_amount').value),r=83; document.getElementById('currency_result').innerText = (m==='inr_to_usd'?'USD: '+(a/r).toFixed(2):'INR: '+(a*r).toFixed(2));}
+function calcLand(){document.getElementById('land_result').innerText='Total = ₹'+(document.getElementById('land_rate').value*document.getElementById('land_sqft').value).toLocaleString();}
+function calcOldPercent(){document.getElementById('percentResultOld').innerText='Result = '+(document.getElementById('pBase').value*document.getElementById('pPercent').value/100);}
+function calcAge(){let b=new Date(document.getElementById('dob').value),n=new Date(); document.getElementById('ageResult').innerText='Age: '+(n.getFullYear()-b.getFullYear());}
 function convertUnits(){
-  let v=parseFloat(unitInput.value),t=unitType.value,res='';
+  let v=parseFloat(document.getElementById('unitInput').value),t=document.getElementById('unitType').value,res='';
   if(t==='km-m')res=v*1000+' m';
   if(t==='m-km')res=v/1000+' km';
   if(t==='kg-g')res=v*1000+' g';
   if(t==='g-kg')res=v/1000+' kg';
   if(t==='c-f')res=v*9/5+32+' °F';
   if(t==='f-c')res=(v-32)*5/9+' °C';
-  unitResult.innerText=res;
+  document.getElementById('unitResult').innerText=res;
 }
-function convertMoney(){currencyResult.innerText='USD ≈ '+(inrInput.value/80).toFixed(2);}
-function calcEMI(){let p=parseFloat(loan.value),r=rate.value/1200,n=months.value; emiResult.innerText='EMI = ₹'+(p*r*((1+r)**n)/(((1+r)**n)-1)).toFixed(2);}
-function generatePass(){let c='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%',p=''; for(let i=0;i<10;i++)p+=c[Math.floor(Math.random()*c.length)]; passResult.innerText=p;}
+function convertMoney(){document.getElementById('currencyResult').innerText='USD ≈ '+(document.getElementById('inrInput').value/80).toFixed(2);}
+function calcEMI(){let p=parseFloat(document.getElementById('loan').value),r=document.getElementById('rate').value/1200,n=document.getElementById('months').value; document.getElementById('emiResult').innerText='EMI = ₹'+(p*r*((1+r)**n)/(((1+r)**n)-1)).toFixed(2);}
+function generatePass(){let c='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%',p=''; for(let i=0;i<10;i++)p+=c[Math.floor(Math.random()*c.length)]; document.getElementById('passResult').innerText=p;}
 function submitQuiz(){
-  let s=0; if(q1.value==='tajmahal')s++; if(q2.value==='Moscow')s++; if(q3.value==='droupatimurmu')s++;
-  quizResult.innerText='Score: '+s+'/3';
+  let s=0; if(document.getElementById('q1').value==='tajmahal')s++; if(document.getElementById('q2').value==='Moscow')s++; if(document.getElementById('q3').value==='droupatimurmu')s++;
+  document.getElementById('quizResult').innerText='Score: '+s+'/3';
 }
 </script>
 
@@ -277,8 +290,8 @@ function submitQuiz(){
 <div class='tabs'>
   <div class='tab-btn' onclick="openTab('home')">Home</div>
   <div class='tab-btn' onclick="openTab('smarttools')">Smart Tools</div>
-  <div class='tab-btn' onclick="openTab('capital')">Capital</div>
-  <div class='tab-btn' onclick="openTab('solution')">Algebra</div>
+  <div class='tab-btn' onclick="openTab('capital')">Capital Finder</div>
+  <div class='tab-btn' onclick="openTab('solution')">Algebra Solver</div>
   <div class='tab-btn' onclick="openTab('operations')">Operations</div>
   <div class='tab-btn' onclick="openTab('lifetools')">Life Tools</div>
   <div class='tab-btn' onclick="openTab('quiz')">Quiz</div>
@@ -286,48 +299,48 @@ function submitQuiz(){
 
 <div id='home' class='tab-content active'>
   <h1>Welcome Mithun 👋</h1>
-      <div class="tool-box">
+  <div class="tool-box">
     <h3>Text Tools</h3>
-    <textarea id="text_in"></textarea>
+    <textarea id="text_in" rows="5" placeholder="Type text here..."></textarea>
     <button onclick="upperText()">UPPERCASE</button>
     <button onclick="lowerText()">lowercase</button>
     <button onclick="removeSpaces()">Remove Spaces</button>
-    <textarea id="text_out" class="result"></textarea>
+    <textarea id="text_out" class="result" rows="5" readonly></textarea>
   </div>
 </div>
 
 <div id="smarttools" class="tab-content">
   <h2>Smart Tools Collection</h2>
   
-    <div class="tool-box">
+  <div class="tool-box">
     <h3>QR Code Maker</h3>
     <input id="qr_text" placeholder="Enter text or URL">
     <button onclick="makeQR()">Generate</button>
-        <div id="qr_box" class="result" style="text-align:center; min-height: 50px;"></div>
+    <div id="qr_box" class="result" style="text-align:center; min-height: 50px;"></div>
   </div>
 
-    <div class="tool-box">
+  <div class="tool-box">
     <h3>Random Name Picker</h3>
     <textarea id="name_list" placeholder="Names separated by commas"></textarea>
     <button onclick="pickName()">Pick</button>
     <div id="pick_out" class="result"></div>
   </div>
 
-    <div class="tool-box">
-    <h3>PDF Merger (Requires Library)</h3>
+  <div class="tool-box">
+    <h3>PDF Merger (Note: Client-side merging is complex)</h3>
     <input type="file" id="pdf_in" multiple accept="application/pdf">
     <button onclick="mergePDF()">Merge</button>
-    <div class="result">Note: This is a placeholder as merging PDFs client-side is complex.</div>
+    <div class="result">Note: This is a placeholder. Full PDF merging usually requires a server or advanced library.</div>
   </div>
   
-    <div class="tool-box">
+  <div class="tool-box">
     <h3>Timer</h3>
-    <input id="timer_in" type="number" placeholder="Seconds">
+    <input id="timer_in" type="number" min="1" placeholder="Seconds">
     <button onclick="startTimer()">Start</button>
     <div id="timer_out" class="result"></div>
   </div>
   
-    <div class="tool-box">
+  <div class="tool-box">
     <h3>Stopwatch</h3>
     <div id="sw_out" class="result">0.00s</div>
     <button onclick="swStart()">Start</button>
@@ -335,7 +348,7 @@ function submitQuiz(){
     <button onclick="swReset()">Reset</button>
   </div>
 
-    <div class="tool-box">
+  <div class="tool-box">
     <h3>Notes App (Local Storage)</h3>
     <textarea id="note_in" rows="4" placeholder="Type your notes here..."></textarea>
     <button onclick="saveNote()">Save</button>
@@ -343,7 +356,7 @@ function submitQuiz(){
     <div id="note_out" class="result"></div>
   </div>
 
-    <div class="tool-box">
+  <div class="tool-box">
     <h3>Barcode Generator</h3>
     <input id="barcode_text" placeholder="Enter number (e.g., 123456789012)">
     <button onclick="makeBarcode()">Generate</button>
@@ -352,7 +365,7 @@ function submitQuiz(){
     </div>
   </div>
 
-    <div class="tool-box">
+  <div class="tool-box">
     <h3>Your IP Finder</h3>
     <button onclick="getIP()">Show My IP</button>
     <div id="ip_box" class="result"></div>
@@ -371,6 +384,7 @@ function submitQuiz(){
     <div id="pwd_box" class="result"></div>
   </div>
 </div>
+
 <div id='capital' class='tab-content'>
   <div class='tool-box'>
     <h2>Capital Finder</h2>
@@ -383,30 +397,30 @@ function submitQuiz(){
 <div id='solution' class='tab-content'>
   <div class='tool-box'>
     <h2>Algebra Solver</h2>
-    <textarea id='ai_question' rows='4' placeholder='solve(x+y=10,x-y=2)'></textarea>
+    <textarea id='ai_question' rows='4' placeholder='Example: solve(x+y=10,x-y=2)'></textarea>
     <button onclick='solveAlgebra()'>Solve</button>
     <div id='ai_result' class='result'></div>
   </div>
 </div>
 
 <div id='operations' class='tab-content'>
-  <div class='tool-box'><h3>Odd / Even</h3><input id='oddInput' type='number'><button onclick='oddEven()'>Check</button><div id='oddResult' class='result'></div></div>
+  <div class='tool-box'><h3>Odd / Even</h3><input id='oddInput' type='number' placeholder='Enter a number'><button onclick='oddEven()'>Check</button><div id='oddResult' class='result'></div></div>
 
-  <div class='tool-box'><h3>Calculator</h3><input id='numA' type='number'><select id='opType'><option>+</option><option>-</option><option>*</option><option>/</option></select><input id='numB' type='number'><button onclick='calculateOp()'>Calc</button><div id='calcResult' class='result'></div></div>
+  <div class='tool-box'><h3>Calculator</h3><input id='numA' type='number' placeholder='Number A'><select id='opType'><option>+</option><option>-</option><option>*</option><option>/</option></select><input id='numB' type='number' placeholder='Number B'><button onclick='calculateOp()'>Calc</button><div id='calcResult' class='result'></div></div>
 
   <div class='tool-box'><h3>Number Series</h3><input id='seriesStart' type='number' placeholder='Start'><input id='seriesEnd' type='number' placeholder='End'><button onclick='numberSeries()'>Generate</button><div id='seriesResult' class='result'></div></div>
 
-  <div class='tool-box'><h3>HCF / LCM</h3><input id='multiNums' placeholder='5,10,15'><button onclick='hcfLCM("hcf")'>HCF</button><button onclick='hcfLCM("lcm")'>LCM</button><div id='hcfResult' class='result'></div></div>
+  <div class='tool-box'><h3>HCF / LCM</h3><input id='multiNums' placeholder='Enter numbers (e.g., 5,10,15)'><button onclick='hcfLCM("hcf")'>HCF</button><button onclick='hcfLCM("lcm")'>LCM</button><div id='hcfResult' class='result'></div></div>
 
-  <div class='tool-box'><h3>Roots</h3><input id='rootNum' type='number'><button onclick='sqRoot()'>√</button><button onclick='cubeRoot()'>³√</button><div id='rootResult' class='result'></div></div>
+  <div class='tool-box'><h3>Roots</h3><input id='rootNum' type='number' placeholder='Enter a number'><button onclick='sqRoot()'>√</button><button onclick='cubeRoot()'>³√</button><div id='rootResult' class='result'></div></div>
 
-  <div class='tool-box'><h3>Factorial</h3><input id='factNum' type='number'><button onclick='factorial()'>Find</button><div id='factResult' class='result'></div></div>
+  <div class='tool-box'><h3>Factorial</h3><input id='factNum' type='number' placeholder='Enter a number'><button onclick='factorial()'>Find</button><div id='factResult' class='result'></div></div>
 
-  <div class='tool-box'><h3>Prime Check</h3><input id='primeNum' type='number'><button onclick='primeCheck()'>Check</button><div id='primeResult' class='result'></div></div>
+  <div class='tool-box'><h3>Prime Check</h3><input id='primeNum' type='number' placeholder='Enter a number'><button onclick='primeCheck()'>Check</button><div id='primeResult' class='result'></div></div>
 </div>
 
 <div id='lifetools' class='tab-content'>
-    <div class="tool-box">
+  <div class="tool-box">
     <h3>BMI Calculator</h3>
     <input id="bmi_w" placeholder="Weight (kg)" type='number'>
     <input id="bmi_h" placeholder="Height (cm)" type='number'>
@@ -414,40 +428,40 @@ function submitQuiz(){
     <div id="bmi_out" class="result"></div>
   </div>
 
-  <div class='tool-box'><h3>Advanced Calc</h3><input id='adv_input'><button onclick='calculateAdvanced()'>Calculate</button><div id='adv_result' class='result'></div></div>
+  <div class='tool-box'><h3>Advanced Calculator</h3><input id='adv_input' placeholder='Enter expression (e.g., 2+3*4)'><button onclick='calculateAdvanced()'>Calculate</button><div id='adv_result' class='result'></div></div>
 
-  <div class='tool-box'><h3>Percentage</h3><input id='percent_value' type='number' placeholder='Value'><input id='percent_percent' type='number' placeholder='Total'><button onclick='calcPercentage()'>Calc</button><div id='percent_result' class='result'></div></div>
+  <div class='tool-box'><h3>Percentage Calculator</h3><input id='percent_value' type='number' placeholder='Value'><input id='percent_percent' type='number' placeholder='Total'><button onclick='calcPercentage()'>Calculate Percentage</button><div id='percent_result' class='result'></div></div>
 
-  <div class='tool-box'><h3>Currency</h3><input id='currency_amount' type='number'><select id='currency_type'><option value='inr_to_usd'>INR→USD</option><option value='usd_to_inr'>USD→INR</option></select><button onclick='convertCurrency()'>Convert</button><div id='currency_result' class='result'></div></div>
+  <div class='tool-box'><h3>Currency Converter</h3><input id='currency_amount' type='number' placeholder='Amount'><select id='currency_type'><option value='inr_to_usd'>INR→USD (Approx.)</option><option value='usd_to_inr'>USD→INR (Approx.)</option></select><button onclick='convertCurrency()'>Convert</button><div id='currency_result' class='result'></div></div>
 
-  <div class='tool-box'><h3>Land Price</h3><input id='land_rate' type='number' placeholder='Rate'><input id='land_sqft' type='number' placeholder='Sq. Ft.'><button onclick='calcLand()'>Calc</button><div id='land_result' class='result'></div></div>
+  <div class='tool-box'><h3>Land Price Calculator</h3><input id='land_rate' type='number' placeholder='Rate per Sq. Ft.'><input id='land_sqft' type='number' placeholder='Total Sq. Ft.'><button onclick='calcLand()'>Calculate</button><div id='land_result' class='result'></div></div>
 
-  <div class='tool-box'><h3>Old %</h3><input id='pBase' type='number' placeholder='Base'><input id='pPercent' type='number' placeholder='Percent'><button onclick='calcOldPercent()'>Calc</button><div id='percentResultOld' class='result'></div></div>
+  <div class='tool-box'><h3>What Percent Of (Old % calc)</h3><input id='pBase' type='number' placeholder='Base Number'><input id='pPercent' type='number' placeholder='Percentage (%)'><button onclick='calcOldPercent()'>Calculate</button><div id='percentResultOld' class='result'></div></div>
 
-  <div class='tool-box'><h3>Age</h3><input type='date' id='dob'><button onclick='calcAge()'>Find</button><div id='ageResult' class='result'></div></div>
+  <div class='tool-box'><h3>Age Calculator</h3><input type='date' id='dob'><button onclick='calcAge()'>Find Age</button><div id='ageResult' class='result'></div></div>
 
-  <div class='tool-box'><h3>Unit Convert</h3><input id='unitInput' type='number'><select id='unitType'><option value='km-m'>Km→m</option><option value='m-km'>m→Km</option><option value='kg-g'>Kg→g</option><option value='g-kg'>g→Kg</option><option value='c-f'>C→F</option><option value='f-c'>F→C</option></select><button onclick='convertUnits()'>Convert</button><div id='unitResult' class='result'></div></div>
+  <div class='tool-box'><h3>Unit Converter</h3><input id='unitInput' type='number' placeholder='Value'><select id='unitType'><option value='km-m'>Km→m</option><option value='m-km'>m→Km</option><option value='kg-g'>Kg→g</option><option value='g-kg'>g→Kg</option><option value='c-f'>Celsius→Fahrenheit</option><option value='f-c'>Fahrenheit→Celsius</option></select><button onclick='convertUnits()'>Convert</button><div id='unitResult' class='result'></div></div>
 
-  <div class='tool-box'><h3>₹→$</h3><input id='inrInput' type='number' placeholder='INR Amount'><button onclick='convertMoney()'>Convert</button><div id='currencyResult' class='result'></div></div>
+  <div class='tool-box'><h3>INR to USD Quick Convert (~80)</h3><input id='inrInput' type='number' placeholder='INR Amount'><button onclick='convertMoney()'>Convert</button><div id='currencyResult' class='result'></div></div>
 
-  <div class='tool-box'><h3>EMI</h3><input id='loan' type='number' placeholder='Loan Amt'><input id='rate' type='number' placeholder='Rate %'><input id='months' type='number' placeholder='Months'><button onclick='calcEMI()'>Calculate</button><div id='emiResult' class='result'></div></div>
+  <div class='tool-box'><h3>EMI Calculator</h3><input id='loan' type='number' placeholder='Loan Amount'><input id='rate' type='number' placeholder='Annual Rate %'><input id='months' type='number' placeholder='Number of Months'><button onclick='calcEMI()'>Calculate EMI</button><div id='emiResult' class='result'></div></div>
 
-  <div class='tool-box'><h3>Password</h3><button onclick='generatePass()'>Generate</button><div id='passResult' class='result'></div></div>
+  <div class='tool-box'><h3>Random Password Generator</h3><button onclick='generatePass()'>Generate Password</button><div id='passResult' class='result'></div></div>
 </div>
 
 <div id='quiz' class='tab-content'>
   <div class='tool-box'>
-    <h3>Quiz</h3>
-    <p>1. World wonder?</p>
+    <h3>General Knowledge Quiz</h3>
+    <p>1. Which of these is a World Wonder?</p>
     <select id='q1'><option value='tajmahal'>Taj Mahal</option><option value='eff'>Eiffel Tower</option></select>
 
-    <p>2. Capital of Russia?</p>
+    <p>2. What is the Capital of Russia?</p>
     <select id='q2'><option value='Beijing'>Beijing</option><option value='Moscow'>Moscow</option></select>
 
-    <p>3. President of India?</p>
-    <select id='q3'><option value='droupatimurmu'>Droupadi Murmu</option><option value='modi'>Modi</option></select>
+    <p>3. Who is the current President of India?</p>
+    <select id='q3'><option value='droupatimurmu'>Droupadi Murmu</option><option value='modi'>Narendra Modi</option></select>
 
-    <button onclick='submitQuiz()'>Submit</button>
+    <button onclick='submitQuiz()'>Submit Quiz</button>
     <div id='quizResult' class='result'></div>
   </div>
 </div>
