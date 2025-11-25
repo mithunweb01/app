@@ -3,24 +3,25 @@
 <head>
 <meta charset='UTF-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-<title>Mithun Multi-Tool App - Colorful Upgrade</title>
+<title>Mithun Multi-Tool App - Colourful Upgrade</title>
 
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/algebrite@1.3.1/dist/algebrite.min.js"></script>
 
 <style>
 :root {
-  --bg1: #6a11cb;
-  --bg2: #2575fc;
+  /* SUNSET WARM THEME: Very Colourful */
+  --bg1: #ff5f6d; /* Bright Red-Pink */
+  --bg2: #ffc371; /* Orange-Yellow */
   --card: rgba(255,255,255,0.95);
   --text-dark: #000;
   --text-light: #fff;
-  --accent: #00fff0;
+  --accent: #2196F3; /* Bright Blue for contrast */
 }
 body {
   margin:0;
   background: linear-gradient(135deg, var(--bg1), var(--bg2));
-  font-family: Arial, sans-serif; /* Added sans-serif fallback */
+  font-family: Arial, sans-serif;
   color: var(--text-light);
 }
 /* top nav */
@@ -29,25 +30,26 @@ body {
   gap:10px;
   padding:12px;
   justify-content:center;
-  background: rgba(0,0,0,0.3);
+  background: rgba(0,0,0,0.4); /* Darker transparent background */
   backdrop-filter: blur(5px);
-  position:sticky; /* Makes the tab bar stick to the top */
+  position:sticky;
   top:0;
-  z-index: 1000; /* Ensure it stays above other content */
+  z-index: 1000;
 }
 .tab-btn {
   padding:10px 15px;
   border-radius:12px;
-  background:rgba(255,255,255,0.1);
+  background:rgba(255,255,255,0.2);
   color:white;
   cursor:pointer;
   font-weight:bold;
   border:2px solid var(--accent);
-  transition: all 0.3s; /* Added transition for hover effect */
+  transition: all 0.3s;
 }
-.tab-btn:hover {
+.tab-btn:hover, .tab-btn.active-tab { /* Added active-tab class for styling */
   background:var(--accent);
-  color:black;
+  color:white;
+  box-shadow: 0 0 10px var(--accent);
 }
 .tab-content {
   display:none; padding:20px;
@@ -61,243 +63,126 @@ body {
   padding:15px;
   border-radius:12px;
   margin-bottom:20px;
-  box-shadow:0 4px 15px rgba(0,0,0,0.2);
+  box-shadow:0 8px 20px rgba(0,0,0,0.3); /* Stronger colourful shadow */
 }
 
 input,select,button,textarea {
   padding:10px;
   margin:5px;
   border-radius:8px;
-  border:1px solid #ccc; /* Added border for definition */
+  border:1px solid #ccc;
 }
 button {
   background:var(--accent);
-  color:#000;
+  color:#fff; /* White text on accent button for better contrast */
   font-weight:bold;
   cursor:pointer;
-  border:none; /* Removed default button border */
-  transition: opacity 0.2s; /* Added transition for hover effect */
+  border:none;
+  transition: background-color 0.2s, opacity 0.2s;
 }
-button:hover { opacity:0.8; }
+button:hover { 
+  opacity:0.9; 
+  background-color: #007bb2; 
+}
 
 .result {
   margin-top:10px;
   padding:10px;
-  background:#fff7c4;
+  background:#f0f8ff; /* Lightest blue for result box */
   border-radius:10px;
   color:#000;
   font-weight:bold;
   white-space:pre-wrap;
+  border-left: 5px solid var(--accent); /* Accent line */
 }
 </style>
 
 <script>
-function calcBMI(){let w=parseFloat(bmi_w.value),h=parseFloat(bmi_h.value)/100;if(!w||!h){bmi_out.innerText='Enter valid inputs';return;}bmi_out.innerText='BMI = '+(w/(h*h)).toFixed(2);
-}
+// --- START OF TAB FIX ---
+function openTab(t, element) {
+  // 1. Hide all tab content
+  document.querySelectorAll('.tab-content').forEach(x => x.classList.remove('active'));
+  
+  // 2. Remove active class from all buttons
+  document.querySelectorAll('.tab-btn').forEach(x => x.classList.remove('active-tab'));
 
-function pickName(){let arr=name_list.value.split(',').map(s=>s.trim()).filter(Boolean);if(arr.length===0){pick_out.innerText='Enter names';return;}pick_out.innerText=arr[Math.floor(Math.random()*arr.length)];
-}
-
-let sw=0,swInt;
-function swStart(){clearInterval(swInt);swInt=setInterval(()=>{sw++;sw_out.innerText=(sw/100).toFixed(2)+'s';},10);
-}
-function swStop(){clearInterval(swInt);
-}
-function swReset(){sw=0;sw_out.innerText='0.00s';
-}
-
-let tInt;
-function startTimer(){let t=parseInt(timer_in.value);if(!t)return;clearInterval(tInt);timer_out.innerText=t+'s';tInt=setInterval(()=>{t--;timer_out.innerText=t+'s';if(t<=0){clearInterval(tInt);timer_out.innerText='Time Up!';}},1000);
-}
-
-function saveNote(){localStorage.setItem('mithun_note',note_in.value);note_out.innerText='Saved';
-}
-function loadNote(){note_in.value=localStorage.getItem('mithun_note')||'';note_out.innerText='Loaded';
-}
-
-function upperText(){text_out.value=text_in.value.toUpperCase();
-}
-function lowerText(){text_out.value=text_in.value.toLowerCase();
-}
-function removeSpaces(){text_out.value=text_in.value.replace(/\s+/g,'');
-}
-
-async function mergePDF(){
-  let files=document.getElementById('pdf_in').files;
-  if(files.length<2){alert('Select 2+ PDFs');return;}
-  alert('PDF Merging is a complex task that typically requires a backend server or a large JavaScript library (like PDF-lib) not included here. This function is a placeholder.');
-  // The original code was a simplification and would not produce a correctly merged PDF
-  /*
-  let bufs=[];for(let f of files)bufs.push(await f.arrayBuffer());
-  let merged=new Blob(bufs,{type:"application/pdf"});
-  let a=document.createElement('a');a.href=URL.createObjectURL(merged);a.download='merged.pdf';a.click();
-  */
-}
-
-function makeQR(){
-  let t = document.getElementById('qr_text').value.trim();
-  let qr_box = document.getElementById('qr_box');
-  if(!t){ qr_box.innerHTML = 'Enter text'; return; }
-  let url = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=" + encodeURIComponent(t);
-  qr_box.innerHTML = "<img src='" + url + "' width='200' height='200' alt='QR Code'>";
-}
-
-/* ---------- BARCODE GENERATOR ---------- */
-function makeBarcode(){
-  // Requires the JsBarcode library included in the head
-  let val = barcode_text.value.trim();
-  if(!val){ alert("Enter number"); return; }
-  try {
-    JsBarcode("#barcode_svg", val, { format: "CODE128", displayValue: true });
-    document.getElementById('barcode_box').style.display = 'block';
-  } catch (e) {
-    document.getElementById('barcode_box').innerHTML = "Error: Check console (requires a number or valid barcode format)";
-  }
-}
-
-/* ---------- IP FINDER ---------- */
-function getIP(){
-  fetch("https://api.ipify.org?format=json")
-  .then(r => r.json())
-  .then(d => ip_box.innerHTML = "Your IP: <b>" + d.ip + "</b>")
-  .catch(()=> ip_box.innerHTML = "Error fetching IP");
-}
-
-/* ---------- DEVICE INFO ---------- */
-function getDeviceInfo(){
-  const info = `
-    <b>User Agent:</b> ${navigator.userAgent}<br>
-    <b>Platform:</b> ${navigator.platform}<br>
-    <b>Language:</b> ${navigator.language}<br>
-    <b>Online:</b> ${navigator.onLine}<br>
-    <b>Screen:</b> ${screen.width} × ${screen.height}
-  `;
-  device_box.innerHTML = info;
-}
-
-/* ---------- PASSWORD STRENGTH ---------- */
-function checkPwd(){
-  let pwd = pwd_input.value;
-  if(!pwd){ pwd_box.innerHTML = "Enter password"; return; }
-
-  let score = 0;
-  if(pwd.length >= 8) score++;
-  if(/[A-Z]/.test(pwd)) score++;
-  if(/[0-9]/.test(pwd)) score++;
-  if(/[^A-Za-z0-9]/.test(pwd)) score++;
-
-  const levels = ["Very Weak", "Weak", "Medium", "Strong", "Very Strong"];
-  pwd_box.innerHTML = "Strength: <b>" + levels[score] + "</b>";
-}
-
-function openTab(t){
-  document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active'));
+  // 3. Show the selected tab content
   document.getElementById(t).classList.add('active');
+
+  // 4. Add active class to the clicked button
+  element.classList.add('active-tab');
 }
 
-function similarity(a,b){
-  a=a.toLowerCase(); b=b.toLowerCase();
-  const m=Array.from({length:a.length+1},()=>Array(b.length+1).fill(0));
-  for(let i=0;i<=a.length;i++)m[i][0]=i;
-  for(let j=0;j<=b.length;j++)m[0][j]=j;
-  for(let i=1;i<=a.length;i++){
-    for(let j=1;j<=b.length;j++){
-      const c=a[i-1]===b[j-1]?0:1;
-      m[i][j]=Math.min(m[i-1][j]+1,m[i][j-1]+1,m[i-1][j-1]+c);
-    }
+// Function to set the default tab on page load
+window.onload = function() {
+  // Open the 'home' tab and highlight the first tab button
+  const homeButton = document.querySelector('.tab-btn');
+  if (homeButton) {
+    openTab('home', homeButton);
   }
-  return 1 - m[a.length][b.length]/Math.max(a.length,b.length);
-}
+};
+// --- END OF TAB FIX ---
 
-async function findCapital(){
-  const c=document.getElementById('countryInput').value.trim();
-  const out=document.getElementById('capitalResult');
-  if(!c) return out.innerText='Enter a country';
-  out.innerText='Loading...';
-  try{
-    const r=await fetch('https://restcountries.com/v3.1/all?fields=name,capital,region,population');
-    const d=await r.json();
-    let best=null,score=0;
-    d.forEach(k=>{
-      let s=similarity(c,k.name.common);
-      if(s>score){score=s; best=k;}
-    });
-    out.innerText =
-      "Country: "+best.name.common+
-      "\nCapital: "+(best.capital?best.capital[0]:"None")+
-      "\nRegion: "+best.region+
-      "\nPopulation: "+(best.population ? best.population.toLocaleString() : 'N/A'); // Added check for population
-  } catch { out.innerText='Error fetching data'; }
-}
+// All other original functions (calcBMI, pickName, swStart, etc.) remain here...
+// (Keeping the JS concise by omitting the unchanged functions, but they are necessary in the full file)
 
-function solveAlgebra(){
-  // Requires the Algebrite library included in the head
-  const q=document.getElementById('ai_question').value.trim();
-  const out=document.getElementById('ai_result');
-  if(!q) return out.innerText='Type an equation';
-  try{
-    out.innerText = Algebrite.run(q);
-  }catch(e){ out.innerText='Unable to solve: '+e.message; } // Added error message
-}
-
+function calcBMI(){let w=parseFloat(bmi_w.value),h=parseFloat(bmi_h.value)/100;if(!w||!h){bmi_out.innerText='Enter valid inputs';return;}bmi_out.innerText='BMI = '+(w/(h*h)).toFixed(2);}
+function pickName(){let arr=name_list.value.split(',').map(s=>s.trim()).filter(Boolean);if(arr.length===0){pick_out.innerText='Enter names';return;}pick_out.innerText=arr[Math.floor(Math.random()*arr.length)];}
+let sw=0,swInt;
+function swStart(){clearInterval(swInt);swInt=setInterval(()=>{sw++;sw_out.innerText=(sw/100).toFixed(2)+'s';},10);}
+function swStop(){clearInterval(swInt);}
+function swReset(){sw=0;sw_out.innerText='0.00s';}
+let tInt;
+function startTimer(){let t=parseInt(timer_in.value);if(!t)return;clearInterval(tInt);timer_out.innerText=t+'s';tInt=setInterval(()=>{t--;timer_out.innerText=t+'s';if(t<=0){clearInterval(tInt);timer_out.innerText='Time Up!';}},1000);}
+function saveNote(){localStorage.setItem('mithun_note',note_in.value);note_out.innerText='Saved';}
+function loadNote(){note_in.value=localStorage.getItem('mithun_note')||'';note_out.innerText='Loaded';}
+function upperText(){text_out.value=text_in.value.toUpperCase();}
+function lowerText(){text_out.value=text_in.value.toLowerCase();}
+function removeSpaces(){text_out.value=text_in.value.replace(/\s+/g,'');}
+async function mergePDF(){let files=document.getElementById('pdf_in').files;if(files.length<2){alert('Select 2+ PDFs');return;}alert('PDF Merging is a complex task that typically requires a backend server or a large JavaScript library (like PDF-lib) not included here. This function is a placeholder.');}
+function makeQR(){let t = document.getElementById('qr_text').value.trim();let qr_box = document.getElementById('qr_box');if(!t){ qr_box.innerHTML = 'Enter text'; return; }let url = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=" + encodeURIComponent(t);qr_box.innerHTML = "<img src='" + url + "' width='200' height='200' alt='QR Code'>";}
+function makeBarcode(){let val = barcode_text.value.trim();if(!val){ alert("Enter number"); return; }try {JsBarcode("#barcode_svg", val, { format: "CODE128", displayValue: true });document.getElementById('barcode_box').style.display = 'block';} catch (e) {document.getElementById('barcode_box').innerHTML = "Error: Check console (requires a number or valid barcode format)";}}
+function getIP(){fetch("https://api.ipify.org?format=json").then(r => r.json()).then(d => ip_box.innerHTML = "Your IP: <b>" + d.ip + "</b>").catch(()=> ip_box.innerHTML = "Error fetching IP");}
+function getDeviceInfo(){const info = `<b>User Agent:</b> ${navigator.userAgent}<br><b>Platform:</b> ${navigator.platform}<br><b>Language:</b> ${navigator.language}<br><b>Online:</b> ${navigator.onLine}<br><b>Screen:</b> ${screen.width} × ${screen.height}`;device_box.innerHTML = info;}
+function checkPwd(){let pwd = pwd_input.value;if(!pwd){ pwd_box.innerHTML = "Enter password"; return; }let score = 0;if(pwd.length >= 8) score++;if(/[A-Z]/.test(pwd)) score++;if(/[0-9]/.test(pwd)) score++;if(/[^A-Za-z0-9]/.test(pwd)) score++;const levels = ["Very Weak", "Weak", "Medium", "Strong", "Very Strong"];pwd_box.innerHTML = "Strength: <b>" + levels[score] + "</b>";}
+function similarity(a,b){a=a.toLowerCase(); b=b.toLowerCase();const m=Array.from({length:a.length+1},()=>Array(b.length+1).fill(0));for(let i=0;i<=a.length;i++)m[i][0]=i;for(let j=0;j<=b.length;j++)m[0][j]=j;for(let i=1;i<=a.length;i++){for(let j=1;j<=b.length;j++){const c=a[i-1]===b[j-1]?0:1;m[i][j]=Math.min(m[i-1][j]+1,m[i][j-1]+1,m[i-1][j-1]+c);}}return 1 - m[a.length][b.length]/Math.max(a.length,b.length);}
+async function findCapital(){const c=document.getElementById('countryInput').value.trim();const out=document.getElementById('capitalResult');if(!c) return out.innerText='Enter a country';out.innerText='Loading...';try{const r=await fetch('https://restcountries.com/v3.1/all?fields=name,capital,region,population');const d=await r.json();let best=null,score=0;d.forEach(k=>{let s=similarity(c,k.name.common);if(s>score){score=s; best=k;}});out.innerText ="Country: "+best.name.common+"\nCapital: "+(best.capital?best.capital[0]:"None")+"\nRegion: "+best.region+"\nPopulation: "+(best.population ? best.population.toLocaleString() : 'N/A');} catch { out.innerText='Error fetching data'; }}
+function solveAlgebra(){const q=document.getElementById('ai_question').value.trim();const out=document.getElementById('ai_result');if(!q) return out.innerText='Type an equation';try{out.innerText = Algebrite.run(q);}catch(e){ out.innerText='Unable to solve: '+e.message; }}
 function oddEven(){ let n=document.getElementById('oddInput').value; document.getElementById('oddResult').innerText = (n%2===0?'Even':'Odd'); }
-function calculateOp(){ let a=parseFloat(document.getElementById('numA').value),b=parseFloat(document.getElementById('numB').value),op=document.getElementById('opType').value,r;
-  if(op==='+')r=a+b; if(op==='-')r=a-b; if(op==='*')r=a*b; if(op==='/')r=a/b;
-  document.getElementById('calcResult').innerText='Answer: '+r;
-}
+function calculateOp(){ let a=parseFloat(document.getElementById('numA').value),b=parseFloat(document.getElementById('numB').value),op=document.getElementById('opType').value,r;if(op==='+')r=a+b; if(op==='-')r=a-b; if(op==='*')r=a*b; if(op==='/')r=a/b;document.getElementById('calcResult').innerText='Answer: '+r;}
 function numberSeries(){ let s=parseInt(document.getElementById('seriesStart').value),e=parseInt(document.getElementById('seriesEnd').value),o=''; for(let i=s;i<=e;i++)o+=i+' '; document.getElementById('seriesResult').innerText=o; }
-function hcfLCM(m){
-  let n=document.getElementById('multiNums').value.split(',').map(Number);
-  function g(a,b){return b===0?a:g(b,a%b);}
-  function l(a,b){return(a*b)/g(a,b);}
-  let ans=n[0];
-  for(let i=1;i<n.length;i++) ans=(m==='hcf'?g(ans,n[i]):l(ans,n[i]));
-  document.getElementById('hcfResult').innerText = (m==='hcf'?'HCF = ':'LCM = ')+ans;
-}
+function hcfLCM(m){let n=document.getElementById('multiNums').value.split(',').map(Number);function g(a,b){return b===0?a:g(b,a%b);}function l(a,b){return(a*b)/g(a,b);}let ans=n[0];for(let i=1;i<n.length;i++) ans=(m==='hcf'?g(ans,n[i]):l(ans,n[i]));document.getElementById('hcfResult').innerText = (m==='hcf'?'HCF = ':'LCM = ')+ans;}
 function sqRoot(){ document.getElementById('rootResult').innerText='√ = '+Math.sqrt(document.getElementById('rootNum').value); }
 function cubeRoot(){ document.getElementById('rootResult').innerText='³√ = '+Math.cbrt(document.getElementById('rootNum').value); }
 function factorial(){ let n=parseInt(document.getElementById('factNum').value),f=1; for(let i=1;i<=n;i++)f*=i; document.getElementById('factResult').innerText='Factorial = '+f; }
 function primeCheck(){ let n=parseInt(document.getElementById('primeNum').value); for(let i=2;i<=Math.sqrt(n);i++) if(n%i===0) return document.getElementById('primeResult').innerText='Not Prime'; document.getElementById('primeResult').innerText='Prime';}
-
 function calculateAdvanced(){ try{document.getElementById('adv_result').innerText='Result: '+eval(document.getElementById('adv_input').value);}catch{document.getElementById('adv_result').innerText='Invalid Expression';}}
 function calcPercentage(){let v=parseFloat(document.getElementById('percent_value').value),t=parseFloat(document.getElementById('percent_percent').value); document.getElementById('percent_result').innerText = (v/t*100).toFixed(2)+'%';}
 function convertCurrency(){const m=document.getElementById('currency_type').value,a=parseFloat(document.getElementById('currency_amount').value),r=83; document.getElementById('currency_result').innerText = (m==='inr_to_usd'?'USD: '+(a/r).toFixed(2):'INR: '+(a*r).toFixed(2));}
 function calcLand(){document.getElementById('land_result').innerText='Total = ₹'+(document.getElementById('land_rate').value*document.getElementById('land_sqft').value).toLocaleString();}
 function calcOldPercent(){document.getElementById('percentResultOld').innerText='Result = '+(document.getElementById('pBase').value*document.getElementById('pPercent').value/100);}
 function calcAge(){let b=new Date(document.getElementById('dob').value),n=new Date(); document.getElementById('ageResult').innerText='Age: '+(n.getFullYear()-b.getFullYear());}
-function convertUnits(){
-  let v=parseFloat(document.getElementById('unitInput').value),t=document.getElementById('unitType').value,res='';
-  if(t==='km-m')res=v*1000+' m';
-  if(t==='m-km')res=v/1000+' km';
-  if(t==='kg-g')res=v*1000+' g';
-  if(t==='g-kg')res=v/1000+' kg';
-  if(t==='c-f')res=v*9/5+32+' °F';
-  if(t==='f-c')res=(v-32)*5/9+' °C';
-  document.getElementById('unitResult').innerText=res;
-}
+function convertUnits(){let v=parseFloat(document.getElementById('unitInput').value),t=document.getElementById('unitType').value,res='';if(t==='km-m')res=v*1000+' m';if(t==='m-km')res=v/1000+' km';if(t==='kg-g')res=v*1000+' g';if(t==='g-kg')res=v/1000+' kg';if(t==='c-f')res=v*9/5+32+' °F';if(t==='f-c')res=(v-32)*5/9+' °C';document.getElementById('unitResult').innerText=res;}
 function convertMoney(){document.getElementById('currencyResult').innerText='USD ≈ '+(document.getElementById('inrInput').value/80).toFixed(2);}
 function calcEMI(){let p=parseFloat(document.getElementById('loan').value),r=document.getElementById('rate').value/1200,n=document.getElementById('months').value; document.getElementById('emiResult').innerText='EMI = ₹'+(p*r*((1+r)**n)/(((1+r)**n)-1)).toFixed(2);}
 function generatePass(){let c='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%',p=''; for(let i=0;i<10;i++)p+=c[Math.floor(Math.random()*c.length)]; document.getElementById('passResult').innerText=p;}
-function submitQuiz(){
-  let s=0; if(document.getElementById('q1').value==='tajmahal')s++; if(document.getElementById('q2').value==='Moscow')s++; if(document.getElementById('q3').value==='droupatimurmu')s++;
-  document.getElementById('quizResult').innerText='Score: '+s+'/3';
-}
+function submitQuiz(){let s=0; if(document.getElementById('q1').value==='tajmahal')s++; if(document.getElementById('q2').value==='Moscow')s++; if(document.getElementById('q3').value==='droupatimurmu')s++;document.getElementById('quizResult').innerText='Score: '+s+'/3';}
 </script>
 
 </head>
 <body>
 
 <div class='tabs'>
-  <div class='tab-btn' onclick="openTab('home')">Home</div>
-  <div class='tab-btn' onclick="openTab('smarttools')">Smart Tools</div>
-  <div class='tab-btn' onclick="openTab('capital')">Capital Finder</div>
-  <div class='tab-btn' onclick="openTab('solution')">Algebra Solver</div>
-  <div class='tab-btn' onclick="openTab('operations')">Operations</div>
-  <div class='tab-btn' onclick="openTab('lifetools')">Life Tools</div>
-  <div class='tab-btn' onclick="openTab('quiz')">Quiz</div>
+  <div class='tab-btn' onclick="openTab('home', this)">Home</div>
+  <div class='tab-btn' onclick="openTab('smarttools', this)">Smart Tools</div>
+  <div class='tab-btn' onclick="openTab('capital', this)">Capital Finder</div>
+  <div class='tab-btn' onclick="openTab('solution', this)">Algebra Solver</div>
+  <div class='tab-btn' onclick="openTab('operations', this)">Operations</div>
+  <div class='tab-btn' onclick="openTab('lifetools', this)">Life Tools</div>
+  <div class='tab-btn' onclick="openTab('quiz', this)">Quiz</div>
 </div>
 
-<div id='home' class='tab-content active'>
+<div id='home' class='tab-content'>
   <h1>Welcome Mithun 👋</h1>
   <div class="tool-box">
     <h3>Text Tools</h3>
