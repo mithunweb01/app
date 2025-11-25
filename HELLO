@@ -1,0 +1,91 @@
+function openTab(t){
+  document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active'));
+  document.getElementById(t).classList.add('active');
+}
+
+function similarity(a,b){
+  a=a.toLowerCase(); b=b.toLowerCase();
+  const m=Array.from({length:a.length+1},()=>Array(b.length+1).fill(0));
+  for(let i=0;i<=a.length;i++)m[i][0]=i;
+  for(let j=0;j<=b.length;j++)m[0][j]=j;
+  for(let i=1;i<=a.length;i++){
+    for(let j=1;j<=b.length;j++){
+      const c=a[i-1]===b[j-1]?0:1;
+      m[i][j]=Math.min(m[i-1][j]+1,m[i][j-1]+1,m[i-1][j-1]+c);
+    }
+  }
+  return 1 - m[a.length][b.length]/Math.max(a.length,b.length);
+}
+
+async function findCapital(){
+  const c=document.getElementById('countryInput').value.trim();
+  const out=document.getElementById('capitalResult');
+  if(!c) return out.innerText='Enter a country';
+  out.innerText='Loading...';
+  try{
+    const r=await fetch('https://restcountries.com/v3.1/all?fields=name,capital,region,population');
+    const d=await r.json();
+    let best=null,score=0;
+    d.forEach(k=>{
+      let s=similarity(c,k.name.common);
+      if(s>score){score=s; best=k;}
+    });
+    out.innerText =
+      "Country: "+best.name.common+
+      "\nCapital: "+(best.capital?best.capital[0]:"None")+
+      "\nRegion: "+best.region+
+      "\nPopulation: "+best.population.toLocaleString();
+  } catch { out.innerText='Error fetching data'; }
+}
+
+function solveAlgebra(){
+  const q=document.getElementById('ai_question').value.trim();
+  const out=document.getElementById('ai_result');
+  if(!q) return out.innerText='Type an equation';
+  try{
+    out.innerText = Algebrite.run(q);
+  }catch{ out.innerText='Unable to solve'; }
+}
+
+function oddEven(){ let n=oddInput.value; oddResult.innerText = (n%2===0?'Even':'Odd'); }
+function calculateOp(){ let a=parseFloat(numA.value),b=parseFloat(numB.value),op=opType.value,r;
+  if(op==='+')r=a+b; if(op==='-')r=a-b; if(op==='*')r=a*b; if(op==='/')r=a/b;
+  calcResult.innerText='Answer: '+r;
+}
+function numberSeries(){ let s=parseInt(seriesStart.value),e=parseInt(seriesEnd.value),o=''; for(let i=s;i<=e;i++)o+=i+' '; seriesResult.innerText=o; }
+function hcfLCM(m){
+  let n=multiNums.value.split(',').map(Number);
+  function g(a,b){return b===0?a:g(b,a%b);}
+  function l(a,b){return(a*b)/g(a,b);}
+  let ans=n[0];
+  for(let i=1;i<n.length;i++) ans=(m==='hcf'?g(ans,n[i]):l(ans,n[i]));
+  hcfResult.innerText = (m==='hcf'?'HCF = ':'LCM = ')+ans;
+}
+function sqRoot(){ rootResult.innerText='√ = '+Math.sqrt(rootNum.value); }
+function cubeRoot(){ rootResult.innerText='³√ = '+Math.cbrt(rootNum.value); }
+function factorial(){ let n=parseInt(factNum.value),f=1; for(let i=1;i<=n;i++)f*=i; factResult.innerText='Factorial = '+f; }
+function primeCheck(){ let n=parseInt(primeNum.value); for(let i=2;i<=Math.sqrt(n);i++) if(n%i===0) return primeResult.innerText='Not Prime'; primeResult.innerText='Prime';}
+
+function calculateAdvanced(){ try{adv_result.innerText='Result: '+eval(adv_input.value);}catch{adv_result.innerText='Invalid Expression';}}
+function calcPercentage(){let v=parseFloat(percent_value.value),t=parseFloat(percent_percent.value); percent_result.innerText = (v/t*100).toFixed(2)+'%';}
+function convertCurrency(){const m=currency_type.value,a=parseFloat(currency_amount.value),r=83; currency_result.innerText = (m==='inr_to_usd'?'USD: '+(a/r).toFixed(2):'INR: '+(a*r).toFixed(2));}
+function calcLand(){land_result.innerText='Total = ₹'+(land_rate.value*land_sqft.value).toLocaleString();}
+function calcOldPercent(){percentResultOld.innerText='Result = '+(pBase.value*pPercent.value/100);}
+function calcAge(){let b=new Date(dob.value),n=new Date(); ageResult.innerText='Age: '+(n.getFullYear()-b.getFullYear());}
+function convertUnits(){
+  let v=parseFloat(unitInput.value),t=unitType.value,res='';
+  if(t==='km-m')res=v*1000+' m';
+  if(t==='m-km')res=v/1000+' km';
+  if(t==='kg-g')res=v*1000+' g';
+  if(t==='g-kg')res=v/1000+' kg';
+  if(t==='c-f')res=v*9/5+32+' °F';
+  if(t==='f-c')res=(v-32)*5/9+' °C';
+  unitResult.innerText=res;
+}
+function convertMoney(){currencyResult.innerText='USD ≈ '+(inrInput.value/80).toFixed(2);}
+function calcEMI(){let p=parseFloat(loan.value),r=rate.value/1200,n=months.value; emiResult.innerText='EMI = ₹'+(p*r*((1+r)**n)/(((1+r)**n)-1)).toFixed(2);}
+function generatePass(){let c='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%',p=''; for(let i=0;i<10;i++)p+=c[Math.floor(Math.random()*c.length)]; passResult.innerText=p;}
+function submitQuiz(){
+  let s=0; if(q1.value==='tajmahal')s++; if(q2.value==='Moscow')s++; if(q3.value==='droupatimurmu')s++;
+  quizResult.innerText='Score: '+s+'/3';
+}
