@@ -85,6 +85,78 @@ button:hover { opacity:0.8; }
 </style>
 
 <script>
+  function calcBMI(){let w=parseFloat(bmi_w.value),h=parseFloat(bmi_h.value)/100;if(!w||!h){bmi_out.innerText='Enter valid inputs';return;}bmi_out.innerText='BMI = '+(w/(h*h)).toFixed(2);}
+
+function pickName(){let arr=name_list.value.split(',').map(s=>s.trim()).filter(Boolean);if(arr.length===0){pick_out.innerText='Enter names';return;}pick_out.innerText=arr[Math.floor(Math.random()*arr.length)];}
+
+let sw=0,swInt;
+function swStart(){clearInterval(swInt);swInt=setInterval(()=>{sw++;sw_out.innerText=(sw/100).toFixed(2)+'s';},10);}
+function swStop(){clearInterval(swInt);}
+function swReset(){sw=0;sw_out.innerText='0.00s';}
+
+let tInt;
+function startTimer(){let t=parseInt(timer_in.value);if(!t)return;clearInterval(tInt);timer_out.innerText=t+'s';tInt=setInterval(()=>{t--;timer_out.innerText=t+'s';if(t<=0)clearInterval(tInt);},1000);}
+
+function saveNote(){localStorage.setItem('mithun_note',note_in.value);note_out.innerText='Saved';}
+function loadNote(){note_in.value=localStorage.getItem('mithun_note')||'';note_out.innerText='Loaded';}
+
+function upperText(){text_out.value=text_in.value.toUpperCase();}
+function lowerText(){text_out.value=text_in.value.toLowerCase();}
+function removeSpaces(){text_out.value=text_in.value.replace(/\s+/g,'');}
+
+async function mergePDF(){let files=pdf_in.files;if(files.length<2){alert('Select 2+ PDFs');return;}let bufs=[];for(let f of files)bufs.push(await f.arrayBuffer());let merged=new Blob(bufs,{type:"application/pdf"});let a=document.createElement('a');a.href=URL.createObjectURL(merged);a.download='merged.pdf';a.click();}
+
+function makeQR(){let t=qr_text.value.trim();if(!t){qr_box.innerHTML='Enter text';return;}let url="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data="+encodeURIComponent(t);qr_box.innerHTML="<img src='"+url+"' width='200' height='200'>";}
+/* ---------- QR CODE MAKER ---------- */
+function makeQR(){
+  let t = qr_text.value.trim();
+  if(!t){ qr_box.innerHTML = 'Enter text'; return; }
+  let url = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=" + encodeURIComponent(t);
+  qr_box.innerHTML = "<img src='" + url + "' width='200' height='200'>";
+}
+
+/* ---------- BARCODE GENERATOR ---------- */
+function makeBarcode(){
+  let val = barcode_text.value.trim();
+  if(!val){ alert("Enter number"); return; }
+  JsBarcode("#barcode_box", val, { format: "CODE128" });
+}
+
+/* ---------- IP FINDER ---------- */
+function getIP(){
+  fetch("https://api.ipify.org?format=json")
+  .then(r => r.json())
+  .then(d => ip_box.innerHTML = "Your IP: <b>" + d.ip + "</b>")
+  .catch(()=> ip_box.innerHTML = "Error fetching IP");
+}
+
+/* ---------- DEVICE INFO ---------- */
+function getDeviceInfo(){
+  const info = `
+    <b>User Agent:</b> ${navigator.userAgent}<br>
+    <b>Platform:</b> ${navigator.platform}<br>
+    <b>Language:</b> ${navigator.language}<br>
+    <b>Online:</b> ${navigator.onLine}<br>
+    <b>Screen:</b> ${screen.width} × ${screen.height}
+  `;
+  device_box.innerHTML = info;
+}
+
+/* ---------- PASSWORD STRENGTH ---------- */
+function checkPwd(){
+  let pwd = pwd_input.value;
+  if(!pwd){ pwd_box.innerHTML = "Enter password"; return; }
+
+  let score = 0;
+  if(pwd.length >= 8) score++;
+  if(/[A-Z]/.test(pwd)) score++;
+  if(/[0-9]/.test(pwd)) score++;
+  if(/[^A-Za-z0-9]/.test(pwd)) score++;
+
+  const levels = ["Very Weak", "Weak", "Medium", "Strong", "Very Strong"];
+  pwd_box.innerHTML = "Strength: <b>" + levels[score] + "</b>";
+}
+
 function openTab(t){
   document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active'));
   document.getElementById(t).classList.add('active');
@@ -188,11 +260,119 @@ function submitQuiz(){
   <div class='tab-btn' onclick="openTab('operations')">Operations</div>
   <div class='tab-btn' onclick="openTab('lifetools')">Life Tools</div>
   <div class='tab-btn' onclick="openTab('quiz')">Quiz</div>
+  <div class ='tab-btn' onclick="openTab('smarttools')>smarttools</div>
 </div>
 
 <div id='home' class='tab-content active'>
   <h1>Welcome Mithun 👋</h1>
 </div>
+  <div id="smarttools" class="tab-content">
+
+  <div class="tool-box">
+    <h3>BMI Calculator</h3>
+    <input id="bmi_w" placeholder="Weight (kg)">
+    <input id="bmi_h" placeholder="Height (cm)">
+    <button onclick="calcBMI()">Calculate</button>
+    <div id="bmi_out" class="result"></div>
+  </div>
+
+  <div class="tool-box">
+    <h3>Random Name Picker</h3>
+    <textarea id="name_list" placeholder="Names separated by commas"></textarea>
+    <button onclick="pickName()">Pick</button>
+    <div id="pick_out" class="result"></div>
+  </div>
+
+  <div class="tool-box">
+    <h3>Stopwatch</h3>
+    <div id="sw_out" class="result">0.00s</div>
+    <button onclick="swStart()">Start</button>
+    <button onclick="swStop()">Stop</button>
+    <button onclick="swReset()">Reset</button>
+  </div>
+
+  <div class="tool-box">
+    <h3>Timer</h3>
+    <input id="timer_in" placeholder="Seconds">
+    <button onclick="startTimer()">Start</button>
+    <div id="timer_out" class="result"></div>
+  </div>
+
+  <div class="tool-box">
+    <h3>Notes App</h3>
+    <textarea id="note_in"></textarea>
+    <button onclick="saveNote()">Save</button>
+    <button onclick="loadNote()">Load</button>
+    <div id="note_out" class="result"></div>
+  </div>
+
+  <div class="tool-box">
+    <h3>Text Tools</h3>
+    <textarea id="text_in"></textarea>
+    <button onclick="upperText()">UPPERCASE</button>
+    <button onclick="lowerText()">lowercase</button>
+    <button onclick="removeSpaces()">Remove Spaces</button>
+    <textarea id="text_out" class="result"></textarea>
+  </div>
+
+  <div class="tool-box">
+    <h3>PDF Merge</h3>
+    <input type="file" id="pdf_in" multiple accept="application/pdf">
+    <button onclick="mergePDF()">Merge</button>
+  </div>
+
+  <div class="tool-box">
+    <h3>QR Code Maker</h3>
+    <input id="qr_text" placeholder="Enter text or URL">
+    <button onclick="makeQR()">Generate</button>
+    <div id="qr_box" class="result" style="text-align:center;"></div>
+  </div>
+    <!-- ================= SMART TOOLS TAB ================= -->
+<div id="smarttools" class="tab-content">
+  
+  <!-- QR CODE MAKER -->
+  <div class="tool-box">
+    <h3>QR Code Maker</h3>
+    <input id="qr_text" placeholder="Enter text or URL">
+    <button onclick="makeQR()">Generate</button>
+    <div id="qr_box" class="result" style="text-align:center;"></div>
+  </div>
+
+  <!-- BARCODE GENERATOR -->
+  <div class="tool-box">
+    <h3>Barcode Generator</h3>
+    <input id="barcode_text" placeholder="Enter number">
+    <button onclick="makeBarcode()">Generate</button>
+    <svg id="barcode_box"></svg>
+  </div>
+
+  <!-- IP FINDER -->
+  <div class="tool-box">
+    <h3>Your IP Finder</h3>
+    <button onclick="getIP()">Show My IP</button>
+    <div id="ip_box" class="result"></div>
+  </div>
+
+  <!-- DEVICE INFO -->
+  <div class="tool-box">
+    <h3>Device Info</h3>
+    <button onclick="getDeviceInfo()">Show Device Info</button>
+    <div id="device_box" class="result"></div>
+  </div>
+
+  <!-- PASSWORD STRENGTH CHECKER -->
+  <div class="tool-box">
+    <h3>Password Strength Checker</h3>
+    <input id="pwd_input" type="password" placeholder="Enter password">
+    <button onclick="checkPwd()">Check</button>
+    <div id="pwd_box" class="result"></div>
+  </div>
+
+</div>
+
+
+</div>
+
 
 <div id='capital' class='tab-content'>
   <div class='tool-box'>
