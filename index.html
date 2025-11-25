@@ -3,7 +3,7 @@
 <head>
 <meta charset='UTF-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-<title>Mithun Multi-Tool App - Colourful Upgrade</title>
+<title>Mithun Multi-Tool App</title>
 
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/algebrite@1.3.1/dist/algebrite.min.js"></script>
@@ -98,7 +98,6 @@ button:hover {
 </style>
 
 <script>
-// --- START OF TAB FIX ---
 function openTab(t, element) {
   // 1. Hide all tab content
   document.querySelectorAll('.tab-content').forEach(x => x.classList.remove('active'));
@@ -113,19 +112,19 @@ function openTab(t, element) {
   element.classList.add('active-tab');
 }
 
-// Function to set the default tab on page load
+// Function to set the default tab on page load (Fix for tab not opening on load)
 window.onload = function() {
-  // Open the 'home' tab and highlight the first tab button
-  const homeButton = document.querySelector('.tab-btn');
+  const homeTabId = 'home';
+  // Select the 'home' tab button element
+  const homeButton = document.querySelector(`.tab-btn[onclick*="${homeTabId}"]`);
+  
   if (homeButton) {
-    openTab('home', homeButton);
+    // Open the 'home' tab content and highlight the button
+    openTab(homeTabId, homeButton);
   }
 };
-// --- END OF TAB FIX ---
 
-// All other original functions (calcBMI, pickName, swStart, etc.) remain here...
-// (Keeping the JS concise by omitting the unchanged functions, but they are necessary in the full file)
-
+// --- START: All other tool functions are included below ---
 function calcBMI(){let w=parseFloat(bmi_w.value),h=parseFloat(bmi_h.value)/100;if(!w||!h){bmi_out.innerText='Enter valid inputs';return;}bmi_out.innerText='BMI = '+(w/(h*h)).toFixed(2);}
 function pickName(){let arr=name_list.value.split(',').map(s=>s.trim()).filter(Boolean);if(arr.length===0){pick_out.innerText='Enter names';return;}pick_out.innerText=arr[Math.floor(Math.random()*arr.length)];}
 let sw=0,swInt;
@@ -167,13 +166,14 @@ function convertMoney(){document.getElementById('currencyResult').innerText='USD
 function calcEMI(){let p=parseFloat(document.getElementById('loan').value),r=document.getElementById('rate').value/1200,n=document.getElementById('months').value; document.getElementById('emiResult').innerText='EMI = ₹'+(p*r*((1+r)**n)/(((1+r)**n)-1)).toFixed(2);}
 function generatePass(){let c='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%',p=''; for(let i=0;i<10;i++)p+=c[Math.floor(Math.random()*c.length)]; document.getElementById('passResult').innerText=p;}
 function submitQuiz(){let s=0; if(document.getElementById('q1').value==='tajmahal')s++; if(document.getElementById('q2').value==='Moscow')s++; if(document.getElementById('q3').value==='droupatimurmu')s++;document.getElementById('quizResult').innerText='Score: '+s+'/3';}
+// --- END: All other tool functions are included above ---
 </script>
 
 </head>
 <body>
 
 <div class='tabs'>
-  <div class='tab-btn' onclick="openTab('home', this)">Home</div>
+    <div class='tab-btn' onclick="openTab('home', this)">Home</div>
   <div class='tab-btn' onclick="openTab('smarttools', this)">Smart Tools</div>
   <div class='tab-btn' onclick="openTab('capital', this)">Capital Finder</div>
   <div class='tab-btn' onclick="openTab('solution', this)">Algebra Solver</div>
@@ -285,6 +285,7 @@ function submitQuiz(){let s=0; if(document.getElementById('q1').value==='tajmaha
     <textarea id='ai_question' rows='4' placeholder='Example: solve(x+y=10,x-y=2)'></textarea>
     <button onclick='solveAlgebra()'>Solve</button>
     <div id='ai_result' class='result'></div>
+    <p class="result">Uses the Algebrite library for symbolic math.</p>
   </div>
 </div>
 
