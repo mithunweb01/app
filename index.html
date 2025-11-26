@@ -7,7 +7,6 @@
 
 <!-- External Libraries -->
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/algebrite@1.3.1/dist/algebrite.min.js"></script>
 
 <style>
 :root {
@@ -48,10 +47,10 @@ body {
   background:var(--accent);
 }
 
-/* Content */
 .tab-content{ display:none; padding:20px; }
 .active{ display:block; }
 
+/* Cards */
 .tool-box{
   background:var(--card);
   color:var(--text-dark);
@@ -82,7 +81,7 @@ button{
   white-space:pre-wrap;
 }
 
-/* Life Tools Sub-tab Buttons */
+/* Life tools */
 .life-grid{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
@@ -102,19 +101,14 @@ button{
   background:var(--accent);
   color:white;
 }
-
-/* Hidden sub-pages */
 .life-subtab{ display:none; }
 .life-subtab.active-sub{ display:block; }
-
-.flag-img{
-  width:120px; border-radius:10px; margin-top:10px;
-}
 </style>
 
 </head>
 <body>
 
+<!-- NAV TABS -->
 <div class="tabs">
   <div class="tab-btn" onclick="openTab('home',this)">Home</div>
   <div class="tab-btn" onclick="openTab('smart',this)">Smart Tools</div>
@@ -127,7 +121,7 @@ button{
 </div>
 
 <!-- HOME -->
-<div id="home" class="tab-content">
+<div id="home" class="tab-content active">
   <h1>Welcome Mithun 👋</h1>
   <div class="tool-box">
     <h3>Text Tools</h3>
@@ -175,17 +169,44 @@ button{
     <button onclick="checkPwd()">Check</button>
     <div id="pwd_box" class="result"></div>
   </div>
-
 </div>
 
 <!-- CAPITAL FINDER -->
 <div id="capital" class="tab-content">
   <h2>Capital Finder</h2>
-
   <div class="tool-box">
     <input id="country_in" placeholder="Enter country">
     <button onclick="findCapital()">Find</button>
     <div id="capital_out" class="result"></div>
+  </div>
+</div>
+
+<!-- ALGEBRA SOLVER -->
+<div id="algebra" class="tab-content">
+  <h2>Algebra Solver</h2>
+  <div class="tool-box">
+    <input id="eq_in" placeholder="Enter equation (2x+3=11)">
+    <button onclick="solveEq()">Solve</button>
+    <div id="eq_out" class="result"></div>
+  </div>
+</div>
+
+<!-- OPERATIONS -->
+<div id="operations" class="tab-content">
+  <h2>Number Operations</h2>
+
+  <div class="tool-box">
+    <h3>Prime Checker</h3>
+    <input id="prime_in">
+    <button onclick="isPrimeCheck()">Check</button>
+    <div id="prime_out" class="result"></div>
+  </div>
+
+  <div class="tool-box">
+    <h3>Factorial</h3>
+    <input id="fact_in">
+    <button onclick="fact()">Find</button>
+    <div id="fact_out" class="result"></div>
   </div>
 </div>
 
@@ -236,7 +257,7 @@ button{
     </div>
   </div>
 
-  <!-- UNIT CONVERT -->
+  <!-- UNIT -->
   <div id="unit" class="life-subtab">
     <div class="tool-box">
       <h3>Unit Convert (m ↔ cm)</h3>
@@ -250,7 +271,7 @@ button{
     </div>
   </div>
 
-  <!-- SQUARE ROOT / CUBE ROOT -->
+  <!-- ROOT -->
   <div id="square" class="life-subtab">
     <div class="tool-box">
       <h3>Square / Cube Root</h3>
@@ -263,14 +284,13 @@ button{
   <!-- PERCENTAGE -->
   <div id="percent" class="life-subtab">
     <div class="tool-box">
-      <h3>Percentage Finder</h3>
+      <h3>Percentage</h3>
       <input id="percent_a" placeholder="Value">
       <input id="percent_b" placeholder="Total">
       <button onclick="calcPercent()">Find</button>
       <div id="percent_out" class="result"></div>
     </div>
   </div>
-
 </div>
 
 <!-- WEATHER -->
@@ -291,299 +311,168 @@ button{
   </div>
 </div>
 
-<!-- PART 2 (JS FUNCTIONS) WILL COME NEXT -->
+<!-- QUIZ -->
+<div id="quiz" class="tab-content">
+  <h2>Quiz</h2>
+  <div class="tool-box">
+    <h3>Math Quiz</h3>
+    <button onclick="startQuiz()">Start Quiz</button>
+    <div id="quiz_box" class="result"></div>
+  </div>
+</div>
+
+<!-- JS -->
 <script>
-// ---------------------- SHOW SECTIONS -----------------------
-function showSection(id) {
-  document.querySelectorAll(".section").forEach(s => s.style.display = "none");
-  document.getElementById(id).style.display = "block";
+
+/* TAB SWITCH */
+function openTab(id, btn){
+  document.querySelectorAll(".tab-content").forEach(t=>t.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+
+  document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active-tab"));
+  btn.classList.add("active-tab");
 }
 
-// ---------------------- LIFE TOOLS SUB-PAGES -----------------------
-function showLife(tool) {
-  let html = "";
-
-  if (tool === "ageTool") {
-    html = `
-      <div class="tool-card">
-        <h3>Age Calculator</h3>
-        <input type="date" id="dob">
-        <button class="action" onclick="calcAge()">Calculate</button>
-        <div id="ageResult" class="result-box"></div>
-      </div>`;
-  }
-
-  if (tool === "bmiTool") {
-    html = `
-      <div class="tool-card">
-        <h3>BMI Calculator</h3>
-        <input type="number" id="height" placeholder="Height in cm">
-        <input type="number" id="weight" placeholder="Weight in kg">
-        <button class="action" onclick="calcBMI()">Calculate</button>
-        <div id="bmiResult" class="result-box"></div>
-      </div>`;
-  }
-
-  if (tool === "emiTool") {
-    html = `
-      <div class="tool-card">
-        <h3>EMI Calculator</h3>
-        <input type="number" id="loan" placeholder="Loan Amount">
-        <input type="number" id="rate" placeholder="Interest (%)">
-        <input type="number" id="months" placeholder="Months">
-        <button class="action" onclick="calcEMI()">Calculate</button>
-        <div id="emiResult" class="result-box"></div>
-      </div>`;
-  }
-
-  if (tool === "unitTool") {
-    html = `
-      <div class="tool-card">
-        <h3>Unit Converter (km ↔ miles)</h3>
-        <input type="number" id="km" placeholder="Kilometers">
-        <button class="action" onclick="kmToMiles()">Convert</button>
-        <div id="unitResult" class="result-box"></div>
-      </div>`;
-  }
-
-  if (tool === "expenseTool") {
-    html = `
-      <div class="tool-card">
-        <h3>Expense Tracker</h3>
-        <input type="text" id="expName" placeholder="Item">
-        <input type="number" id="expAmt" placeholder="Amount">
-        <button class="action" onclick="addExpense()">Add</button>
-        <div id="expList" class="result-box"></div>
-      </div>`;
-  }
-
-  if (tool === "passGenTool") {
-    html = `
-      <div class="tool-card">
-        <h3>Password Generator</h3>
-        <input type="number" id="passLen" placeholder="Length (8–20)">
-        <button class="action" onclick="genPassword()">Generate</button>
-        <div id="genPassResult" class="result-box"></div>
-      </div>`;
-  }
-
-  if (tool === "rootTool") {
-    html = `
-      <div class="tool-card">
-        <h3>Square & Cube Root Finder</h3>
-        <input type="number" id="rootNum" placeholder="Enter number">
-        <button class="action" onclick="calcRoots()">Calculate</button>
-        <div id="rootResult" class="result-box"></div>
-      </div>`;
-  }
-
-  document.getElementById("lifeContent").innerHTML = html;
+/* LIFE SUB-TABS */
+function openLife(id){
+  document.querySelectorAll(".life-subtab").forEach(s=>s.classList.remove("active-sub"));
+  document.getElementById(id).classList.add("active-sub");
 }
 
-// ---------------------- LIFE TOOL FUNCTIONS -----------------------
-function calcAge() {
-  let dob = new Date(document.getElementById("dob").value);
-  let diff = Date.now() - dob.getTime();
-  let age = new Date(diff).getUTCFullYear() - 1970;
-  document.getElementById("ageResult").innerHTML = "Age: " + age;
+/* TEXT TOOLS */
+function upperText(){ text_out.value = text_in.value.toUpperCase(); }
+function lowerText(){ text_out.value = text_in.value.toLowerCase(); }
+function removeSpaces(){ text_out.value = text_in.value.split(" ").join(""); }
+
+/* SMART TOOLS */
+function makeQR(){
+  let t = qr_text.value;
+  qr_box.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${t}">`;
 }
-
-function calcBMI() {
-  let h = document.getElementById("height").value / 100;
-  let w = document.getElementById("weight").value;
-  let bmi = (w / (h * h)).toFixed(2);
-  document.getElementById("bmiResult").innerHTML = "BMI: " + bmi;
+function makeBarcode(){
+  JsBarcode("#barcode_svg", barcode_text.value);
 }
-
-function calcEMI() {
-  let P = document.getElementById("loan").value;
-  let R = document.getElementById("rate").value / 1200;
-  let N = document.getElementById("months").value;
-
-  let emi = P * R * (Math.pow(1 + R, N)) / (Math.pow(1 + R, N) - 1);
-  document.getElementById("emiResult").innerHTML = "EMI: ₹" + emi.toFixed(2);
+async function getIP(){
+  let d = await fetch("https://api.ipify.org?format=json").then(r=>r.json());
+  ip_box.innerHTML = d.ip;
 }
-
-function kmToMiles() {
-  let km = document.getElementById("km").value;
-  document.getElementById("unitResult").innerHTML =
-    `${km} km = ${(km * 0.621371).toFixed(2)} miles`;
+function getDeviceInfo(){
+  device_box.innerHTML = navigator.userAgent;
 }
-
-let expenses = [];
-function addExpense() {
-  let name = document.getElementById("expName").value;
-  let amt = Number(document.getElementById("expAmt").value);
-  expenses.push({ name, amt });
-
-  let html = expenses.map(e => `${e.name}: ₹${e.amt}`).join("<br>");
-  document.getElementById("expList").innerHTML = html;
-}
-
-function genPassword() {
-  let len = document.getElementById("passLen").value;
-  let chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%";
-  let pass = "";
-  for (let i = 0; i < len; i++) pass += chars[Math.floor(Math.random() * chars.length)];
-
-  document.getElementById("genPassResult").innerHTML = pass;
-}
-
-function calcRoots() {
-  let n = document.getElementById("rootNum").value;
-  document.getElementById("rootResult").innerHTML =
-    `Square Root: ${Math.sqrt(n).toFixed(4)}<br>Cube Root: ${Math.cbrt(n).toFixed(4)}`;
-}
-
-// ---------------------- SMART TOOLS -----------------------
-function generateQR() {
-  let t = document.getElementById("qrInput").value;
-  document.getElementById("qrOutput").innerHTML =
-    `<img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${t}">`;
-}
-
-function generateBarcode() {
-  let val = document.getElementById("barcodeInput").value;
-  JsBarcode("#barcodeOutput", val);
-}
-
-async function findIP() {
-  let data = await fetch("https://api.ipify.org?format=json").then(r => r.json());
-  document.getElementById("ipResult").innerHTML = "Your IP: " + data.ip;
-}
-
-function deviceInfo() {
-  let ua = navigator.userAgent;
-  document.getElementById("deviceResult").innerHTML = ua;
-}
-
-function checkPassword() {
-  let p = document.getElementById("passCheck").value;
+function checkPwd(){
+  let p = pwd_input.value;
   let score = 0;
-  if (p.length >= 8) score++;
-  if (/[0-9]/.test(p)) score++;
-  if (/[A-Z]/.test(p)) score++;
-  if (/[@#$%]/.test(p)) score++;
+  if(p.length>=8)score++;
+  if(/[0-9]/.test(p))score++;
+  if(/[A-Z]/.test(p))score++;
+  if(/[@#$%]/.test(p))score++;
 
-  let msg = ["Very Weak", "Weak", "Good", "Strong", "Very Strong"][score];
-  document.getElementById("passResult").innerHTML = "Strength: " + msg;
+  pwd_box.innerHTML = ["Very Weak","Weak","Good","Strong","Very Strong"][score];
 }
 
-// ---------------------- WEATHER -----------------------
-async function getWeather() {
-  let c = document.getElementById("cityWeather").value;
-  let url = `https://api.openweathermap.org/data/2.5/weather?q=${c}&appid=439d4b804bc8187953eb36d2a8c26a02&units=metric`;
+/* CAPITAL FINDER */
+async function findCapital(){
+  let c = country_in.value.trim().toLowerCase();
+  if(!c){ capital_out.innerHTML="Enter country"; return;}
 
-  let d = await fetch(url).then(r => r.json());
-  if (!d.main) {
-    document.getElementById("weatherResult").innerHTML = "City not found.";
-    return;
-  }
+  let all = await fetch("https://restcountries.com/v3.1/all").then(r=>r.json());
+  let found = all.find(x=>x.name.common.toLowerCase()==c);
 
-  document.getElementById("weatherResult").innerHTML =
-    `Temp: ${d.main.temp}°C<br>Humidity: ${d.main.humidity}%<br>Weather: ${d.weather[0].description}`;
-}
+  if(!found){ capital_out.innerHTML="Not found"; return;}
 
-function autoWeather() {
-  navigator.geolocation.getCurrentPosition(async pos => {
-    let lat = pos.coords.latitude;
-    let lon = pos.coords.longitude;
+  let capital = found.capital ? found.capital[0] : "No capital";
+  let flag = found.flags.png;
 
-    let url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=439d4b804bc8187953eb36d2a8c26a02&units=metric`;
-    let d = await fetch(url).then(r => r.json());
-
-    document.getElementById("weatherResult").innerHTML =
-      `Location: ${d.name}<br>Temp: ${d.main.temp}°C<br>Weather: ${d.weather[0].description}`;
-  });
-}
-/* ---------------------- CAPITAL FINDER ----------------------- */
-
-// Fuzzy matching function (basic)
-function fuzzyMatch(input, list) {
-  input = input.toLowerCase();
-  let best = "";
-  let score = 999;
-
-  for (let country of list) {
-    let c = country.toLowerCase();
-    let dist = levenshtein(input, c);
-    if (dist < score) {
-      score = dist;
-      best = country;
-    }
-  }
-  return best;
-}
-
-// Levenshtein Distance (for fuzzy)
-function levenshtein(a, b) {
-  const matrix = Array(a.length + 1).fill(null).map(() =>
-    Array(b.length + 1).fill(null)
-  );
-
-  for (let i = 0; i <= a.length; i++) matrix[i][0] = i;
-  for (let j = 0; j <= b.length; j++) matrix[0][j] = j;
-
-  for (let i = 1; i <= a.length; i++) {
-    for (let j = 1; j <= b.length; j++) {
-      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
-      matrix[i][j] = Math.min(
-        matrix[i - 1][j] + 1,
-        matrix[i][j - 1] + 1,
-        matrix[i - 1][j - 1] + cost
-      );
-    }
-  }
-  return matrix[a.length][b.length];
-}
-
-async function getCapital() {
-  const input = document.getElementById("countryInput").value;
-
-  // Get all country names for fuzzy matching
-  let all = await fetch("https://restcountries.com/v3.1/all").then(r => r.json());
-  let names = all.map(c => c.name.common);
-
-  let bestMatch = fuzzyMatch(input, names);
-
-  // Fetch best match info
-  let url = `https://restcountries.com/v3.1/name/${bestMatch}?fullText=true`;
-  let data = await fetch(url).then(r => r.json());
-  let c = data[0];
-
-  let name = c.name.common;
-  let capital = c.capital ? c.capital[0] : "No capital";
-  let region = c.region;
-  let population = c.population.toLocaleString();
-  let flag = c.flags.png;
-
-  let languages = c.languages ? Object.values(c.languages).join(", ") : "N/A";
-  let currencies = c.currencies ?
-    Object.values(c.currencies).map(x => x.name).join(", ")
-    : "N/A";
-
-  // Wikipedia short summary API
-  let wikiURL = `https://en.wikipedia.org/api/rest_v1/page/summary/${name}`;
-  let wiki = await fetch(wikiURL).then(r => r.json());
-
-  let summary = wiki.extract ? wiki.extract : "No summary available.";
-
-  document.getElementById("capitalResult").innerHTML = `
-    <h3>${name}</h3>
+  capital_out.innerHTML = `
+    <h3>${found.name.common}</h3>
     <img src="${flag}" width="120">
     <p><b>Capital:</b> ${capital}</p>
-    <p><b>Region:</b> ${region}</p>
-    <p><b>Population:</b> ${population}</p>
-    <p><b>Languages:</b> ${languages}</p>
-    <p><b>Currencies:</b> ${currencies}</p>
-    <hr>
-    <p><b>About ${name}:</b><br>${summary}</p>
+    <p><b>Region:</b> ${found.region}</p>
+    <p><b>Population:</b> ${found.population.toLocaleString()}</p>
   `;
 }
 
-</script>
+/* ALGEBRA SOLVER */
+function solveEq(){
+  let eq = eq_in.value;
+  try{
+    let parts = eq.split("=");
+    let L = eval(parts[0].replace("x","*x"));
+    eq_out.innerHTML = "Use algebra library if needed";
+  }catch(e){
+    eq_out.innerHTML="Invalid equation";
+  }
+}
 
-<script src="https://cdn.jsdelivr.net/jsbarcode/3.11.5/JsBarcode.all.min.js"></script>
+/* OPERATIONS */
+function isPrimeCheck(){
+  let n = Number(prime_in.value);
+  if(n<2)return prime_out.innerHTML="Not Prime";
+  for(let i=2;i*i<=n;i++){
+    if(n%i==0)return prime_out.innerHTML="Not Prime";
+  }
+  prime_out.innerHTML="Prime Number";
+}
+function fact(){
+  let n=Number(fact_in.value),f=1;
+  for(let i=1;i<=n;i++)f*=i;
+  fact_out.innerHTML=f;
+}
+
+/* LIFE TOOLS */
+function calcAge(){
+  let d = new Date(age_dob.value);
+  if(!age_dob.value)return age_out.innerHTML="Enter DOB";
+  let age = new Date(Date.now()-d.getTime()).getUTCFullYear()-1970;
+  age_out.innerHTML="Age: "+age;
+}
+function calcBMI(){
+  let h=bmi_h.value/100,w=bmi_w.value;
+  bmi_out.innerHTML = "BMI: "+(w/(h*h)).toFixed(2);
+}
+function calcEMI(){
+  let P=emi_p.value,R=emi_r.value/1200,N=emi_n.value;
+  let emi = P*R*Math.pow(1+R,N)/(Math.pow(1+R,N)-1);
+  emi_out.innerHTML="EMI: "+emi.toFixed(2);
+}
+function convertUnit(){
+  let v=unit_in.value,t=unit_type.value;
+  unit_out.innerHTML = t=="m-cm" ? v*100+" cm" : v/100+" m";
+}
+function calcRoot(){
+  let n=root_in.value;
+  root_out.innerHTML=`Square Root: ${Math.sqrt(n)}\nCube Root: ${Math.cbrt(n)}`;
+}
+function calcPercent(){
+  percent_out.innerHTML = (percent_a.value/percent_b.value*100).toFixed(2)+"%";
+}
+
+/* WEATHER */
+async function cityWeather(){
+  let c=city_in.value;
+  let url=`https://api.openweathermap.org/data/2.5/weather?q=${c}&appid=439d4b804bc8187953eb36d2a8c26a02&units=metric`;
+  let d=await fetch(url).then(r=>r.json());
+  if(!d.main)return city_weather_out.innerHTML="Not found";
+  city_weather_out.innerHTML = `Temp: ${d.main.temp}°C`;
+}
+function autoWeather(){
+  navigator.geolocation.getCurrentPosition(async pos=>{
+    let lat=pos.coords.latitude,lon=pos.coords.longitude;
+    let url=`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=439d4b804bc8187953eb36d2a8c26a02&units=metric`;
+    let d=await fetch(url).then(r=>r.json());
+    auto_weather_out.innerHTML = `Location: ${d.name}\nTemp: ${d.main.temp}°C`;
+  });
+}
+
+/* QUIZ */
+function startQuiz(){
+  let a=Math.floor(Math.random()*10);
+  let b=Math.floor(Math.random()*10);
+  let ans=prompt(`${a}+${b}=?`);
+  quiz_box.innerHTML = ans==a+b ? "Correct!" : "Wrong";
+}
+
+</script>
 
 </body>
 </html>
