@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang='en'>
+<html lang="en">
 <head>
-<meta charset='UTF-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mithun Multi-Tool App</title>
 
 <!-- External Libraries -->
@@ -15,27 +15,27 @@
   --bg2: #ffc371;
   --card: rgba(255,255,255,0.95);
   --text-dark: #000;
-  --text-light: #fff;
   --accent: #2196F3;
 }
 body {
   margin:0;
-  background: linear-gradient(135deg, var(--bg1), var(--bg2));
-  font-family: Arial, sans-serif;
-  color: var(--text-light);
+  background:linear-gradient(135deg,var(--bg1),var(--bg2));
+  font-family:Arial, sans-serif;
+  color:white;
 }
-.tabs {
+
+/* Tabs */
+.tabs{
   display:flex;
   gap:10px;
   padding:12px;
   justify-content:center;
-  background: rgba(0,0,0,0.4);
-  backdrop-filter: blur(5px);
+  background:rgba(0,0,0,0.4);
   position:sticky;
   top:0;
-  z-index: 1000;
+  z-index:1000;
 }
-.tab-btn {
+.tab-btn{
   padding:10px 15px;
   border-radius:12px;
   background:rgba(255,255,255,0.2);
@@ -43,17 +43,16 @@ body {
   cursor:pointer;
   font-weight:bold;
   border:2px solid var(--accent);
-  transition: all 0.3s;
 }
-.tab-btn:hover, .tab-btn.active-tab {
+.tab-btn:hover, .tab-btn.active-tab{
   background:var(--accent);
-  color:white;
-  box-shadow: 0 0 10px var(--accent);
 }
-.tab-content { display:none; padding:20px; }
-.active { display:block; }
 
-.tool-box {
+/* Content */
+.tab-content{ display:none; padding:20px; }
+.active{ display:block; }
+
+.tool-box{
   background:var(--card);
   color:var(--text-dark);
   padding:15px;
@@ -62,393 +61,529 @@ body {
   box-shadow:0 8px 20px rgba(0,0,0,0.3);
 }
 
-input,select,button,textarea {
+input,textarea,select,button{
   padding:10px;
   margin:5px;
   border-radius:8px;
   border:1px solid #ccc;
 }
-button {
+button{
   background:var(--accent);
-  color:#fff;
-  font-weight:bold;
+  color:white;
   cursor:pointer;
-  border:none;
-  transition: .2s;
-}
-button:hover { opacity:0.9; background-color:#007bb2; }
-
-.result {
-  margin-top:10px;
-  padding:10px;
-  background:#f0f8ff;
-  border-radius:10px;
-  color:#000;
   font-weight:bold;
-  white-space:pre-wrap;
+}
+.result{
+  background:#f0f8ff;
+  padding:10px;
+  border-radius:10px;
+  margin-top:10px;
   border-left:5px solid var(--accent);
+  white-space:pre-wrap;
+}
+
+/* Life Tools Sub-tab Buttons */
+.life-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:15px;
+}
+.life-btn{
+  background:white;
+  color:black;
+  padding:15px;
+  border-radius:12px;
+  text-align:center;
+  cursor:pointer;
+  font-weight:bold;
+  border:2px solid var(--accent);
+}
+.life-btn:hover{
+  background:var(--accent);
+  color:white;
+}
+
+/* Hidden sub-pages */
+.life-subtab{ display:none; }
+.life-subtab.active-sub{ display:block; }
+
+.flag-img{
+  width:120px; border-radius:10px; margin-top:10px;
 }
 </style>
 
-<script>
-function openTab(t, element) {
-  document.querySelectorAll('.tab-content').forEach(x => x.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(x => x.classList.remove('active-tab'));
-  document.getElementById(t).classList.add('active');
-  element.classList.add('active-tab');
-}
-
-window.onload = function() {
-  const homeButton = document.querySelector(`.tab-btn[onclick*="home"]`);
-  openTab("home", homeButton);
-};
-</script>
 </head>
-
 <body>
 
-<div class='tabs'>
-  <div class='tab-btn' onclick="openTab('home', this)">Home</div>
-  <div class='tab-btn' onclick="openTab('smarttools', this)">Smart Tools</div>
-  <div class='tab-btn' onclick="openTab('capital', this)">Capital Finder</div>
-  <div class='tab-btn' onclick="openTab('solution', this)">Algebra Solver</div>
-  <div class='tab-btn' onclick="openTab('operations', this)">Operations</div>
-  <div class='tab-btn' onclick="openTab('lifetools', this)">Life Tools</div>
-  <div class='tab-btn' onclick="openTab('weather', this)">Weather Forecast</div>
-  <div class='tab-btn' onclick="openTab('quiz', this)">Quiz</div>
+<div class="tabs">
+  <div class="tab-btn" onclick="openTab('home',this)">Home</div>
+  <div class="tab-btn" onclick="openTab('smart',this)">Smart Tools</div>
+  <div class="tab-btn" onclick="openTab('capital',this)">Capital Finder</div>
+  <div class="tab-btn" onclick="openTab('algebra',this)">Algebra Solver</div>
+  <div class="tab-btn" onclick="openTab('operations',this)">Operations</div>
+  <div class="tab-btn" onclick="openTab('life',this)">Life Tools</div>
+  <div class="tab-btn" onclick="openTab('weather',this)">Weather</div>
+  <div class="tab-btn" onclick="openTab('quiz',this)">Quiz</div>
 </div>
 
-<!------------------ HOME ------------------>
-<div id='home' class='tab-content'>
+<!-- HOME -->
+<div id="home" class="tab-content">
   <h1>Welcome Mithun 👋</h1>
   <div class="tool-box">
     <h3>Text Tools</h3>
-    <textarea id="text_in" rows="5" placeholder="Type text here..."></textarea>
+    <textarea id="text_in"></textarea>
     <button onclick="upperText()">UPPERCASE</button>
     <button onclick="lowerText()">lowercase</button>
     <button onclick="removeSpaces()">Remove Spaces</button>
-    <textarea id="text_out" class="result" rows="5" readonly></textarea>
+    <textarea id="text_out" class="result"></textarea>
   </div>
 </div>
 
-<!------------------ SMART TOOLS ------------------>
-<div id="smarttools" class="tab-content">
-  <h2>Smart Tools Collection</h2>
+<!-- SMART TOOLS -->
+<div id="smart" class="tab-content">
+  <h2>Smart Tools</h2>
 
   <div class="tool-box">
-    <h3>QR Code Maker</h3>
-    <input id="qr_text" placeholder="Enter text or URL">
+    <h3>QR Code</h3>
+    <input id="qr_text">
     <button onclick="makeQR()">Generate</button>
-    <div id="qr_box" class="result" style="text-align:center;"></div>
+    <div id="qr_box" class="result"></div>
   </div>
 
   <div class="tool-box">
-    <h3>Barcode Generator</h3>
-    <input id="barcode_text" placeholder="Enter number">
+    <h3>Barcode</h3>
+    <input id="barcode_text">
     <button onclick="makeBarcode()">Generate</button>
-    <div id="barcode_box" class="result" style="display:none;text-align:center;">
-      <svg id="barcode_svg"></svg>
-    </div>
+    <svg id="barcode_svg"></svg>
   </div>
 
   <div class="tool-box">
-    <h3>Your IP Finder</h3>
-    <button onclick="getIP()">Show My IP</button>
+    <h3>Your IP</h3>
+    <button onclick="getIP()">Show IP</button>
     <div id="ip_box" class="result"></div>
   </div>
 
   <div class="tool-box">
     <h3>Device Info</h3>
-    <button onclick="getDeviceInfo()">Show Device Info</button>
+    <button onclick="getDeviceInfo()">Show</button>
     <div id="device_box" class="result"></div>
   </div>
 
   <div class="tool-box">
-    <h3>Password Strength Checker</h3>
-    <input id="pwd_input" type="password">
+    <h3>Password Strength</h3>
+    <input id="pwd_input">
     <button onclick="checkPwd()">Check</button>
     <div id="pwd_box" class="result"></div>
   </div>
 
-  <div class="tool-box">
-    <h3>Random Name Picker</h3>
-    <textarea id="name_list" placeholder="Names separated by commas"></textarea>
-    <button onclick="pickName()">Pick</button>
-    <div id="pick_out" class="result"></div>
-  </div>
-
-  <div class="tool-box">
-    <h3>Timer</h3>
-    <input id="timer_in" type="number" placeholder="Seconds">
-    <button onclick="startTimer()">Start</button>
-    <div id="timer_out" class="result"></div>
-  </div>
-
-  <div class="tool-box">
-    <h3>Stopwatch</h3>
-    <div id="sw_out" class="result">0.00s</div>
-    <button onclick="swStart()">Start</button>
-    <button onclick="swStop()">Stop</button>
-    <button onclick="swReset()">Reset</button>
-  </div>
-
-  <div class="tool-box">
-    <h3>Notes App</h3>
-    <textarea id="note_in" rows="4"></textarea>
-    <button onclick="saveNote()">Save</button>
-    <button onclick="loadNote()">Load</button>
-    <div id="note_out" class="result"></div>
-  </div>
 </div>
 
-<!------------------ CAPITAL FINDER ------------------>
+<!-- CAPITAL FINDER -->
 <div id="capital" class="tab-content">
   <h2>Capital Finder</h2>
+
   <div class="tool-box">
     <input id="country_in" placeholder="Enter country">
-    <button onclick="findCapital()">Find Capital</button>
+    <button onclick="findCapital()">Find</button>
     <div id="capital_out" class="result"></div>
   </div>
 </div>
 
-<!------------------ ALGEBRA SOLVER ------------------>
-<div id="solution" class="tab-content">
-  <h2>Algebra Solver</h2>
-  <div class="tool-box">
-    <input id="alg_in" placeholder="Equation (ex: 2x+3=15)">
-    <button onclick="solveAlg()">Solve</button>
-    <div id="alg_out" class="result"></div>
-  </div>
-</div>
+<!-- LIFE TOOLS -->
+<div id="life" class="tab-content">
+  <h2>Life Tools</h2>
 
-<!------------------ OPERATIONS ------------------>
-<div id="operations" class="tab-content">
-  <h2>Math Operations</h2>
-
-  <div class="tool-box">
-    <h3>Basic Calculator</h3>
-    <input id="n1" type="number" placeholder="Number 1">
-    <input id="n2" type="number" placeholder="Number 2">
-    <button onclick="calc('+')">+</button>
-    <button onclick="calc('-')">-</button>
-    <button onclick="calc('*')">*</button>
-    <button onclick="calc('/')">/</button>
-    <div id="calc_out" class="result"></div>
+  <div class="life-grid">
+    <div class="life-btn" onclick="openLife('age')">Age</div>
+    <div class="life-btn" onclick="openLife('bmi')">BMI</div>
+    <div class="life-btn" onclick="openLife('emi')">EMI</div>
+    <div class="life-btn" onclick="openLife('unit')">Unit Convert</div>
+    <div class="life-btn" onclick="openLife('square')">Square/Cube Root</div>
+    <div class="life-btn" onclick="openLife('percent')">Percentage</div>
+    <div class="life-btn" onclick="openLife('discount')">Discount</div>
   </div>
 
-  <div class="tool-box">
-    <h3>LCM / HCF</h3>
-    <input id="lcm_in" placeholder="Numbers separated by commas (ex 4,6,8)">
-    <button onclick="calcLCM()">LCM</button>
-    <button onclick="calcHCF()">HCF</button>
-    <div id="lcm_out" class="result"></div>
-  </div>
-
-  <div class="tool-box">
-    <h3>Prime Checker</h3>
-    <input id="prime_in" type="number" placeholder="Enter number">
-    <button onclick="checkPrime()">Check</button>
-    <div id="prime_out" class="result"></div>
-  </div>
-</div>
-
-
-    <!-- WEATHER FORECAST TAB -->
-  <div id="weather" class="tab-content">
-    <h2>Weather Forecast</h2>
-
+  <!-- AGE -->
+  <div id="age" class="life-subtab">
     <div class="tool-box">
-      <h3>Auto Location Weather</h3>
-      <button onclick="autoWeather()">Detect & Show Weather</button>
-      <div id="auto_weather_out" class="result"></div>
-    </div>
-
-    <div class="tool-box">
-      <h3>Search City Weather</h3>
-      <input id="city_in" placeholder="Enter city (ex: Chennai)">
-      <button onclick="cityWeather()">Show Weather</button>
-      <div id="city_weather_out" class="result"></div>
+      <h3>Age Calculator</h3>
+      <input type="date" id="age_dob">
+      <button onclick="calcAge()">Calculate</button>
+      <div id="age_out" class="result"></div>
     </div>
   </div>
 
+  <!-- BMI -->
+  <div id="bmi" class="life-subtab">
+    <div class="tool-box">
+      <h3>BMI Calculator</h3>
+      <input id="bmi_h" placeholder="Height (cm)">
+      <input id="bmi_w" placeholder="Weight (kg)">
+      <button onclick="calcBMI()">Calculate</button>
+      <div id="bmi_out" class="result"></div>
+    </div>
+  </div>
 
-</div><!-- end tabs container -->
+  <!-- EMI -->
+  <div id="emi" class="life-subtab">
+    <div class="tool-box">
+      <h3>EMI Calculator</h3>
+      <input id="emi_p" placeholder="Principal">
+      <input id="emi_r" placeholder="Rate %">
+      <input id="emi_n" placeholder="Months">
+      <button onclick="calcEMI()">Calculate</button>
+      <div id="emi_out" class="result"></div>
+    </div>
+  </div>
 
-<!-- ============= SCRIPTS SECTION ============= -->
+  <!-- UNIT CONVERT -->
+  <div id="unit" class="life-subtab">
+    <div class="tool-box">
+      <h3>Unit Convert (m ↔ cm)</h3>
+      <input id="unit_in">
+      <select id="unit_type">
+        <option value="m-cm">Meter → CM</option>
+        <option value="cm-m">CM → Meter</option>
+      </select>
+      <button onclick="convertUnit()">Convert</button>
+      <div id="unit_out" class="result"></div>
+    </div>
+  </div>
+
+  <!-- SQUARE ROOT / CUBE ROOT -->
+  <div id="square" class="life-subtab">
+    <div class="tool-box">
+      <h3>Square / Cube Root</h3>
+      <input id="root_in">
+      <button onclick="calcRoot()">Calculate</button>
+      <div id="root_out" class="result"></div>
+    </div>
+  </div>
+
+  <!-- PERCENTAGE -->
+  <div id="percent" class="life-subtab">
+    <div class="tool-box">
+      <h3>Percentage Finder</h3>
+      <input id="percent_a" placeholder="Value">
+      <input id="percent_b" placeholder="Total">
+      <button onclick="calcPercent()">Find</button>
+      <div id="percent_out" class="result"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- WEATHER -->
+<div id="weather" class="tab-content">
+  <h2>Weather</h2>
+
+  <div class="tool-box">
+    <h3>Auto Location</h3>
+    <button onclick="autoWeather()">Get Weather</button>
+    <div id="auto_weather_out" class="result"></div>
+  </div>
+
+  <div class="tool-box">
+    <h3>City Search</h3>
+    <input id="city_in">
+    <button onclick="cityWeather()">Search</button>
+    <div id="city_weather_out" class="result"></div>
+  </div>
+</div>
+
+<!-- PART 2 (JS FUNCTIONS) WILL COME NEXT -->
 <script>
-/* ---------------- TAB CONTROL ---------------- */
-function openTab(tabName, elm) {
-  let tabs = document.getElementsByClassName("tab-content");
-  for (let t of tabs) t.style.display = "none";
-
-  let btns = document.getElementsByClassName("tab-btn");
-  for (let b of btns) b.classList.remove("active");
-
-  document.getElementById(tabName).style.display = "block";
-  elm.classList.add("active");
+// ---------------------- SHOW SECTIONS -----------------------
+function showSection(id) {
+  document.querySelectorAll(".section").forEach(s => s.style.display = "none");
+  document.getElementById(id).style.display = "block";
 }
 
-/* ---------------- QR CODE MAKER ---------------- */
-function makeQR() {
-  let t = document.getElementById("qr_input").value;
-  if (!t) return alert("Enter something!");
-  let url = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=" + encodeURIComponent(t);
-  document.getElementById("qr_out").innerHTML = `<img src="${url}">`;
+// ---------------------- LIFE TOOLS SUB-PAGES -----------------------
+function showLife(tool) {
+  let html = "";
+
+  if (tool === "ageTool") {
+    html = `
+      <div class="tool-card">
+        <h3>Age Calculator</h3>
+        <input type="date" id="dob">
+        <button class="action" onclick="calcAge()">Calculate</button>
+        <div id="ageResult" class="result-box"></div>
+      </div>`;
+  }
+
+  if (tool === "bmiTool") {
+    html = `
+      <div class="tool-card">
+        <h3>BMI Calculator</h3>
+        <input type="number" id="height" placeholder="Height in cm">
+        <input type="number" id="weight" placeholder="Weight in kg">
+        <button class="action" onclick="calcBMI()">Calculate</button>
+        <div id="bmiResult" class="result-box"></div>
+      </div>`;
+  }
+
+  if (tool === "emiTool") {
+    html = `
+      <div class="tool-card">
+        <h3>EMI Calculator</h3>
+        <input type="number" id="loan" placeholder="Loan Amount">
+        <input type="number" id="rate" placeholder="Interest (%)">
+        <input type="number" id="months" placeholder="Months">
+        <button class="action" onclick="calcEMI()">Calculate</button>
+        <div id="emiResult" class="result-box"></div>
+      </div>`;
+  }
+
+  if (tool === "unitTool") {
+    html = `
+      <div class="tool-card">
+        <h3>Unit Converter (km ↔ miles)</h3>
+        <input type="number" id="km" placeholder="Kilometers">
+        <button class="action" onclick="kmToMiles()">Convert</button>
+        <div id="unitResult" class="result-box"></div>
+      </div>`;
+  }
+
+  if (tool === "expenseTool") {
+    html = `
+      <div class="tool-card">
+        <h3>Expense Tracker</h3>
+        <input type="text" id="expName" placeholder="Item">
+        <input type="number" id="expAmt" placeholder="Amount">
+        <button class="action" onclick="addExpense()">Add</button>
+        <div id="expList" class="result-box"></div>
+      </div>`;
+  }
+
+  if (tool === "passGenTool") {
+    html = `
+      <div class="tool-card">
+        <h3>Password Generator</h3>
+        <input type="number" id="passLen" placeholder="Length (8–20)">
+        <button class="action" onclick="genPassword()">Generate</button>
+        <div id="genPassResult" class="result-box"></div>
+      </div>`;
+  }
+
+  if (tool === "rootTool") {
+    html = `
+      <div class="tool-card">
+        <h3>Square & Cube Root Finder</h3>
+        <input type="number" id="rootNum" placeholder="Enter number">
+        <button class="action" onclick="calcRoots()">Calculate</button>
+        <div id="rootResult" class="result-box"></div>
+      </div>`;
+  }
+
+  document.getElementById("lifeContent").innerHTML = html;
 }
 
-/* ---------------- BARCODE GENERATOR ---------------- */
-function makeBarcode() {
-  let t = document.getElementById("barcode_input").value;
-  if (!t) return alert("Enter text!");
-  let url = "https://barcode.tec-it.com/barcode.ashx?data=" + encodeURIComponent(t);
-  document.getElementById("barcode_out").innerHTML = `<img src="${url}">`;
+// ---------------------- LIFE TOOL FUNCTIONS -----------------------
+function calcAge() {
+  let dob = new Date(document.getElementById("dob").value);
+  let diff = Date.now() - dob.getTime();
+  let age = new Date(diff).getUTCFullYear() - 1970;
+  document.getElementById("ageResult").innerHTML = "Age: " + age;
 }
 
-/* ---------------- IP ADDRESS FINDER ---------------- */
-async function getIP() {
-  let r = await fetch("https://api.ipify.org?format=json");
-  let d = await r.json();
-  document.getElementById("ip_out").innerText = "Your IP: " + d.ip;
+function calcBMI() {
+  let h = document.getElementById("height").value / 100;
+  let w = document.getElementById("weight").value;
+  let bmi = (w / (h * h)).toFixed(2);
+  document.getElementById("bmiResult").innerHTML = "BMI: " + bmi;
 }
 
-/* ---------------- DEVICE INFO ---------------- */
-function getDeviceInfo() {
-  let info =
-    "Platform: " + navigator.platform + "\n" +
-    "Browser: " + navigator.userAgent + "\n" +
-    "Language: " + navigator.language + "\n" +
-    "Online: " + navigator.onLine;
-  document.getElementById("device_out").innerText = info;
+function calcEMI() {
+  let P = document.getElementById("loan").value;
+  let R = document.getElementById("rate").value / 1200;
+  let N = document.getElementById("months").value;
+
+  let emi = P * R * (Math.pow(1 + R, N)) / (Math.pow(1 + R, N) - 1);
+  document.getElementById("emiResult").innerHTML = "EMI: ₹" + emi.toFixed(2);
 }
 
-/* ---------------- PASSWORD STRENGTH ---------------- */
-function checkPass() {
-  let p = document.getElementById("pass_in").value;
-  let s = "Weak";
+function kmToMiles() {
+  let km = document.getElementById("km").value;
+  document.getElementById("unitResult").innerHTML =
+    `${km} km = ${(km * 0.621371).toFixed(2)} miles`;
+}
 
+let expenses = [];
+function addExpense() {
+  let name = document.getElementById("expName").value;
+  let amt = Number(document.getElementById("expAmt").value);
+  expenses.push({ name, amt });
+
+  let html = expenses.map(e => `${e.name}: ₹${e.amt}`).join("<br>");
+  document.getElementById("expList").innerHTML = html;
+}
+
+function genPassword() {
+  let len = document.getElementById("passLen").value;
+  let chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%";
+  let pass = "";
+  for (let i = 0; i < len; i++) pass += chars[Math.floor(Math.random() * chars.length)];
+
+  document.getElementById("genPassResult").innerHTML = pass;
+}
+
+function calcRoots() {
+  let n = document.getElementById("rootNum").value;
+  document.getElementById("rootResult").innerHTML =
+    `Square Root: ${Math.sqrt(n).toFixed(4)}<br>Cube Root: ${Math.cbrt(n).toFixed(4)}`;
+}
+
+// ---------------------- SMART TOOLS -----------------------
+function generateQR() {
+  let t = document.getElementById("qrInput").value;
+  document.getElementById("qrOutput").innerHTML =
+    `<img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${t}">`;
+}
+
+function generateBarcode() {
+  let val = document.getElementById("barcodeInput").value;
+  JsBarcode("#barcodeOutput", val);
+}
+
+async function findIP() {
+  let data = await fetch("https://api.ipify.org?format=json").then(r => r.json());
+  document.getElementById("ipResult").innerHTML = "Your IP: " + data.ip;
+}
+
+function deviceInfo() {
+  let ua = navigator.userAgent;
+  document.getElementById("deviceResult").innerHTML = ua;
+}
+
+function checkPassword() {
+  let p = document.getElementById("passCheck").value;
   let score = 0;
-  if (p.length > 6) score++;
-  if (/[A-Z]/.test(p)) score++;
+  if (p.length >= 8) score++;
   if (/[0-9]/.test(p)) score++;
-  if (/[^A-Za-z0-9]/.test(p)) score++;
+  if (/[A-Z]/.test(p)) score++;
+  if (/[@#$%]/.test(p)) score++;
 
-  if (score <= 1) s = "Weak";
-  else if (score == 2) s = "Medium";
-  else if (score >= 3) s = "Strong";
-
-  document.getElementById("pass_out").innerText = "Strength: " + s;
+  let msg = ["Very Weak", "Weak", "Good", "Strong", "Very Strong"][score];
+  document.getElementById("passResult").innerHTML = "Strength: " + msg;
 }
 
-/* ---------------- RANDOM NAME PICKER ---------------- */
-function pickName() {
-  let names = document.getElementById("names_in").value.trim();
-  if (!names) return alert("Enter names separated by commas!");
-  let arr = names.split(",");
-  let r = arr[Math.floor(Math.random() * arr.length)];
-  document.getElementById("name_out").innerText = "Selected: " + r;
-}
+// ---------------------- WEATHER -----------------------
+async function getWeather() {
+  let c = document.getElementById("cityWeather").value;
+  let url = `https://api.openweathermap.org/data/2.5/weather?q=${c}&appid=439d4b804bc8187953eb36d2a8c26a02&units=metric`;
 
-/* ---------------- TIMER ---------------- */
-let timerInterval;
-function startTimer() {
-  let s = Number(document.getElementById("timer_sec").value);
-  if (!s) return alert("Enter seconds!");
-  clearInterval(timerInterval);
-
-  timerInterval = setInterval(() => {
-    document.getElementById("timer_out").innerText = s + " sec left";
-    s--;
-    if (s < 0) {
-      clearInterval(timerInterval);
-      document.getElementById("timer_out").innerText = "Time's up!";
-    }
-  }, 1000);
-}
-
-/* ---------------- STOPWATCH ---------------- */
-let sw = 0, swInterval;
-function startSW() {
-  clearInterval(swInterval);
-  swInterval = setInterval(() => {
-    sw++;
-    document.getElementById("sw_out").innerText = sw + " sec";
-  }, 1000);
-}
-function stopSW() { clearInterval(swInterval); }
-function resetSW() { sw = 0; document.getElementById("sw_out").innerText = "0"; }
-
-/* ---------------- NOTES APP ---------------- */
-function saveNote() {
-  localStorage.setItem("note", document.getElementById("note_in").value);
-}
-function loadNote() {
-  document.getElementById("note_in").value = localStorage.getItem("note") || "";
-}
-loadNote();
-
-/* ---------------- WEATHER FORECAST ---------------- */
-
-// Auto location weather
-function autoWeather() {
-  if (!navigator.geolocation) {
-    auto_weather_out.innerText = "Geolocation not supported!";
+  let d = await fetch(url).then(r => r.json());
+  if (!d.main) {
+    document.getElementById("weatherResult").innerHTML = "City not found.";
     return;
   }
 
-  auto_weather_out.innerText = "Getting your location...";
+  document.getElementById("weatherResult").innerHTML =
+    `Temp: ${d.main.temp}°C<br>Humidity: ${d.main.humidity}%<br>Weather: ${d.weather[0].description}`;
+}
 
-  navigator.geolocation.getCurrentPosition(async (pos) => {
+function autoWeather() {
+  navigator.geolocation.getCurrentPosition(async pos => {
     let lat = pos.coords.latitude;
     let lon = pos.coords.longitude;
 
-    let url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`;
+    let url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=439d4b804bc8187953eb36d2a8c26a02&units=metric`;
+    let d = await fetch(url).then(r => r.json());
 
-    let r = await fetch(url);
-    let d = await r.json();
-
-    auto_weather_out.innerText =
-      "Temperature: " + d.current_weather.temperature + "°C\n" +
-      "Wind Speed: " + d.current_weather.windspeed + " km/h\n" +
-      "Condition Code: " + d.current_weather.weathercode;
+    document.getElementById("weatherResult").innerHTML =
+      `Location: ${d.name}<br>Temp: ${d.main.temp}°C<br>Weather: ${d.weather[0].description}`;
   });
 }
+/* ---------------------- CAPITAL FINDER ----------------------- */
 
-// City weather
-async function cityWeather() {
-  let city = city_in.value.trim();
-  if (!city) {
-    city_weather_out.innerText = "Enter city name!";
-    return;
+// Fuzzy matching function (basic)
+function fuzzyMatch(input, list) {
+  input = input.toLowerCase();
+  let best = "";
+  let score = 999;
+
+  for (let country of list) {
+    let c = country.toLowerCase();
+    let dist = levenshtein(input, c);
+    if (dist < score) {
+      score = dist;
+      best = country;
+    }
   }
+  return best;
+}
 
-  city_weather_out.innerText = "Searching...";
+// Levenshtein Distance (for fuzzy)
+function levenshtein(a, b) {
+  const matrix = Array(a.length + 1).fill(null).map(() =>
+    Array(b.length + 1).fill(null)
+  );
 
-  // Step 1: Geocoding → lat/lon
-  let geo = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${city}`);
-  let g = await geo.json();
+  for (let i = 0; i <= a.length; i++) matrix[i][0] = i;
+  for (let j = 0; j <= b.length; j++) matrix[0][j] = j;
 
-  if (!g.results || g.results.length === 0) {
-    city_weather_out.innerText = "City not found!";
-    return;
+  for (let i = 1; i <= a.length; i++) {
+    for (let j = 1; j <= b.length; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      matrix[i][j] = Math.min(
+        matrix[i - 1][j] + 1,
+        matrix[i][j - 1] + 1,
+        matrix[i - 1][j - 1] + cost
+      );
+    }
   }
+  return matrix[a.length][b.length];
+}
 
-  let lat = g.results[0].latitude;
-  let lon = g.results[0].longitude;
+async function getCapital() {
+  const input = document.getElementById("countryInput").value;
 
-  // Step 2: Weather
-  let url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`;
+  // Get all country names for fuzzy matching
+  let all = await fetch("https://restcountries.com/v3.1/all").then(r => r.json());
+  let names = all.map(c => c.name.common);
 
-  let r = await fetch(url);
-  let d = await r.json();
+  let bestMatch = fuzzyMatch(input, names);
 
-  city_weather_out.innerText =
-    "City: " + g.results[0].name + "\n" +
-    "Temperature: " + d.current_weather.temperature + "°C\n" +
-    "Wind Speed: " + d.current_weather.windspeed + " km/h\n" +
-    "Condition Code: " + d.current_weather.weathercode;
+  // Fetch best match info
+  let url = `https://restcountries.com/v3.1/name/${bestMatch}?fullText=true`;
+  let data = await fetch(url).then(r => r.json());
+  let c = data[0];
+
+  let name = c.name.common;
+  let capital = c.capital ? c.capital[0] : "No capital";
+  let region = c.region;
+  let population = c.population.toLocaleString();
+  let flag = c.flags.png;
+
+  let languages = c.languages ? Object.values(c.languages).join(", ") : "N/A";
+  let currencies = c.currencies ?
+    Object.values(c.currencies).map(x => x.name).join(", ")
+    : "N/A";
+
+  // Wikipedia short summary API
+  let wikiURL = `https://en.wikipedia.org/api/rest_v1/page/summary/${name}`;
+  let wiki = await fetch(wikiURL).then(r => r.json());
+
+  let summary = wiki.extract ? wiki.extract : "No summary available.";
+
+  document.getElementById("capitalResult").innerHTML = `
+    <h3>${name}</h3>
+    <img src="${flag}" width="120">
+    <p><b>Capital:</b> ${capital}</p>
+    <p><b>Region:</b> ${region}</p>
+    <p><b>Population:</b> ${population}</p>
+    <p><b>Languages:</b> ${languages}</p>
+    <p><b>Currencies:</b> ${currencies}</p>
+    <hr>
+    <p><b>About ${name}:</b><br>${summary}</p>
+  `;
 }
 
 </script>
+
+<script src="https://cdn.jsdelivr.net/jsbarcode/3.11.5/JsBarcode.all.min.js"></script>
 
 </body>
 </html>
