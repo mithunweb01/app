@@ -1,14 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang='en'>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0'>
 <title>Mithun Multi-Tool App</title>
 
 <!-- External Libraries -->
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/algebrite@1.3.1/dist/algebrite.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
 
 <style>
 :root {
@@ -44,11 +43,12 @@ body {
   cursor:pointer;
   font-weight:bold;
   border:2px solid var(--accent);
-  transition: 0.3s;
+  transition: all 0.3s;
 }
 .tab-btn:hover, .tab-btn.active-tab {
   background:var(--accent);
   color:white;
+  box-shadow: 0 0 10px var(--accent);
 }
 .tab-content { display:none; padding:20px; }
 .active { display:block; }
@@ -74,8 +74,9 @@ button {
   font-weight:bold;
   cursor:pointer;
   border:none;
+  transition: .2s;
 }
-button:hover { background:#0b7ad1; }
+button:hover { opacity:0.9; background-color:#007bb2; }
 
 .result {
   margin-top:10px;
@@ -90,105 +91,22 @@ button:hover { background:#0b7ad1; }
 </style>
 
 <script>
-/* -------- Tab Controller -------- */
 function openTab(t, element) {
   document.querySelectorAll('.tab-content').forEach(x => x.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(x => x.classList.remove('active-tab'));
   document.getElementById(t).classList.add('active');
   element.classList.add('active-tab');
 }
-window.onload = () => {
+
+window.onload = function() {
   const homeButton = document.querySelector(`.tab-btn[onclick*="home"]`);
   openTab("home", homeButton);
 };
-
-/* -------- SMART TOOLS FUNCTIONS -------- */
-
-function makeQR() {
-  const text = document.getElementById("qr_text").value;
-  QRCode.toDataURL(text, function (err, url) {
-    document.getElementById("qr_box").innerHTML =
-      `<img src="${url}" style="width:150px;">`;
-  });
-}
-
-function makeBarcode() {
-  let v = document.getElementById("barcode_text").value;
-  JsBarcode("#barcode_svg", v, {format: "CODE128"});
-  document.getElementById("barcode_box").style.display = "block";
-}
-
-async function getIP() {
-  let r = await fetch("https://api.ipify.org?format=json");
-  let d = await r.json();
-  document.getElementById("ip_box").innerText = "Your IP: " + d.ip;
-}
-
-function getDeviceInfo() {
-  let info =
-    "User Agent: " + navigator.userAgent + "\n" +
-    "Platform: " + navigator.platform + "\n" +
-    "Language: " + navigator.language;
-  document.getElementById("device_box").innerText = info;
-}
-
-function checkPwd() {
-  let p = document.getElementById("pwd_input").value;
-  let s = "Weak";
-  if (p.length >= 8 && /[0-9]/.test(p) && /[A-Z]/.test(p)) s = "Strong";
-  else if (p.length >= 6) s = "Medium";
-  document.getElementById("pwd_box").innerText = "Strength: " + s;
-}
-
-function pickName() {
-  let list = document.getElementById("name_list").value.split(",");
-  let pick = list[Math.floor(Math.random() * list.length)].trim();
-  document.getElementById("pick_out").innerText = "Selected: " + pick;
-}
-
-let timer;
-function startTimer() {
-  let sec = Number(document.getElementById("timer_in").value);
-  let out = document.getElementById("timer_out");
-  out.innerText = sec + "s remaining";
-  timer = setInterval(() => {
-    sec--;
-    out.innerText = sec + "s remaining";
-    if (sec <= 0) {
-      clearInterval(timer);
-      out.innerText = "Time's up!";
-    }
-  }, 1000);
-}
-
-let sw = 0, swInt;
-function swStart() { swInt = setInterval(() => { sw += 0.1; document.getElementById("sw_out").innerText = sw.toFixed(1)+"s"; }, 100); }
-function swStop() { clearInterval(swInt); }
-function swReset() { sw = 0; document.getElementById("sw_out").innerText = "0.0s"; }
-
-function saveNote() { localStorage.setItem("mynote", document.getElementById("note_in").value); }
-function loadNote() { document.getElementById("note_out").innerText = localStorage.getItem("mynote") || "No notes found."; }
-
-/* -------- Text Tools -------- */
-function upperText(){ document.getElementById("text_out").value = document.getElementById("text_in").value.toUpperCase(); }
-function lowerText(){ document.getElementById("text_out").value = document.getElementById("text_in").value.toLowerCase(); }
-function removeSpaces(){ document.getElementById("text_out").value = document.getElementById("text_in").value.replace(/\s+/g,""); }
-
-/* -------- Algebra Solver -------- */
-function solveEquation() {
-  let q = document.getElementById("eq_input").value;
-  try {
-    let ans = Algebrite.run(q);
-    document.getElementById("eq_out").innerText = ans;
-  } catch {
-    document.getElementById("eq_out").innerText = "Invalid expression";
-  }
-}
 </script>
 </head>
+
 <body>
 
-<!-- TABS -->
 <div class='tabs'>
   <div class='tab-btn' onclick="openTab('home', this)">Home</div>
   <div class='tab-btn' onclick="openTab('smarttools', this)">Smart Tools</div>
@@ -196,15 +114,16 @@ function solveEquation() {
   <div class='tab-btn' onclick="openTab('solution', this)">Algebra Solver</div>
   <div class='tab-btn' onclick="openTab('operations', this)">Operations</div>
   <div class='tab-btn' onclick="openTab('lifetools', this)">Life Tools</div>
+  <div class='tab-btn' onclick="openTab('weather', this)">Weather Forecast</div>
   <div class='tab-btn' onclick="openTab('quiz', this)">Quiz</div>
 </div>
 
-<!-- HOME -->
-<div id="home" class="tab-content">
+<!------------------ HOME ------------------>
+<div id='home' class='tab-content'>
   <h1>Welcome Mithun 👋</h1>
   <div class="tool-box">
     <h3>Text Tools</h3>
-    <textarea id="text_in" rows="5" placeholder="Type text..."></textarea>
+    <textarea id="text_in" rows="5" placeholder="Type text here..."></textarea>
     <button onclick="upperText()">UPPERCASE</button>
     <button onclick="lowerText()">lowercase</button>
     <button onclick="removeSpaces()">Remove Spaces</button>
@@ -212,13 +131,13 @@ function solveEquation() {
   </div>
 </div>
 
-<!-- SMART TOOLS -->
+<!------------------ SMART TOOLS ------------------>
 <div id="smarttools" class="tab-content">
-  <h2>Smart Tools</h2>
+  <h2>Smart Tools Collection</h2>
 
   <div class="tool-box">
     <h3>QR Code Maker</h3>
-    <input id="qr_text" placeholder="Enter text">
+    <input id="qr_text" placeholder="Enter text or URL">
     <button onclick="makeQR()">Generate</button>
     <div id="qr_box" class="result" style="text-align:center;"></div>
   </div>
@@ -234,18 +153,18 @@ function solveEquation() {
 
   <div class="tool-box">
     <h3>Your IP Finder</h3>
-    <button onclick="getIP()">Show IP</button>
+    <button onclick="getIP()">Show My IP</button>
     <div id="ip_box" class="result"></div>
   </div>
 
   <div class="tool-box">
     <h3>Device Info</h3>
-    <button onclick="getDeviceInfo()">Show Device</button>
+    <button onclick="getDeviceInfo()">Show Device Info</button>
     <div id="device_box" class="result"></div>
   </div>
 
   <div class="tool-box">
-    <h3>Password Strength</h3>
+    <h3>Password Strength Checker</h3>
     <input id="pwd_input" type="password">
     <button onclick="checkPwd()">Check</button>
     <div id="pwd_box" class="result"></div>
@@ -253,7 +172,7 @@ function solveEquation() {
 
   <div class="tool-box">
     <h3>Random Name Picker</h3>
-    <textarea id="name_list" placeholder="Names separated by comma"></textarea>
+    <textarea id="name_list" placeholder="Names separated by commas"></textarea>
     <button onclick="pickName()">Pick</button>
     <div id="pick_out" class="result"></div>
   </div>
@@ -267,14 +186,14 @@ function solveEquation() {
 
   <div class="tool-box">
     <h3>Stopwatch</h3>
-    <div id="sw_out" class="result">0.0s</div>
+    <div id="sw_out" class="result">0.00s</div>
     <button onclick="swStart()">Start</button>
     <button onclick="swStop()">Stop</button>
     <button onclick="swReset()">Reset</button>
   </div>
 
   <div class="tool-box">
-    <h3>Notes</h3>
+    <h3>Notes App</h3>
     <textarea id="note_in" rows="4"></textarea>
     <button onclick="saveNote()">Save</button>
     <button onclick="loadNote()">Load</button>
@@ -282,102 +201,254 @@ function solveEquation() {
   </div>
 </div>
 
-<!-- CAPITAL FINDER -->
+<!------------------ CAPITAL FINDER ------------------>
 <div id="capital" class="tab-content">
   <h2>Capital Finder</h2>
   <div class="tool-box">
-    <input id="cap_in" placeholder="Enter country">
-    <button onclick="capFind()">Find</button>
-    <div id="cap_out" class="result"></div>
+    <input id="country_in" placeholder="Enter country">
+    <button onclick="findCapital()">Find Capital</button>
+    <div id="capital_out" class="result"></div>
   </div>
 </div>
 
-<script>
-function capFind(){
-  let c = document.getElementById("cap_in").value.toLowerCase();
-  const data = {
-    india: "New Delhi",
-    usa: "Washington D.C",
-    japan: "Tokyo",
-    australia:"Canberra",
-    canada:"Ottawa"
-  };
-  document.getElementById("cap_out").innerText =
-    data[c] ? "Capital: " + data[c] : "Not Found";
-}
-</script>
-
-<!-- ALGEBRA SOLVER -->
+<!------------------ ALGEBRA SOLVER ------------------>
 <div id="solution" class="tab-content">
   <h2>Algebra Solver</h2>
   <div class="tool-box">
-    <input id="eq_input" placeholder="Example: solve(x^2-4)">
-    <button onclick="solveEquation()">Solve</button>
-    <div id="eq_out" class="result"></div>
+    <input id="alg_in" placeholder="Equation (ex: 2x+3=15)">
+    <button onclick="solveAlg()">Solve</button>
+    <div id="alg_out" class="result"></div>
   </div>
 </div>
 
-<!-- OPERATIONS -->
+<!------------------ OPERATIONS ------------------>
 <div id="operations" class="tab-content">
   <h2>Math Operations</h2>
+
   <div class="tool-box">
-    <input id="n1" type="number" placeholder="Num1">
-    <input id="n2" type="number" placeholder="Num2">
-    <button onclick="document.getElementById('op_out').innerText = Number(n1.value)+Number(n2.value)">Add</button>
-    <button onclick="document.getElementById('op_out').innerText = Number(n1.value)-Number(n2.value)">Subtract</button>
-    <button onclick="document.getElementById('op_out').innerText = Number(n1.value)*Number(n2.value)">Multiply</button>
-    <button onclick="document.getElementById('op_out').innerText = (Number(n2.value)==0?'Error':Number(n1.value)/Number(n2.value))">Divide</button>
-    <div id="op_out" class="result"></div>
+    <h3>Basic Calculator</h3>
+    <input id="n1" type="number" placeholder="Number 1">
+    <input id="n2" type="number" placeholder="Number 2">
+    <button onclick="calc('+')">+</button>
+    <button onclick="calc('-')">-</button>
+    <button onclick="calc('*')">*</button>
+    <button onclick="calc('/')">/</button>
+    <div id="calc_out" class="result"></div>
+  </div>
+
+  <div class="tool-box">
+    <h3>LCM / HCF</h3>
+    <input id="lcm_in" placeholder="Numbers separated by commas (ex 4,6,8)">
+    <button onclick="calcLCM()">LCM</button>
+    <button onclick="calcHCF()">HCF</button>
+    <div id="lcm_out" class="result"></div>
+  </div>
+
+  <div class="tool-box">
+    <h3>Prime Checker</h3>
+    <input id="prime_in" type="number" placeholder="Enter number">
+    <button onclick="checkPrime()">Check</button>
+    <div id="prime_out" class="result"></div>
   </div>
 </div>
 
-<!-- LIFE TOOLS -->
-<div id="lifetools" class="tab-content">
-  <h2>Life Tools</h2>
 
-  <div class="tool-box">
-    <h3>BMI Calculator</h3>
-    <input id="w" placeholder="Weight kg">
-    <input id="h" placeholder="Height m">
-    <button onclick="document.getElementById('bmi_out').innerText = (w.value/(h.value*h.value)).toFixed(2)">Calculate</button>
-    <div id="bmi_out" class="result"></div>
+    <!-- WEATHER FORECAST TAB -->
+  <div id="weather" class="tab-content">
+    <h2>Weather Forecast</h2>
+
+    <div class="tool-box">
+      <h3>Auto Location Weather</h3>
+      <button onclick="autoWeather()">Detect & Show Weather</button>
+      <div id="auto_weather_out" class="result"></div>
+    </div>
+
+    <div class="tool-box">
+      <h3>Search City Weather</h3>
+      <input id="city_in" placeholder="Enter city (ex: Chennai)">
+      <button onclick="cityWeather()">Show Weather</button>
+      <div id="city_weather_out" class="result"></div>
+    </div>
   </div>
 
-  <div class="tool-box">
-    <h3>Age Calculator</h3>
-    <input id="dob" type="date">
-    <button onclick="calcAge()">Calculate</button>
-    <div id="age_out" class="result"></div>
-  </div>
-</div>
 
+</div><!-- end tabs container -->
+
+<!-- ============= SCRIPTS SECTION ============= -->
 <script>
-function calcAge(){
-  let d = new Date(document.getElementById("dob").value);
-  let diff = Date.now() - d.getTime();
-  let age = new Date(diff).getUTCFullYear() - 1970;
-  document.getElementById("age_out").innerText = "Age: " + age;
-}
-</script>
+/* ---------------- TAB CONTROL ---------------- */
+function openTab(tabName, elm) {
+  let tabs = document.getElementsByClassName("tab-content");
+  for (let t of tabs) t.style.display = "none";
 
-<!-- QUIZ -->
-<div id="quiz" class="tab-content">
-  <h2>Quick Quiz</h2>
-  <div class="tool-box">
-    <p>5 + 7 = ?</p>
-    <input id="q1">
-    <button onclick="checkQuiz()">Check</button>
-    <div id="quiz_out" class="result"></div>
-  </div>
-</div>
+  let btns = document.getElementsByClassName("tab-btn");
+  for (let b of btns) b.classList.remove("active");
 
-<script>
-function checkQuiz(){
-  document.getElementById("quiz_out").innerText =
-    (q1.value == "12") ? "Correct!" : "Wrong!";
+  document.getElementById(tabName).style.display = "block";
+  elm.classList.add("active");
 }
+
+/* ---------------- QR CODE MAKER ---------------- */
+function makeQR() {
+  let t = document.getElementById("qr_input").value;
+  if (!t) return alert("Enter something!");
+  let url = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=" + encodeURIComponent(t);
+  document.getElementById("qr_out").innerHTML = `<img src="${url}">`;
+}
+
+/* ---------------- BARCODE GENERATOR ---------------- */
+function makeBarcode() {
+  let t = document.getElementById("barcode_input").value;
+  if (!t) return alert("Enter text!");
+  let url = "https://barcode.tec-it.com/barcode.ashx?data=" + encodeURIComponent(t);
+  document.getElementById("barcode_out").innerHTML = `<img src="${url}">`;
+}
+
+/* ---------------- IP ADDRESS FINDER ---------------- */
+async function getIP() {
+  let r = await fetch("https://api.ipify.org?format=json");
+  let d = await r.json();
+  document.getElementById("ip_out").innerText = "Your IP: " + d.ip;
+}
+
+/* ---------------- DEVICE INFO ---------------- */
+function getDeviceInfo() {
+  let info =
+    "Platform: " + navigator.platform + "\n" +
+    "Browser: " + navigator.userAgent + "\n" +
+    "Language: " + navigator.language + "\n" +
+    "Online: " + navigator.onLine;
+  document.getElementById("device_out").innerText = info;
+}
+
+/* ---------------- PASSWORD STRENGTH ---------------- */
+function checkPass() {
+  let p = document.getElementById("pass_in").value;
+  let s = "Weak";
+
+  let score = 0;
+  if (p.length > 6) score++;
+  if (/[A-Z]/.test(p)) score++;
+  if (/[0-9]/.test(p)) score++;
+  if (/[^A-Za-z0-9]/.test(p)) score++;
+
+  if (score <= 1) s = "Weak";
+  else if (score == 2) s = "Medium";
+  else if (score >= 3) s = "Strong";
+
+  document.getElementById("pass_out").innerText = "Strength: " + s;
+}
+
+/* ---------------- RANDOM NAME PICKER ---------------- */
+function pickName() {
+  let names = document.getElementById("names_in").value.trim();
+  if (!names) return alert("Enter names separated by commas!");
+  let arr = names.split(",");
+  let r = arr[Math.floor(Math.random() * arr.length)];
+  document.getElementById("name_out").innerText = "Selected: " + r;
+}
+
+/* ---------------- TIMER ---------------- */
+let timerInterval;
+function startTimer() {
+  let s = Number(document.getElementById("timer_sec").value);
+  if (!s) return alert("Enter seconds!");
+  clearInterval(timerInterval);
+
+  timerInterval = setInterval(() => {
+    document.getElementById("timer_out").innerText = s + " sec left";
+    s--;
+    if (s < 0) {
+      clearInterval(timerInterval);
+      document.getElementById("timer_out").innerText = "Time's up!";
+    }
+  }, 1000);
+}
+
+/* ---------------- STOPWATCH ---------------- */
+let sw = 0, swInterval;
+function startSW() {
+  clearInterval(swInterval);
+  swInterval = setInterval(() => {
+    sw++;
+    document.getElementById("sw_out").innerText = sw + " sec";
+  }, 1000);
+}
+function stopSW() { clearInterval(swInterval); }
+function resetSW() { sw = 0; document.getElementById("sw_out").innerText = "0"; }
+
+/* ---------------- NOTES APP ---------------- */
+function saveNote() {
+  localStorage.setItem("note", document.getElementById("note_in").value);
+}
+function loadNote() {
+  document.getElementById("note_in").value = localStorage.getItem("note") || "";
+}
+loadNote();
+
+/* ---------------- WEATHER FORECAST ---------------- */
+
+// Auto location weather
+function autoWeather() {
+  if (!navigator.geolocation) {
+    auto_weather_out.innerText = "Geolocation not supported!";
+    return;
+  }
+
+  auto_weather_out.innerText = "Getting your location...";
+
+  navigator.geolocation.getCurrentPosition(async (pos) => {
+    let lat = pos.coords.latitude;
+    let lon = pos.coords.longitude;
+
+    let url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`;
+
+    let r = await fetch(url);
+    let d = await r.json();
+
+    auto_weather_out.innerText =
+      "Temperature: " + d.current_weather.temperature + "°C\n" +
+      "Wind Speed: " + d.current_weather.windspeed + " km/h\n" +
+      "Condition Code: " + d.current_weather.weathercode;
+  });
+}
+
+// City weather
+async function cityWeather() {
+  let city = city_in.value.trim();
+  if (!city) {
+    city_weather_out.innerText = "Enter city name!";
+    return;
+  }
+
+  city_weather_out.innerText = "Searching...";
+
+  // Step 1: Geocoding → lat/lon
+  let geo = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${city}`);
+  let g = await geo.json();
+
+  if (!g.results || g.results.length === 0) {
+    city_weather_out.innerText = "City not found!";
+    return;
+  }
+
+  let lat = g.results[0].latitude;
+  let lon = g.results[0].longitude;
+
+  // Step 2: Weather
+  let url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`;
+
+  let r = await fetch(url);
+  let d = await r.json();
+
+  city_weather_out.innerText =
+    "City: " + g.results[0].name + "\n" +
+    "Temperature: " + d.current_weather.temperature + "°C\n" +
+    "Wind Speed: " + d.current_weather.windspeed + " km/h\n" +
+    "Condition Code: " + d.current_weather.weathercode;
+}
+
 </script>
 
 </body>
 </html>
- 
