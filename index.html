@@ -3,476 +3,380 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mithun Multi-Tool App</title>
-
-<!-- External Libraries -->
-<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+<title>Mithun Multi Tool App</title>
 
 <style>
-:root {
-  --bg1: #ff5f6d;
-  --bg2: #ffc371;
-  --card: rgba(255,255,255,0.95);
-  --text-dark: #000;
-  --accent: #2196F3;
-}
 body {
-  margin:0;
-  background:linear-gradient(135deg,var(--bg1),var(--bg2));
-  font-family:Arial, sans-serif;
-  color:white;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f0f2f5;
 }
 
-/* Tabs */
-.tabs{
-  display:flex;
-  gap:10px;
-  padding:12px;
-  justify-content:center;
-  background:rgba(0,0,0,0.4);
-  position:sticky;
-  top:0;
-  z-index:1000;
-}
-.tab-btn{
-  padding:10px 15px;
-  border-radius:12px;
-  background:rgba(255,255,255,0.2);
-  color:white;
-  cursor:pointer;
-  font-weight:bold;
-  border:2px solid var(--accent);
-}
-.tab-btn:hover, .tab-btn.active-tab{
-  background:var(--accent);
+header {
+  background: #4a4aff;
+  color: white;
+  padding: 15px;
+  text-align: center;
+  font-size: 22px;
+  font-weight: bold;
 }
 
-.tab-content{ display:none; padding:20px; }
-.active{ display:block; }
-
-/* Cards */
-.tool-box{
-  background:var(--card);
-  color:var(--text-dark);
-  padding:15px;
-  border-radius:12px;
-  margin-bottom:20px;
-  box-shadow:0 8px 20px rgba(0,0,0,0.3);
+nav {
+  display: flex;
+  flex-wrap: wrap;
+  background: #222;
 }
 
-input,textarea,select,button{
-  padding:10px;
-  margin:5px;
-  border-radius:8px;
-  border:1px solid #ccc;
-}
-button{
-  background:var(--accent);
-  color:white;
-  cursor:pointer;
-  font-weight:bold;
-}
-.result{
-  background:#f0f8ff;
-  padding:10px;
-  border-radius:10px;
-  margin-top:10px;
-  border-left:5px solid var(--accent);
-  white-space:pre-wrap;
+nav button {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  background: #222;
+  color: white;
+  font-size: 15px;
+  cursor: pointer;
+  border-right: 1px solid #333;
 }
 
-/* Life tools */
-.life-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
-  gap:15px;
+nav button:hover {
+  background: #444;
 }
-.life-btn{
-  background:white;
-  color:black;
-  padding:15px;
-  border-radius:12px;
-  text-align:center;
-  cursor:pointer;
-  font-weight:bold;
-  border:2px solid var(--accent);
+
+.section {
+  display: none;
+  padding: 20px;
 }
-.life-btn:hover{
-  background:var(--accent);
-  color:white;
+
+.active {
+  display: block;
 }
-.life-subtab{ display:none; }
-.life-subtab.active-sub{ display:block; }
+
+.tool-btn {
+  display: block;
+  width: 100%;
+  margin: 10px 0;
+  padding: 12px;
+  background: #4a4aff;
+  color: white;
+  border: none;
+  font-size: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.result-box {
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  margin-top: 15px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+}
+
+input, select {
+  padding: 8px;
+  margin: 5px 0;
+  width: 90%;
+}
 </style>
-
 </head>
+
 <body>
 
-<!-- NAV TABS -->
-<div class="tabs">
-  <div class="tab-btn" onclick="openTab('home',this)">Home</div>
-  <div class="tab-btn" onclick="openTab('smart',this)">Smart Tools</div>
-  <div class="tab-btn" onclick="openTab('capital',this)">Capital Finder</div>
-  <div class="tab-btn" onclick="openTab('algebra',this)">Algebra Solver</div>
-  <div class="tab-btn" onclick="openTab('operations',this)">Operations</div>
-  <div class="tab-btn" onclick="openTab('life',this)">Life Tools</div>
-  <div class="tab-btn" onclick="openTab('weather',this)">Weather</div>
-  <div class="tab-btn" onclick="openTab('quiz',this)">Quiz</div>
-</div>
+<header>Mithun Multi Tool App</header>
+
+<nav>
+  <button onclick="openTab('home')">Home</button>
+  <button onclick="openTab('smart')">Smart Tools</button>
+  <button onclick="openTab('life')">Life Tools</button>
+  <button onclick="openTab('weather')">Weather</button>
+  <button onclick="openTab('capital')">Capital Finder</button>
+</nav>
 
 <!-- HOME -->
-<div id="home" class="tab-content active">
-  <h1>Welcome Mithun 👋</h1>
-  <div class="tool-box">
-    <h3>Text Tools</h3>
-    <textarea id="text_in"></textarea>
-    <button onclick="upperText()">UPPERCASE</button>
-    <button onclick="lowerText()">lowercase</button>
-    <button onclick="removeSpaces()">Remove Spaces</button>
-    <textarea id="text_out" class="result"></textarea>
-  </div>
+<div id="home" class="section active">
+  <h2>Welcome</h2>
+  <p>Select a tab to begin.</p>
 </div>
 
 <!-- SMART TOOLS -->
-<div id="smart" class="tab-content">
+<div id="smart" class="section">
   <h2>Smart Tools</h2>
-
-  <div class="tool-box">
-    <h3>QR Code</h3>
-    <input id="qr_text">
-    <button onclick="makeQR()">Generate</button>
-    <div id="qr_box" class="result"></div>
-  </div>
-
-  <div class="tool-box">
-    <h3>Barcode</h3>
-    <input id="barcode_text">
-    <button onclick="makeBarcode()">Generate</button>
-    <svg id="barcode_svg"></svg>
-  </div>
-
-  <div class="tool-box">
-    <h3>Your IP</h3>
-    <button onclick="getIP()">Show IP</button>
-    <div id="ip_box" class="result"></div>
-  </div>
-
-  <div class="tool-box">
-    <h3>Device Info</h3>
-    <button onclick="getDeviceInfo()">Show</button>
-    <div id="device_box" class="result"></div>
-  </div>
-
-  <div class="tool-box">
-    <h3>Password Strength</h3>
-    <input id="pwd_input">
-    <button onclick="checkPwd()">Check</button>
-    <div id="pwd_box" class="result"></div>
-  </div>
-</div>
-
-<!-- CAPITAL FINDER -->
-<div id="capital" class="tab-content">
-  <h2>Capital Finder</h2>
-  <div class="tool-box">
-    <input id="country_in" placeholder="Enter country">
-    <button onclick="findCapital()">Find</button>
-    <div id="capital_out" class="result"></div>
-  </div>
-</div>
-
-<!-- ALGEBRA SOLVER -->
-<div id="algebra" class="tab-content">
-  <h2>Algebra Solver</h2>
-  <div class="tool-box">
-    <input id="eq_in" placeholder="Enter equation (2x+3=11)">
-    <button onclick="solveEq()">Solve</button>
-    <div id="eq_out" class="result"></div>
-  </div>
-</div>
-
-<!-- OPERATIONS -->
-<div id="operations" class="tab-content">
-  <h2>Number Operations</h2>
-
-  <div class="tool-box">
-    <h3>Prime Checker</h3>
-    <input id="prime_in">
-    <button onclick="isPrimeCheck()">Check</button>
-    <div id="prime_out" class="result"></div>
-  </div>
-
-  <div class="tool-box">
-    <h3>Factorial</h3>
-    <input id="fact_in">
-    <button onclick="fact()">Find</button>
-    <div id="fact_out" class="result"></div>
-  </div>
+  <button class="tool-btn" onclick="openInner('qrcode')">QR Code Generator</button>
+  <button class="tool-btn" onclick="openInner('barcode')">Barcode Generator</button>
+  <button class="tool-btn" onclick="openInner('ip')">IP Finder</button>
+  <button class="tool-btn" onclick="openInner('device')">Device Info</button>
+  <button class="tool-btn" onclick="openInner('passmeter')">Password Strength Meter</button>
+  <div id="smartContent"></div>
 </div>
 
 <!-- LIFE TOOLS -->
-<div id="life" class="tab-content">
+<div id="life" class="section">
   <h2>Life Tools</h2>
-
-  <div class="life-grid">
-    <div class="life-btn" onclick="openLife('age')">Age</div>
-    <div class="life-btn" onclick="openLife('bmi')">BMI</div>
-    <div class="life-btn" onclick="openLife('emi')">EMI</div>
-    <div class="life-btn" onclick="openLife('unit')">Unit Convert</div>
-    <div class="life-btn" onclick="openLife('square')">Square/Cube Root</div>
-    <div class="life-btn" onclick="openLife('percent')">Percentage</div>
-    <div class="life-btn" onclick="openLife('discount')">Discount</div>
-  </div>
-
-  <!-- AGE -->
-  <div id="age" class="life-subtab">
-    <div class="tool-box">
-      <h3>Age Calculator</h3>
-      <input type="date" id="age_dob">
-      <button onclick="calcAge()">Calculate</button>
-      <div id="age_out" class="result"></div>
-    </div>
-  </div>
-
-  <!-- BMI -->
-  <div id="bmi" class="life-subtab">
-    <div class="tool-box">
-      <h3>BMI Calculator</h3>
-      <input id="bmi_h" placeholder="Height (cm)">
-      <input id="bmi_w" placeholder="Weight (kg)">
-      <button onclick="calcBMI()">Calculate</button>
-      <div id="bmi_out" class="result"></div>
-    </div>
-  </div>
-
-  <!-- EMI -->
-  <div id="emi" class="life-subtab">
-    <div class="tool-box">
-      <h3>EMI Calculator</h3>
-      <input id="emi_p" placeholder="Principal">
-      <input id="emi_r" placeholder="Rate %">
-      <input id="emi_n" placeholder="Months">
-      <button onclick="calcEMI()">Calculate</button>
-      <div id="emi_out" class="result"></div>
-    </div>
-  </div>
-
-  <!-- UNIT -->
-  <div id="unit" class="life-subtab">
-    <div class="tool-box">
-      <h3>Unit Convert (m ↔ cm)</h3>
-      <input id="unit_in">
-      <select id="unit_type">
-        <option value="m-cm">Meter → CM</option>
-        <option value="cm-m">CM → Meter</option>
-      </select>
-      <button onclick="convertUnit()">Convert</button>
-      <div id="unit_out" class="result"></div>
-    </div>
-  </div>
-
-  <!-- ROOT -->
-  <div id="square" class="life-subtab">
-    <div class="tool-box">
-      <h3>Square / Cube Root</h3>
-      <input id="root_in">
-      <button onclick="calcRoot()">Calculate</button>
-      <div id="root_out" class="result"></div>
-    </div>
-  </div>
-
-  <!-- PERCENTAGE -->
-  <div id="percent" class="life-subtab">
-    <div class="tool-box">
-      <h3>Percentage</h3>
-      <input id="percent_a" placeholder="Value">
-      <input id="percent_b" placeholder="Total">
-      <button onclick="calcPercent()">Find</button>
-      <div id="percent_out" class="result"></div>
-    </div>
-  </div>
+  <button class="tool-btn" onclick="openLife('sqrt')">Square & Cube Root</button>
+  <button class="tool-btn" onclick="openLife('percent')">Percentage Finder</button>
+  <button class="tool-btn" onclick="openLife('discount')">Discount Calculator</button>
+  <button class="tool-btn" onclick="openLife('area')">Area & Volume Calculator</button>
+  <div id="lifeContent"></div>
 </div>
 
 <!-- WEATHER -->
-<div id="weather" class="tab-content">
-  <h2>Weather</h2>
+<div id="weather" class="section">
+  <h2>Weather Forecast</h2>
+  <button class="tool-btn" onclick="getAutoWeather()">Get Weather by Location</button>
 
-  <div class="tool-box">
-    <h3>Auto Location</h3>
-    <button onclick="autoWeather()">Get Weather</button>
-    <div id="auto_weather_out" class="result"></div>
-  </div>
+  <h3>Or Enter City</h3>
+  <input id="weatherCity" placeholder="Enter city name">
+  <button class="tool-btn" onclick="getWeatherByCity()">Get Weather</button>
 
-  <div class="tool-box">
-    <h3>City Search</h3>
-    <input id="city_in">
-    <button onclick="cityWeather()">Search</button>
-    <div id="city_weather_out" class="result"></div>
-  </div>
+  <div id="weatherResult" class="result-box"></div>
 </div>
 
-<!-- QUIZ -->
-<div id="quiz" class="tab-content">
-  <h2>Quiz</h2>
-  <div class="tool-box">
-    <h3>Math Quiz</h3>
-    <button onclick="startQuiz()">Start Quiz</button>
-    <div id="quiz_box" class="result"></div>
-  </div>
+<!-- CAPITAL FINDER -->
+<div id="capital" class="section">
+  <h2>Capital Finder</h2>
+  <input id="countryInput" placeholder="Enter country name">
+  <button class="tool-btn" onclick="getCapital()">Find Capital</button>
+  <div id="capitalResult" class="result-box"></div>
 </div>
 
-<!-- JS -->
 <script>
-
-/* TAB SWITCH */
-function openTab(id, btn){
-  document.querySelectorAll(".tab-content").forEach(t=>t.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
-
-  document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active-tab"));
-  btn.classList.add("active-tab");
+/* ---------------- TAB SYSTEM ---------------- */
+function openTab(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
 }
 
-/* LIFE SUB-TABS */
-function openLife(id){
-  document.querySelectorAll(".life-subtab").forEach(s=>s.classList.remove("active-sub"));
-  document.getElementById(id).classList.add("active-sub");
-}
+/* ---------------- SMART TOOLS ---------------- */
+function openInner(tool) {
+  let box = document.getElementById("smartContent");
 
-/* TEXT TOOLS */
-function upperText(){ text_out.value = text_in.value.toUpperCase(); }
-function lowerText(){ text_out.value = text_in.value.toLowerCase(); }
-function removeSpaces(){ text_out.value = text_in.value.split(" ").join(""); }
+  if (tool === "qrcode") {
+    box.innerHTML = `
+      <h3>QR Code Generator</h3>
+      <input id="qrText" placeholder="Enter text">
+      <button class="tool-btn" onclick="makeQR()">Generate</button>
+      <div id="qrResult"></div>`;
+  }
 
-/* SMART TOOLS */
-function makeQR(){
-  let t = qr_text.value;
-  qr_box.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${t}">`;
-}
-function makeBarcode(){
-  JsBarcode("#barcode_svg", barcode_text.value);
-}
-async function getIP(){
-  let d = await fetch("https://api.ipify.org?format=json").then(r=>r.json());
-  ip_box.innerHTML = d.ip;
-}
-function getDeviceInfo(){
-  device_box.innerHTML = navigator.userAgent;
-}
-function checkPwd(){
-  let p = pwd_input.value;
-  let score = 0;
-  if(p.length>=8)score++;
-  if(/[0-9]/.test(p))score++;
-  if(/[A-Z]/.test(p))score++;
-  if(/[@#$%]/.test(p))score++;
+  if (tool === "barcode") {
+    box.innerHTML = `
+      <h3>Barcode Generator</h3>
+      <input id="barText" placeholder="Enter number">
+      <button class="tool-btn" onclick="makeBarcode()">Generate</button>
+      <svg id="barcode"></svg>`;
+  }
 
-  pwd_box.innerHTML = ["Very Weak","Weak","Good","Strong","Very Strong"][score];
-}
+  if (tool === "ip") {
+    fetch("https://api.ipify.org?format=json")
+      .then(r => r.json())
+      .then(d => {
+        box.innerHTML = `<h3>Your IP Address</h3><div class="result-box">${d.ip}</div>`;
+      });
+  }
 
-/* CAPITAL FINDER */
-async function findCapital(){
-  let c = country_in.value.trim().toLowerCase();
-  if(!c){ capital_out.innerHTML="Enter country"; return;}
+  if (tool === "device") {
+    box.innerHTML = `
+      <h3>Device Info</h3>
+      <div class="result-box">
+        <b>User Agent:</b> ${navigator.userAgent}<br>
+        <b>Platform:</b> ${navigator.platform}<br>
+        <b>Language:</b> ${navigator.language}
+      </div>`;
+  }
 
-  let all = await fetch("https://restcountries.com/v3.1/all").then(r=>r.json());
-  let found = all.find(x=>x.name.common.toLowerCase()==c);
-
-  if(!found){ capital_out.innerHTML="Not found"; return;}
-
-  let capital = found.capital ? found.capital[0] : "No capital";
-  let flag = found.flags.png;
-
-  capital_out.innerHTML = `
-    <h3>${found.name.common}</h3>
-    <img src="${flag}" width="120">
-    <p><b>Capital:</b> ${capital}</p>
-    <p><b>Region:</b> ${found.region}</p>
-    <p><b>Population:</b> ${found.population.toLocaleString()}</p>
-  `;
-}
-
-/* ALGEBRA SOLVER */
-function solveEq(){
-  let eq = eq_in.value;
-  try{
-    let parts = eq.split("=");
-    let L = eval(parts[0].replace("x","*x"));
-    eq_out.innerHTML = "Use algebra library if needed";
-  }catch(e){
-    eq_out.innerHTML="Invalid equation";
+  if (tool === "passmeter") {
+    box.innerHTML = `
+      <h3>Password Strength Meter</h3>
+      <input id="passInput" oninput="checkPass()" placeholder="Enter password">
+      <div id="passStrength" class="result-box"></div>`;
   }
 }
 
-/* OPERATIONS */
-function isPrimeCheck(){
-  let n = Number(prime_in.value);
-  if(n<2)return prime_out.innerHTML="Not Prime";
-  for(let i=2;i*i<=n;i++){
-    if(n%i==0)return prime_out.innerHTML="Not Prime";
+function makeQR() {
+  let text = document.getElementById("qrText").value;
+  document.getElementById("qrResult").innerHTML =
+    `<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${text}">`;
+}
+
+function makeBarcode() {
+  let text = document.getElementById("barText").value;
+  JsBarcode("#barcode", text);
+}
+
+function checkPass() {
+  let p = document.getElementById("passInput").value;
+  let s = "Weak";
+  if (p.length > 6) s = "Medium";
+  if (p.length > 10 && /[0-9]/.test(p) && /[A-Z]/.test(p)) s = "Strong";
+  document.getElementById("passStrength").innerHTML = "Strength: " + s;
+}
+
+/* ---------------- LIFE TOOLS ---------------- */
+function openLife(tool) {
+  let box = document.getElementById("lifeContent");
+
+  if (tool === "sqrt") {
+    box.innerHTML = `
+      <h3>Square & Cube Root</h3>
+      <input id="numRoot" placeholder="Enter number">
+      <button class="tool-btn" onclick="calcRoot()">Calculate</button>
+      <div id="rootResult" class="result-box"></div>`;
   }
-  prime_out.innerHTML="Prime Number";
-}
-function fact(){
-  let n=Number(fact_in.value),f=1;
-  for(let i=1;i<=n;i++)f*=i;
-  fact_out.innerHTML=f;
+
+  if (tool === "percent") {
+    box.innerHTML = `
+      <h3>Percentage Finder</h3>
+      <input id="percentNum" placeholder="Number">
+      <input id="percentPct" placeholder="Percentage">
+      <button class="tool-btn" onclick="calcPercent()">Calculate</button>
+      <div id="percentResult" class="result-box"></div>`;
+  }
+
+  if (tool === "discount") {
+    box.innerHTML = `
+      <h3>Discount Calculator</h3>
+      <input id="price" placeholder="Price">
+      <input id="disc" placeholder="Discount %">
+      <button class="tool-btn" onclick="calcDiscount()">Calculate</button>
+      <div id="discResult" class="result-box"></div>`;
+  }
+
+  if (tool === "area") {
+    box.innerHTML = `
+      <h3>Area of Rectangle</h3>
+      <input id="l" placeholder="Length">
+      <input id="b" placeholder="Breadth">
+      <button class="tool-btn" onclick="calcArea()">Calculate</button>
+      <div id="areaResult" class="result-box"></div>`;
+  }
 }
 
-/* LIFE TOOLS */
-function calcAge(){
-  let d = new Date(age_dob.value);
-  if(!age_dob.value)return age_out.innerHTML="Enter DOB";
-  let age = new Date(Date.now()-d.getTime()).getUTCFullYear()-1970;
-  age_out.innerHTML="Age: "+age;
-}
-function calcBMI(){
-  let h=bmi_h.value/100,w=bmi_w.value;
-  bmi_out.innerHTML = "BMI: "+(w/(h*h)).toFixed(2);
-}
-function calcEMI(){
-  let P=emi_p.value,R=emi_r.value/1200,N=emi_n.value;
-  let emi = P*R*Math.pow(1+R,N)/(Math.pow(1+R,N)-1);
-  emi_out.innerHTML="EMI: "+emi.toFixed(2);
-}
-function convertUnit(){
-  let v=unit_in.value,t=unit_type.value;
-  unit_out.innerHTML = t=="m-cm" ? v*100+" cm" : v/100+" m";
-}
-function calcRoot(){
-  let n=root_in.value;
-  root_out.innerHTML=`Square Root: ${Math.sqrt(n)}\nCube Root: ${Math.cbrt(n)}`;
-}
-function calcPercent(){
-  percent_out.innerHTML = (percent_a.value/percent_b.value*100).toFixed(2)+"%";
+function calcRoot() {
+  let n = document.getElementById("numRoot").value;
+  document.getElementById("rootResult").innerHTML =
+    `Square Root: ${Math.sqrt(n)}<br>Cube Root: ${Math.cbrt(n)}`;
 }
 
-/* WEATHER */
-async function cityWeather(){
-  let c=city_in.value;
-  let url=`https://api.openweathermap.org/data/2.5/weather?q=${c}&appid=439d4b804bc8187953eb36d2a8c26a02&units=metric`;
-  let d=await fetch(url).then(r=>r.json());
-  if(!d.main)return city_weather_out.innerHTML="Not found";
-  city_weather_out.innerHTML = `Temp: ${d.main.temp}°C`;
+function calcPercent() {
+  let n = document.getElementById("percentNum").value;
+  let p = document.getElementById("percentPct").value;
+  document.getElementById("percentResult").innerHTML =
+    (n * p / 100).toFixed(2);
 }
-function autoWeather(){
-  navigator.geolocation.getCurrentPosition(async pos=>{
-    let lat=pos.coords.latitude,lon=pos.coords.longitude;
-    let url=`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=439d4b804bc8187953eb36d2a8c26a02&units=metric`;
-    let d=await fetch(url).then(r=>r.json());
-    auto_weather_out.innerHTML = `Location: ${d.name}\nTemp: ${d.main.temp}°C`;
+
+function calcDiscount() {
+  let p = document.getElementById("price").value;
+  let d = document.getElementById("disc").value;
+  let final = p - (p * d / 100);
+  document.getElementById("discResult").innerHTML = "Final Price: " + final;
+}
+
+function calcArea() {
+  let L = document.getElementById("l").value;
+  let B = document.getElementById("b").value;
+  document.getElementById("areaResult").innerHTML =
+    "Area: " + (L * B);
+}
+
+/* ---------------- WEATHER ---------------- */
+const weatherKey = "b66a33257021cbcf5b021b6fc56efddb"; // YOUR FREE API KEY
+
+function getWeatherByCity() {
+  let city = document.getElementById("weatherCity").value;
+  fetchWeather(city);
+}
+
+function getAutoWeather() {
+  navigator.geolocation.getCurrentPosition(pos => {
+    let lat = pos.coords.latitude;
+    let lon = pos.coords.longitude;
+    fetchWeather("", lat, lon);
   });
 }
 
-/* QUIZ */
-function startQuiz(){
-  let a=Math.floor(Math.random()*10);
-  let b=Math.floor(Math.random()*10);
-  let ans=prompt(`${a}+${b}=?`);
-  quiz_box.innerHTML = ans==a+b ? "Correct!" : "Wrong";
+function fetchWeather(city, lat = "", lon = "") {
+  let url =
+    city
+    ? `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${weatherKey}&units=metric`
+    : `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${weatherKey}&units=metric`;
+
+  fetch(url)
+    .then(r => r.json())
+    .then(d => {
+      document.getElementById("weatherResult").innerHTML = `
+        <b>${d.name}</b><br>
+        Temperature: ${d.main.temp}°C<br>
+        Humidity: ${d.main.humidity}%<br>
+        Weather: ${d.weather[0].description}
+      `;
+    });
 }
 
+/* ---------------- CAPITAL FINDER ---------------- */
+function levenshtein(a, b) {
+  const m = [];
+  for (let i = 0; i <= a.length; i++) {
+    m[i] = [i];
+    for (let j = 1; j <= b.length; j++) {
+      if (i === 0) m[0][j] = j;
+      else {
+        m[i][j] = Math.min(
+          m[i-1][j] + 1,
+          m[i][j-1] + 1,
+          m[i-1][j-1] + (a[i-1] === b[j-1] ? 0 : 1)
+        );
+      }
+    }
+  }
+  return m[a.length][b.length];
+}
+
+function fuzzyMatch(input, list) {
+  input = input.toLowerCase();
+  let best = "";
+  let bestScore = 999;
+  for (let c of list) {
+    let score = levenshtein(input, c.toLowerCase());
+    if (score < bestScore) {
+      bestScore = score;
+      best = c;
+    }
+  }
+  return best;
+}
+
+async function getCapital() {
+  let input = document.getElementById("countryInput").value;
+
+  let all = await fetch("https://restcountries.com/v3.1/all").then(r => r.json());
+  let names = all.map(x => x.name.common);
+
+  let best = fuzzyMatch(input, names);
+
+  let info = await fetch(`https://restcountries.com/v3.1/name/${best}?fullText=true`)
+    .then(r => r.json());
+
+  let c = info[0];
+
+  let wiki = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${best}`)
+    .then(r => r.json());
+
+  document.getElementById("capitalResult").innerHTML = `
+    <h3>${best}</h3>
+    <img src="${c.flags.png}" width="120"><br><br>
+    <b>Capital:</b> ${c.capital}<br>
+    <b>Region:</b> ${c.region}<br>
+    <b>Population:</b> ${c.population.toLocaleString()}<br>
+    <b>Languages:</b> ${Object.values(c.languages || {}).join(", ")}<br>
+    <b>Currencies:</b> ${Object.values(c.currencies || {}).map(x => x.name).join(", ")}<br>
+    <hr>
+    <b>About ${best}:</b><br>
+    ${wiki.extract || "No summary available."}
+  `;
+}
 </script>
+
+<script src="https://cdn.jsdelivr.net/jsbarcode/3.11.5/JsBarcode.all.min.js"></script>
 
 </body>
 </html>
