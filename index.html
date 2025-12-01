@@ -1,8 +1,9 @@
-<!DOCTYPE html>
+
+html = r"""<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Mithun Multi-Tool App</title>
 
 <!-- External Libraries -->
@@ -10,296 +11,267 @@
 
 <style>
 /* ------------------- THEME ------------------- */
-:root {
-  --bg1: #ff5f6d;
-  --bg2: #ffc371;
-  --glass-bg: rgba(255, 255, 255, 0.25);
-  --glass-border: rgba(255, 255, 255, 0.4);
-  --accent: #ff4d79;
-  --shadow: rgba(0, 0, 0, 0.25);
+:root{
+  --bg1:#ff5f6d;
+  --bg2:#ffc371;
+  --glass-bg:rgba(255,255,255,0.18);
+  --glass-border:rgba(255,255,255,0.25);
+  --accent:#ff4d79;
+  --shadow:rgba(0,0,0,0.18);
 }
 
+*{box-sizing:border-box}
+html,body{height:100%}
 body{
   margin:0;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(135deg,var(--bg1),var(--bg2));
-  color:white;
-  backdrop-filter: blur(8px);
+  font-family:Arial, Helvetica, sans-serif;
+  background:linear-gradient(135deg,var(--bg1),var(--bg2));
+  color:#111;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
 }
 
-/* ------------------- TABS ------------------- */
+/* NAV / TABS */
 .tabs{
   position:sticky;
   top:0;
   z-index:1000;
   display:flex;
-  justify-content:center;
-  gap:10px;
-  padding:12px;
-  background:rgba(0,0,0,0.3);
-  backdrop-filter:blur(10px);
+  gap:8px;
+  padding:10px;
+  overflow-x:auto;
+  align-items:center;
+  background:rgba(0,0,0,0.25);
+  backdrop-filter:blur(6px);
 }
-
 .tab-btn{
-  padding:10px 15px;
-  border-radius:15px;
+  flex:0 0 auto;
+  padding:10px 14px;
+  border-radius:14px;
   background:var(--glass-bg);
   border:1px solid var(--glass-border);
   cursor:pointer;
-  font-weight:bold;
-  transition:0.3s;
-  color:white;
+  font-weight:700;
+  color:#fff;
+  white-space:nowrap;
+  -webkit-tap-highlight-color: transparent;
 }
+.tab-btn:hover{ transform:translateY(-2px) }
+.tab-btn.active-tab{ background:var(--accent); }
 
-.tab-btn:hover, .tab-btn.active-tab{
-  background:var(--accent);
-}
-
-/* ------------------- CONTENT ------------------- */
-.tab-content{ display:none; padding:20px; }
+/* CONTENT */
+.container{ padding:16px; max-width:1100px; margin:0 auto; }
+.tab-content{ display:none; padding:10px 0; }
 .tab-content.active{ display:block; }
 
-/* ------------------- GLASS CARD ------------------- */
+/* GLASS CARDS */
 .tool-box{
-  background: var(--glass-bg);
-  backdrop-filter: blur(12px);
-  border: 1px solid var(--glass-border);
-  box-shadow: 0 8px 25px var(--shadow);
-  padding: 20px;
-  border-radius: 20px;
-  margin-bottom: 25px;
-  color: black;
+  background:rgba(255,255,255,0.18);
+  border:1px solid var(--glass-border);
+  padding:14px;
+  border-radius:14px;
+  margin-bottom:16px;
+  box-shadow:0 8px 20px var(--shadow);
+  color:#111;
 }
 
-/* Inputs */
+/* FORM ELEMENTS */
 input,select,textarea,button{
   padding:10px;
-  border-radius:10px;
-  border:1px solid #ccc;
+  border-radius:8px;
+  border:1px solid rgba(0,0,0,0.12);
   margin-top:8px;
-  width:95%;
+  width:100%;
+  font-size:15px;
 }
-button{
-  background:var(--accent);
-  color:white;
-  font-weight:bold;
-  cursor:pointer;
-  border:none;
-}
-
-/* Result */
+textarea{ min-height:100px; resize:vertical; }
 .result{
-  background:white;
-  border-radius:12px;
+  background:#fff;
+  border-radius:10px;
   padding:10px;
   margin-top:10px;
   white-space:pre-wrap;
-  border-left:5px solid var(--accent);
+  border-left:4px solid var(--accent);
 }
 
-/* ------------------- LIFE TOOLS ------------------- */
+/* LIFE GRID */
 .life-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
-  gap:15px;
+  grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+  gap:10px;
 }
 .life-btn{
-  background:var(--glass-bg);
-  backdrop-filter:blur(12px);
+  background:rgba(255,255,255,0.12);
   border:1px solid var(--glass-border);
-  padding:15px;
-  border-radius:15px;
-  cursor:pointer;
-  font-weight:bold;
+  padding:12px;
+  border-radius:12px;
   text-align:center;
+  cursor:pointer;
+  font-weight:700;
 }
-.life-btn:hover{ background:var(--accent); }
 
-.life-subtab{ display:none; }
-.life-subtab.active-sub{ display:block; }
+/* CAPITAL CARD */
+.cap-card img{ border-radius:10px; max-width:100%; height:auto; }
 
-/* ------------------- CAPITAL CARD ------------------- */
-.cap-card{
-  background:rgba(255,255,255,0.2);
-  border:1px solid rgba(255,255,255,0.4);
-  padding:20px;
-  border-radius:20px;
-  backdrop-filter: blur(10px);
-  color:black;
-  margin-top:10px;
-  box-shadow:0 8px 25px var(--shadow);
+/* SMALL SCREEN ADJUST */
+@media (max-width:600px){
+  .tab-btn{ padding:10px; font-size:14px; border-radius:10px; }
+  .tool-box{ padding:12px; border-radius:12px; }
+  body{ font-size:15px; }
 }
-.cap-card img{ border-radius:12px; }
-.cap-title{ font-size:26px; font-weight:bold; }
 
-/* MAP BUTTON */
-.map-btn{
-  background:#333;
-  color:white;
-  padding:10px 15px;
-  border-radius:10px;
-  display:inline-block;
-  margin-top:10px;
-}
+/* utility */
+.hidden{ display:none }
+.small{ font-size:13px; color:#333; }
+.map-btn{ background:#333; color:#fff; padding:8px 12px; border-radius:8px; text-decoration:none; display:inline-block; margin-top:8px; }
 </style>
 </head>
 <body>
-
-<!-- ------------------- NAVIGATION ------------------- -->
-<div class="tabs">
-  <div class="tab-btn active-tab" onclick="openTab('home',this)">Home</div>
-  <div class="tab-btn" onclick="openTab('smart',this)">Smart Tools</div>
-  <div class="tab-btn" onclick="openTab('capital',this)">Capital Finder</div>
-  <div class="tab-btn" onclick="openTab('algebra',this)">Algebra Solver</div>
-  <div class="tab-btn" onclick="openTab('operations',this)">Operations</div>
-  <div class="tab-btn" onclick="openTab('life',this)">Life Tools</div>
-  <div class="tab-btn" onclick="openTab('weather',this)">Weather</div>
-  <div class="tab-btn" onclick="openTab('quiz',this)">Quiz</div>
+<div class="tabs" role="tablist" aria-label="Main tabs">
+  <button class="tab-btn active-tab" data-tab="home" onclick="openTab('home', this)">Home</button>
+  <button class="tab-btn" data-tab="smart" onclick="openTab('smart', this)">Smart Tools</button>
+  <button class="tab-btn" data-tab="capital" onclick="openTab('capital', this)">Capital Finder</button>
+  <button class="tab-btn" data-tab="algebra" onclick="openTab('algebra', this)">Algebra Solver</button>
+  <button class="tab-btn" data-tab="operations" onclick="openTab('operations', this)">Operations</button>
+  <button class="tab-btn" data-tab="life" onclick="openTab('life', this)">Life Tools</button>
+  <button class="tab-btn" data-tab="weather" onclick="openTab('weather', this)">Weather</button>
+  <button class="tab-btn" data-tab="quiz" onclick="openTab('quiz', this)">Quiz</button>
 </div>
 
-<!-- ------------------- HOME ------------------- -->
-<div id="home" class="tab-content active">
-  <h1>Welcome Mithun 👋</h1>
-  <div class="tool-box">
-    <h3>Text Tools</h3>
-    <textarea id="text_in"></textarea>
-    <button onclick="upperText()">UPPERCASE</button>
-    <button onclick="lowerText()">lowercase</button>
-    <button onclick="removeSpaces()">Remove Spaces</button>
-    <textarea id="text_out" class="result"></textarea>
-  </div>
-</div>
-
-<!-- ------------------- SMART TOOLS ------------------- -->
-<div id="smart" class="tab-content">
-  <h2>Smart Tools</h2>
-
-  <div class="tool-box">
-    <h3>QR Code</h3>
-    <input id="qr_text">
-    <button onclick="makeQR()">Generate</button>
-    <div id="qr_box" class="result"></div>
-  </div>
-
-  <div class="tool-box">
-    <h3>Barcode</h3>
-    <input id="barcode_text">
-    <button onclick="makeBarcode()">Generate</button>
-    <svg id="barcode_svg"></svg>
-  </div>
-
-  <div class="tool-box">
-    <h3>Your IP</h3>
-    <button onclick="getIP()">Show IP</button>
-    <div id="ip_box" class="result"></div>
-  </div>
-
-  <div class="tool-box">
-    <h3>Device Info</h3>
-    <button onclick="getDeviceInfo()">Show</button>
-    <div id="device_box" class="result"></div>
-  </div>
-
-  <div class="tool-box">
-    <h3>Password Strength</h3>
-    <input id="pwd_input">
-    <button onclick="checkPwd()">Check</button>
-    <div id="pwd_box" class="result"></div>
-  </div>
-</div>
-
-<!-- ------------------- CAPITAL FINDER ------------------- -->
-<div id="capital" class="tab-content">
-  <h2>Capital Finder</h2>
-
-  <div class="tool-box">
-    <input id="country_in" placeholder="Enter country name">
-    <button onclick="findCapital()">Find Capital</button>
-    <div id="capital_out"></div>
-  </div>
-</div>
-
-<!-- ------------------- ALGEBRA ------------------- -->
-<div id="algebra" class="tab-content">
-  <h2>Algebra Solver</h2>
-  <div class="tool-box">
-    <input id="eq_in" placeholder="Example: 2x+3=11">
-    <button onclick="solveEq()">Solve</button>
-    <div id="eq_out" class="result"></div>
-  </div>
-</div>
-
-<!-- ------------------- OPERATIONS ------------------- -->
-<div id="operations" class="tab-content">
-  <h2>Number Operations</h2>
-
-  <div class="tool-box">
-    <h3>Prime Checker</h3>
-    <input id="prime_in">
-    <button onclick="isPrimeCheck()">Check</button>
-    <div id="prime_out" class="result"></div>
-  </div>
-
-  <div class="tool-box">
-    <h3>Factorial</h3>
-    <input id="fact_in">
-    <button onclick="fact()">Find</button>
-    <div id="fact_out" class="result"></div>
-  </div>
-</div>
-
-<!-- ------------------- LIFE TOOLS ------------------- -->
-<div id="life" class="tab-content">
-  <h2>Life Tools</h2>
-
-  <div class="life-grid">
-    <div class="life-btn" onclick="openLife('age')">Age</div>
-    <div class="life-btn" onclick="openLife('bmi')">BMI</div>
-    <div class="life-btn" onclick="openLife('emi')">EMI</div>
-    <div class="life-btn" onclick="openLife('unit')">Unit Convert</div>
-    <div class="life-btn" onclick="openLife('square')">Root</div>
-    <div class="life-btn" onclick="openLife('percent')">Percentage</div>
-    <div class="life-btn" onclick="openLife('discount')">Discount</div>
-  </div>
-
-  <!-- AGE -->
-  <div id="age" class="life-subtab">
+<div class="container">
+  <!-- HOME -->
+  <section id="home" class="tab-content active" aria-labelledby="home-tab">
+    <h1>Welcome Mithun 👋</h1>
     <div class="tool-box">
+      <h3>Text Tools</h3>
+      <textarea id="text_in" placeholder="Type or paste text here..."></textarea>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button onclick="upperText()">UPPERCASE</button>
+        <button onclick="lowerText()">lowercase</button>
+        <button onclick="removeSpaces()">Remove Spaces</button>
+      </div>
+      <textarea id="text_out" class="result" readonly placeholder="Result will appear here"></textarea>
+    </div>
+  </section>
+
+  <!-- SMART -->
+  <section id="smart" class="tab-content" aria-labelledby="smart-tab">
+    <h2>Smart Tools</h2>
+
+    <div class="tool-box">
+      <h3>QR Code</h3>
+      <input id="qr_text" placeholder="Text or URL for QR">
+      <button onclick="makeQR()">Generate</button>
+      <div id="qr_box" class="result" style="display:flex;align-items:center;justify-content:center"></div>
+    </div>
+
+    <div class="tool-box">
+      <h3>Barcode</h3>
+      <input id="barcode_text" placeholder="Enter numbers/text for barcode">
+      <button onclick="makeBarcode()">Generate</button>
+      <div class="result" style="display:flex;align-items:center;gap:12px;flex-direction:column">
+        <svg id="barcode_svg"></svg>
+      </div>
+    </div>
+
+    <div class="tool-box">
+      <h3>Your IP</h3>
+      <button onclick="getIP()">Show IP</button>
+      <div id="ip_box" class="result"></div>
+    </div>
+
+    <div class="tool-box">
+      <h3>Device Info</h3>
+      <button onclick="getDeviceInfo()">Show</button>
+      <div id="device_box" class="result"></div>
+    </div>
+
+    <div class="tool-box">
+      <h3>Password Strength</h3>
+      <input id="pwd_input" placeholder="Enter password">
+      <button onclick="checkPwd()">Check</button>
+      <div id="pwd_box" class="result"></div>
+    </div>
+  </section>
+
+  <!-- CAPITAL -->
+  <section id="capital" class="tab-content" aria-labelledby="capital-tab">
+    <h2>Capital Finder</h2>
+    <div class="tool-box">
+      <input id="country_in" placeholder="Enter country name (e.g. India)">
+      <button onclick="findCapital()">Find Capital</button>
+      <div id="capital_out" class="result"></div>
+    </div>
+  </section>
+
+  <!-- ALGEBRA -->
+  <section id="algebra" class="tab-content" aria-labelledby="algebra-tab">
+    <h2>Algebra Solver</h2>
+    <div class="tool-box">
+      <input id="eq_in" placeholder="Example: 2*x+3=11  (use * for multiply)" />
+      <button onclick="solveEq()">Solve</button>
+      <div id="eq_out" class="result"></div>
+    </div>
+  </section>
+
+  <!-- OPERATIONS -->
+  <section id="operations" class="tab-content" aria-labelledby="operations-tab">
+    <h2>Number Operations</h2>
+    <div class="tool-box">
+      <h3>Prime Checker</h3>
+      <input id="prime_in" placeholder="Enter integer">
+      <button onclick="isPrimeCheck()">Check</button>
+      <div id="prime_out" class="result"></div>
+    </div>
+
+    <div class="tool-box">
+      <h3>Factorial</h3>
+      <input id="fact_in" placeholder="Enter integer">
+      <button onclick="fact()">Find</button>
+      <div id="fact_out" class="result"></div>
+    </div>
+  </section>
+
+  <!-- LIFE -->
+  <section id="life" class="tab-content" aria-labelledby="life-tab">
+    <h2>Life Tools</h2>
+    <div class="life-grid">
+      <div class="life-btn" onclick="openLife('age')">Age</div>
+      <div class="life-btn" onclick="openLife('bmi')">BMI</div>
+      <div class="life-btn" onclick="openLife('emi')">EMI</div>
+      <div class="life-btn" onclick="openLife('unit')">Unit</div>
+      <div class="life-btn" onclick="openLife('square')">Root</div>
+      <div class="life-btn" onclick="openLife('percent')">Percentage</div>
+      <div class="life-btn" onclick="openLife('discount')">Discount</div>
+    </div>
+
+    <div id="age" class="tool-box life-subtab">
       <h3>Age Calculator</h3>
       <input type="date" id="age_dob">
       <button onclick="calcAge()">Calculate</button>
       <div id="age_out" class="result"></div>
     </div>
-  </div>
 
-  <!-- BMI -->
-  <div id="bmi" class="life-subtab">
-    <div class="tool-box">
+    <div id="bmi" class="tool-box life-subtab">
       <h3>BMI Calculator</h3>
       <input id="bmi_h" placeholder="Height (cm)">
       <input id="bmi_w" placeholder="Weight (kg)">
       <button onclick="calcBMI()">Calculate</button>
       <div id="bmi_out" class="result"></div>
     </div>
-  </div>
 
-  <!-- EMI -->
-  <div id="emi" class="life-subtab">
-    <div class="tool-box">
+    <div id="emi" class="tool-box life-subtab">
       <h3>EMI Calculator</h3>
       <input id="emi_p" placeholder="Principal">
-      <input id="emi_r" placeholder="Rate %">
+      <input id="emi_r" placeholder="Rate % (annual)">
       <input id="emi_n" placeholder="Months">
       <button onclick="calcEMI()">Calculate</button>
       <div id="emi_out" class="result"></div>
     </div>
-  </div>
 
-  <!-- UNIT -->
-  <div id="unit" class="life-subtab">
-    <div class="tool-box">
+    <div id="unit" class="tool-box life-subtab">
       <h3>Unit Converter (m ↔ cm)</h3>
-      <input id="unit_in">
+      <input id="unit_in" placeholder="Value">
       <select id="unit_type">
         <option value="m-cm">Meter → CM</option>
         <option value="cm-m">CM → Meter</option>
@@ -307,243 +279,360 @@ button{
       <button onclick="convertUnit()">Convert</button>
       <div id="unit_out" class="result"></div>
     </div>
-  </div>
 
-  <!-- ROOT -->
-  <div id="square" class="life-subtab">
-    <div class="tool-box">
+    <div id="square" class="tool-box life-subtab">
       <h3>Square / Cube Root</h3>
-      <input id="root_in">
+      <input id="root_in" placeholder="Enter number">
       <button onclick="calcRoot()">Calculate</button>
       <div id="root_out" class="result"></div>
     </div>
-  </div>
 
-  <!-- PERCENTAGE -->
-  <div id="percent" class="life-subtab">
-    <div class="tool-box">
+    <div id="percent" class="tool-box life-subtab">
       <h3>Percentage Finder</h3>
       <input id="percent_a" placeholder="Value">
       <input id="percent_b" placeholder="Total">
       <button onclick="calcPercent()">Find</button>
       <div id="percent_out" class="result"></div>
     </div>
-  </div>
 
-  <!-- DISCOUNT -->
-  <div id="discount" class="life-subtab">
-    <div class="tool-box">
+    <div id="discount" class="tool-box life-subtab">
       <h3>Discount Calculator</h3>
       <input id="d_price" placeholder="Price">
       <input id="d_percent" placeholder="Discount %">
       <button onclick="calcDiscount()">Find</button>
       <div id="discount_out" class="result"></div>
     </div>
-  </div>
-</div>
+  </section>
 
-<!-- ------------------- WEATHER ------------------- -->
-<div id="weather" class="tab-content">
-  <h2>Weather</h2>
-
-  <div class="tool-box">
-    <h3>Auto Location Weather</h3>
-    <button onclick="autoWeather()">Get Weather</button>
-    <div id="auto_weather_out" class="result"></div>
-  </div>
-
-  <div class="tool-box">
-    <h3>City Weather</h3>
-    <input id="city_in">
-    <button onclick="cityWeather()">Search</button>
-    <div id="city_weather_out" class="result"></div>
-  </div>
-</div>
-
-<!-- ------------------- QUIZ ------------------- -->
-<div id="quiz" class="tab-content">
-  <h2>Quiz</h2>
-  <div class="tool-box">
-    <button onclick="startQuiz()">Start Math Quiz</button>
-    <div id="quiz_box" class="result"></div>
-  </div>
-</div>
-
-<!-- ------------------- SCRIPT ------------------- -->
-<script>
-function openTab(id, btn){
-  document.querySelectorAll(".tab-content").forEach(t => t.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
-
-  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active-tab"));
-  btn.classList.add("active-tab");
-}
-
-function upperText(){ text_out.value = text_in.value.toUpperCase(); }
-function lowerText(){ text_out.value = text_in.value.toLowerCase(); }
-function removeSpaces(){ text_out.value = text_in.value.split(" ").join(""); }
-
-function makeQR(){
-  qr_box.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${qr_text.value}">`;
-}
-function makeBarcode(){ JsBarcode("#barcode_svg", barcode_text.value); }
-async function getIP(){
-  let d = await fetch("https://api.ipify.org?format=json").then(r=>r.json());
-  ip_box.innerHTML = d.ip;
-}
-function getDeviceInfo(){ device_box.innerHTML = navigator.userAgent; }
-function checkPwd(){
-  let p = pwd_input.value;
-  let s=0;
-  if(p.length>=8)s++;
-  if(/[0-9]/.test(p))s++;
-  if(/[A-Z]/.test(p))s++;
-  if(/[@#$%]/.test(p))s++;
-  pwd_box.innerHTML=["Very Weak","Weak","Medium","Strong","Very Strong"][s];
-}
-
-/* ------------------- CAPITAL FINDER ------------------- */
-async function findCapital(){
-  let c = country_in.value.trim().toLowerCase();
-  if(!c){ capital_out.innerHTML="Enter a country"; return; }
-
-  let all = await fetch("https://restcountries.com/v3.1/all").then(r=>r.json());
-
-  let found = all.find(x => x.name.common.toLowerCase() === c);
-
-  if(!found){
-    found = all.find(x => x.name.common.toLowerCase().includes(c));
-  }
-
-  if(!found){
-    capital_out.innerHTML="Not found";
-    return;
-  }
-
-  let name = found.name.common;
-  let capital = found.capital ? found.capital[0] : "No Capital";
-  let flag = found.flags.png;
-  let region = found.region;
-  let pop = found.population.toLocaleString();
-  let lang = Object.values(found.languages || {}).join(", ");
-  let curr = Object.values(found.currencies || {}).map(x => x.name).join(", ");
-
-  let wiki = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${name}`)
-             .then(r=>r.json()).catch(()=>({extract:""}));
-
-  let summary = wiki.extract ? wiki.extract.split(". ").slice(0,2).join(". ")+"." : "No summary available.";
-
-  capital_out.innerHTML = `
-    <div class="cap-card">
-      <div class="cap-title">${name}</div>
-      <img src="${flag}" width="150"><br><br>
-      <b>Capital:</b> ${capital}<br>
-      <b>Region:</b> ${region}<br>
-      <b>Population:</b> ${pop}<br>
-      <b>Languages:</b> ${lang}<br>
-      <b>Currency:</b> ${curr}<br><br>
-      <b>About:</b> ${summary}<br><br>
-
-      <a class="map-btn" target="_blank" href="https://www.google.com/maps/search/${name}">
-        Open in Google Maps
-      </a>
+  <!-- WEATHER -->
+  <section id="weather" class="tab-content" aria-labelledby="weather-tab">
+    <h2>Weather</h2>
+    <div class="tool-box">
+      <h3>Auto Location Weather</h3>
+      <button onclick="autoWeather()">Get Weather</button>
+      <div id="auto_weather_out" class="result"></div>
     </div>
-  `;
+
+    <div class="tool-box">
+      <h3>City Weather</h3>
+      <input id="city_in" placeholder="City name">
+      <button onclick="cityWeather()">Search</button>
+      <div id="city_weather_out" class="result"></div>
+    </div>
+  </section>
+
+  <!-- QUIZ -->
+  <section id="quiz" class="tab-content" aria-labelledby="quiz-tab">
+    <h2>Quiz</h2>
+    <div class="tool-box">
+      <button onclick="startQuiz()">Start Math Quiz</button>
+      <div id="quiz_box" class="result"></div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+/* Helper to get element by id safely */
+function $id(id){ return document.getElementById(id); }
+
+/* OPEN TAB - robust even if btn omitted */
+function openTab(id, btn){
+  // hide all
+  document.querySelectorAll(".tab-content").forEach(t => t.classList.remove("active"));
+  // show target
+  const el = $id(id);
+  if(el) el.classList.add("active");
+
+  // update tab button styles
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active-tab"));
+  if(btn && btn.classList) { btn.classList.add("active-tab"); }
+  else {
+    // try to find button by data-tab
+    const tb = document.querySelector('.tab-btn[data-tab="'+id+'"]');
+    if(tb) tb.classList.add('active-tab');
+  }
 }
 
-/* ------------------- ALGEBRA ------------------- */
-function solveEq(){
+/* TEXT TOOLS */
+function upperText(){
+  $id('text_out').value = $id('text_in').value.toUpperCase();
+}
+function lowerText(){
+  $id('text_out').value = $id('text_in').value.toLowerCase();
+}
+function removeSpaces(){
+  $id('text_out').value = $id('text_in').value.replace(/\s+/g,' ');
+}
+
+/* SMART TOOLS */
+function makeQR(){
+  const v = encodeURIComponent($id('qr_text').value||'');
+  $id('qr_box').innerHTML = `<img alt="QR" src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${v}">`;
+}
+function makeBarcode(){
+  const v = $id('barcode_text').value || '';
   try{
-    let eq = eq_in.value.replace("=", "-(") + ")";
-    let x;
-    eval("x=" + eq);
-    eq_out.innerHTML = "x = " + x;
-  }catch{
-    eq_out.innerHTML="Invalid equation";
+    JsBarcode("#barcode_svg", v, {format:"auto",displayValue:true});
+  }catch(e){
+    $id('barcode_svg').innerHTML = '';
+    alert('Barcode error: ' + e.message);
+  }
+}
+async function getIP(){
+  try{
+    const r = await fetch("https://api.ipify.org?format=json");
+    const d = await r.json();
+    $id('ip_box').innerText = d.ip || 'N/A';
+  }catch(e){
+    $id('ip_box').innerText = 'Unable to fetch IP';
+  }
+}
+function getDeviceInfo(){
+  $id('device_box').innerText = navigator.userAgent;
+}
+function checkPwd(){
+  const p = $id('pwd_input').value || '';
+  let s=0;
+  if(p.length>=8) s++;
+  if(/[0-9]/.test(p)) s++;
+  if(/[A-Z]/.test(p)) s++;
+  if(/[@#$%^&*!]/.test(p)) s++;
+  const labels = ["Very Weak","Weak","Medium","Strong","Very Strong"];
+  $id('pwd_box').innerText = labels[Math.min(s, labels.length-1)];
+}
+
+async function findCapital() {
+    const q = ($id('country_in').value || '').trim();
+    if (!q) {
+        $id('capital_out').innerText = 'Enter a country';
+        return;
+    }
+
+    try {
+        // Correct API URL (no slash at the end)
+        const all = await fetch('https://restcountries.com/v3.1/all')
+            .then(r => r.json());
+
+        const lc = q.toLowerCase();
+
+        // Find match
+        let found = all.find(x =>
+            x.name?.common?.toLowerCase() === lc ||
+            x.cca2?.toLowerCase() === lc
+        );
+
+        if (!found) {
+            found = all.find(x =>
+                x.name?.common?.toLowerCase().includes(lc)
+            );
+        }
+
+        if (!found) {
+            $id('capital_out').innerText = 'Not found';
+            return;
+        }
+
+        const name = found.name.common;
+        const capital = found.capital ? found.capital[0] : 'No Capital';
+        const flag = found.flags?.png || '';
+        const region = found.region || '';
+        const pop = found.population ? found.population.toLocaleString() : '';
+        const lang = found.languages ? Object.values(found.languages).join(', ') : '';
+        const curr = found.currencies ? Object.values(found.currencies).map(c => c.name).join(', ') : '';
+
+        $id('capital_out').innerHTML = `
+            <div class="cap-card">
+                <div style="font-weight:700;font-size:20px">${name}</div>
+                ${ flag ? `<img src="${flag}" alt="flag" style="max-width:150px;margin-top:8px">` : '' }
+                <div style="margin-top:8px">
+                    <b>Capital:</b> ${capital}<br>
+                    <b>Region:</b> ${region}<br>
+                    <b>Population:</b> ${pop}<br>
+                    <b>Languages:</b> ${lang}<br>
+                    <b>Currency:</b> ${curr}<br><br>
+                    <a class="map-btn" target="_blank"
+                    href="https://www.google.com/maps/search/${encodeURIComponent(name)}">
+                    Open in Google Maps</a>
+                </div>
+            </div>
+        `;
+
+    } catch (e) {
+        console.error(e);
+        $id('capital_out').innerText = 'Error fetching data';
+    }
+}
+
+/* ALGEBRA - simple solver for linear equations like 2*x+3=11 */
+function solveEq(){
+  const raw = $id('eq_in').value || '';
+  if(!raw){ $id('eq_out').innerText = 'Enter equation'; return; }
+  try{
+    // simple approach: support equations with single x: a*x+b=c
+    // convert to JS by replacing '^' and implicit multiplications are not handled
+    const eq = raw.replace(/\s+/g,'');
+    if(!eq.includes('=')){ $id('eq_out').innerText = 'Equation must contain ='; return; }
+    // move all to left: left - (right)
+    const parts = eq.split('=');
+    const expr = '('+parts[0]+')-('+parts[1]+')';
+    // replace 'x' with a symbol and compute coefficients by evaluating with different x values
+    // numeric approximation method:
+    const f = new Function('x','return '+expr+';');
+    // find root by simple bisection between -1e6 and 1e6
+    let a=-1e6, b=1e6, fa=f(a), fb=f(b);
+    if(isNaN(fa)||isNaN(fb)){ $id('eq_out').innerText='Invalid expression'; return; }
+    if(fa===0){ $id('eq_out').innerText='x = '+a; return; }
+    if(fb===0){ $id('eq_out').innerText='x = '+b; return; }
+    // ensure sign change
+    if(fa*fb>0){
+      // try fallback: solve linear by symbolic: assume form ax+b
+      // try numeric derivative root finding (Newton)
+      let x=0;
+      for(let i=0;i<60;i++){
+        const fx = f(x);
+        const h = 1e-6;
+        const d = (f(x+h)-fx)/h;
+        if(d===0) break;
+        const nx = x - fx/d;
+        if(Math.abs(nx-x)<1e-9){ x=nx; break; }
+        x=nx;
+      }
+      $id('eq_out').innerText = 'x ≈ '+(isFinite(x)?x.toFixed(6):'N/A');
+      return;
+    }
+    // bisection
+    for(let i=0;i<100;i++){
+      const m=(a+b)/2;
+      const fm=f(m);
+      if(Math.abs(fm)<1e-9) { a=m; break; }
+      if(fa*fm<0){ b=m; fb=fm; } else { a=m; fa=fm; }
+    }
+    const root = (a+b)/2;
+    $id('eq_out').innerText = 'x ≈ '+root;
+  }catch(e){
+    $id('eq_out').innerText = 'Invalid equation';
   }
 }
 
-/* ------------------- OPERATIONS ------------------- */
+/* OPERATIONS */
 function isPrimeCheck(){
-  let n=Number(prime_in.value);
-  if(n<2){ prime_out.innerHTML="Not prime"; return; }
-  for(let i=2;i*i<=n;i++){
-    if(n%i==0){ prime_out.innerHTML="Not prime"; return; }
-  }
-  prime_out.innerHTML="Prime Number";
+  const n = parseInt($id('prime_in').value);
+  if(isNaN(n)){ $id('prime_out').innerText='Enter a number'; return; }
+  if(n<2){ $id('prime_out').innerText='Not prime'; return; }
+  for(let i=2;i*i<=n;i++){ if(n%i===0){ $id('prime_out').innerText='Not prime'; return; } }
+  $id('prime_out').innerText='Prime Number';
 }
 function fact(){
-  let n=Number(fact_in.value),f=1;
-  for(let i=1;i<=n;i++)f*=i;
-  fact_out.innerHTML=f;
+  let n = parseInt($id('fact_in').value);
+  if(isNaN(n) || n<0){ $id('fact_out').innerText='Enter non-negative integer'; return; }
+  let f=1;
+  for(let i=1;i<=n;i++) f*=i;
+  $id('fact_out').innerText = f;
 }
 
-/* ------------------- LIFE TOOLS ------------------- */
+/* LIFE TOOLS */
 function openLife(id){
-  document.querySelectorAll(".life-subtab").forEach(s=>s.classList.remove("active-sub"));
-  document.getElementById(id).classList.add("active-sub");
+  document.querySelectorAll('.life-subtab').forEach(s=>s.classList.add('hidden'));
+  const el = $id(id);
+  if(el) el.classList.remove('hidden');
+  // scroll into view on mobile
+  el && el.scrollIntoView({behavior:'smooth', block:'center'});
 }
-
 function calcAge(){
-  if(!age_dob.value) return age_out.innerHTML="Enter DOB";
-  let d=new Date(age_dob.value);
-  let age=new Date(Date.now()-d).getUTCFullYear()-1970;
-  age_out.innerHTML="Age: "+age;
+  const v = $id('age_dob').value;
+  if(!v){ $id('age_out').innerText='Enter DOB'; return; }
+  const d = new Date(v);
+  const diff = Date.now() - d.getTime();
+  const age = Math.floor(diff/(365.25*24*3600*1000));
+  $id('age_out').innerText = 'Age: '+age;
 }
 function calcBMI(){
-  let h=bmi_h.value/100, w=bmi_w.value;
-  bmi_out.innerHTML="BMI: "+(w/(h*h)).toFixed(2);
+  const h = parseFloat($id('bmi_h').value)/100;
+  const w = parseFloat($id('bmi_w').value);
+  if(!h || !w){ $id('bmi_out').innerText='Enter valid values'; return; }
+  $id('bmi_out').innerText = 'BMI: '+(w/(h*h)).toFixed(2);
 }
 function calcEMI(){
-  let P=emi_p.value,R=emi_r.value/1200,N=emi_n.value;
-  let emi=P*R*Math.pow(1+R,N)/(Math.pow(1+R,N)-1);
-  emi_out.innerHTML="EMI: "+emi.toFixed(2);
+  const P = parseFloat($id('emi_p').value);
+  const annual = parseFloat($id('emi_r').value);
+  const N = parseInt($id('emi_n').value);
+  if(!P||!annual||!N){ $id('emi_out').innerText='Enter valid values'; return; }
+  const R = annual/1200;
+  const emi = P*R*Math.pow(1+R,N)/(Math.pow(1+R,N)-1);
+  $id('emi_out').innerText = 'EMI: '+emi.toFixed(2);
 }
 function convertUnit(){
-  unit_out.innerHTML = unit_type.value=="m-cm"
-    ? unit_in.value*100+" cm"
-    : unit_in.value/100+" m";
+  const v = parseFloat($id('unit_in').value);
+  if(isNaN(v)){ $id('unit_out').innerText='Enter value'; return; }
+  $id('unit_out').innerText = $id('unit_type').value==='m-cm' ? (v*100)+' cm' : (v/100)+' m';
 }
 function calcRoot(){
-  let n=root_in.value;
-  root_out.innerHTML=`Square Root: ${Math.sqrt(n)}\nCube Root: ${Math.cbrt(n)}`;
+  const n = parseFloat($id('root_in').value);
+  if(isNaN(n)){ $id('root_out').innerText='Enter number'; return; }
+  $id('root_out').innerText = 'Square Root: '+Math.sqrt(n)+'\nCube Root: '+Math.cbrt(n);
 }
 function calcPercent(){
-  percent_out.innerHTML=(percent_a.value/percent_b.value*100).toFixed(2)+"%";
+  const a = parseFloat($id('percent_a').value);
+  const b = parseFloat($id('percent_b').value);
+  if(isNaN(a)||isNaN(b)||b===0){ $id('percent_out').innerText='Enter valid numbers'; return; }
+  $id('percent_out').innerText = ((a/b*100).toFixed(2))+'%';
 }
 function calcDiscount(){
-  let p=d_price.value, d=d_percent.value;
-  let final=p-(p*d/100);
-  discount_out.innerHTML="Final Price: ₹"+final;
+  const p = parseFloat($id('d_price').value);
+  const d = parseFloat($id('d_percent').value);
+  if(isNaN(p)||isNaN(d)){ $id('discount_out').innerText='Enter valid values'; return; }
+  const final = p - (p*d/100);
+  $id('discount_out').innerText = 'Final Price: ₹'+final.toFixed(2);
 }
 
-/* ------------------- WEATHER ------------------- */
+/* WEATHER */
 async function cityWeather(){
-  let c=city_in.value;
-  let url=`https://api.openweathermap.org/data/2.5/weather?q=${c}&appid=439d4b804bc8187953eb36d2a8c26a02&units=metric`;
-  let d=await fetch(url).then(r=>r.json());
-  if(!d.main)return city_weather_out.innerHTML="Not found";
-
-  city_weather_out.innerHTML=`City: ${d.name}\nTemp: ${d.main.temp}°C\nHumidity: ${d.main.humidity}%`;
+  const c = $id('city_in').value.trim();
+  if(!c){ $id('city_weather_out').innerText='Enter city'; return; }
+  try{
+    // using wttr.in as it requires no API key
+    const r = await fetch('https://wttr.in/'+encodeURIComponent(c)+'?format=%l:+%t+|+%C');
+    const t = await r.text();
+    $id('city_weather_out').innerText = t;
+  }catch(e){
+    $id('city_weather_out').innerText = 'Unable to fetch weather';
+  }
 }
-
 function autoWeather(){
+  if(!navigator.geolocation){ $id('auto_weather_out').innerText='Geolocation not supported'; return; }
+  $id('auto_weather_out').innerText = 'Getting location...';
   navigator.geolocation.getCurrentPosition(async pos=>{
-    let lat=pos.coords.latitude, lon=pos.coords.longitude;
-    let url=`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=439d4b804bc8187953eb36d2a8c26a02&units=metric`;
-    let d=await fetch(url).then(r=>r.json());
-    auto_weather_out.innerHTML=`Location: ${d.name}\nTemp: ${d.main.temp}°C\nHumidity: ${d.main.humidity}%`;
+    try{
+      const lat = pos.coords.latitude.toFixed(4);
+      const lon = pos.coords.longitude.toFixed(4);
+      const r = await fetch('https://wttr.in/@'+lat+','+lon+'?format=%l:+%t+|+%C');
+      const t = await r.text();
+      $id('auto_weather_out').innerText = t;
+    }catch(e){
+      $id('auto_weather_out').innerText = 'Unable to fetch weather';
+    }
+  }, err=>{
+    $id('auto_weather_out').innerText = 'Location permission denied or unavailable';
   });
 }
 
-/* ------------------- QUIZ ------------------- */
+/* QUIZ */
 function startQuiz(){
-  let a=Math.floor(Math.random()*10);
-  let b=Math.floor(Math.random()*10);
-  let ans=prompt(`${a}+${b}=?`);
-  quiz_box.innerHTML = (ans==a+b) ? "Correct!" : "Wrong";
+  const a = Math.floor(Math.random()*10);
+  const b = Math.floor(Math.random()*10);
+  const ans = prompt(`${a} + ${b} = ?`);
+  $id('quiz_box').innerText = (parseInt(ans)===a+b) ? 'Correct!' : 'Wrong';
 }
-</script>
 
+/* Init: hide life subtabs and ensurehome active */
+document.addEventListener('DOMContentLoaded', function(){
+  document.querySelectorAll('.life-subtab').forEach(s=>s.classList.add('hidden'));
+  // ensure home active
+  openTab('home');
+});
+</script>
 </body>
 </html>
+"""
+
