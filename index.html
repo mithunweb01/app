@@ -51,19 +51,16 @@
       padding:14px;border-radius:12px;text-align:center;cursor:pointer;font-weight:700;color:#fff;}
 
     @media (max-width:600px){
-      .tab-btn{padding:8px 10px;font-size:13px;border-radius:10px;}
-      .tool-box{padding:12px;border-radius:12px;}
-      body{font-size:15px;}
+      .tab-btn{padding:8px 10px;font-size:13px;}
+      .tool-box{padding:12px;}
     }
     .hidden{display:none}
-    .small{font-size:13px;color:#333;}
-    .map-btn{background:#333;color:#fff;padding:8px 12px;border-radius:8px;text-decoration:none;display:inline-block;margin-top:8px;}
     .cap-card img{border-radius:10px;max-width:100%;height:auto;}
   </style>
 </head>
 <body>
 
-<div class="tabs" role="tablist">
+<div class="tabs">
   <button class="tab-btn active-tab" data-tab="home" onclick="openTab('home',this)">Home</button>
   <button class="tab-btn" data-tab="smart" onclick="openTab('smart',this)">Smart Tools</button>
   <button class="tab-btn" data-tab="life" onclick="openTab('life',this)">Life Tools</button>
@@ -94,10 +91,8 @@
   <!-- SMART TOOLS -->
   <section id="smart" class="tab-content">
     <h2>Smart Tools</h2>
-
     <div class="tools-grid">
 
-      <!-- Existing -->
       <div class="tool-box">
         <h3>QR Code</h3>
         <input id="qr_text" placeholder="Text or URL for QR">
@@ -131,7 +126,7 @@
         <div id="pwd_box" class="result"></div>
       </div>
 
-      <!-- NEW TOOLS -->
+      <!-- NEW SMART TOOLS -->
       <div class="tool-box">
         <h3>URL Shortener</h3>
         <input id="long_url" placeholder="Enter long URL">
@@ -148,7 +143,7 @@
       <div class="tool-box">
         <h3>Voice-to-Text (Browser API)</h3>
         <button id="start_voice" onclick="toggleVoice()">Start Recording</button>
-        <button id="stop_voice" style="display:none;background:#c00" onclick="toggleVoice()">Stop</button>
+        <button id="stop_voice" style="display:none;background:#c00" onclick="toggleVoice()">Stop Recording</button>
         <div id="voice_result" class="result"></div>
       </div>
 
@@ -180,14 +175,13 @@
       <div class="life-btn" onclick="openLife('square')">Root</div>
       <div class="life-btn" onclick="openLife('percent')">Percentage</div>
       <div class="life-btn" onclick="openLife('discount')">Discount</div>
-      <div class="life-btn" onclick="openLife('steps')">Steps → Cal</div>
+      <div class="life-btn" onclick="openLife('steps')">Steps to Calories</div>
       <div class="life-btn" onclick="openLife('stopwatch')">Stopwatch</div>
       <div class="life-btn" onclick="openLife('timer')">Timer</div>
       <div class="life-btn" onclick="openLife('sleep')">Sleep Time</div>
-      <div class="life-btn" onclick="openLife('gst')">GST Calc</div>
+      <div class="life-btn" onclick="openLife('gst')">GST Calculator</div>
     </div>
 
-    <!-- Original Life Tools -->
     <div id="age" class="tool-box life-subtab hidden">
       <h3>Age Calculator</h3>
       <input type="date" id="age_dob">
@@ -213,11 +207,11 @@
     </div>
 
     <div id="unit" class="tool-box life-subtab hidden">
-      <h3>Unit Converter (m ↔ cm)</h3>
+      <h3>Unit Converter (m to cm)</h3>
       <input id="unit_in" placeholder="Value">
       <select id="unit_type">
-        <option value="m-cm">Meter → CM</option>
-        <option value="cm-m">CM → Meter</option>
+        <option value="m-cm">Meter to CM</option>
+        <option value="cm-m">CM to Meter</option>
       </select>
       <button onclick="convertUnit()">Convert</button>
       <div id="unit_out" class="result"></div>
@@ -246,7 +240,7 @@
       <div id="discount_out" class="result"></div>
     </div>
 
-    <!-- New Life Tools -->
+    <!-- NEW LIFE TOOLS -->
     <div id="steps" class="tool-box life-subtab hidden">
       <h3>Steps to Calories</h3>
       <input id="steps_input" type="number" placeholder="Number of steps">
@@ -256,8 +250,8 @@
 
     <div id="stopwatch" class="tool-box life-subtab hidden">
       <h3>Stopwatch</h3>
-      <div style="font-size:36px;text-align:center;font-weight:bold" id="stopwatch_display">00:00:00</div>
-      <div style="text-align:center;gap:10px;display:flex;justify-content:center;margin-top:10px">
+      <div style="font-size:42px;text-align:center;font-weight:bold" id="stopwatch_display">00:00:00</div>
+      <div style="text-align:center;margin-top:15px">
         <button onclick="startStopwatch()">Start</button>
         <button onclick="stopStopwatch()">Stop</button>
         <button onclick="resetStopwatch()">Reset</button>
@@ -269,7 +263,7 @@
       <input id="timer_min" type="number" placeholder="Minutes" min="0">
       <input id="timer_sec" type="number" placeholder="Seconds" min="0" max="59" value="0">
       <button onclick="startTimer()">Start Timer</button>
-      <div id="timer_display" style="font-size:32px;text-align:center;margin:15px 0">00:00</div>
+      <div id="timer_display" style="font-size:36px;text-align:center;margin:15px 0">00:00</div>
     </div>
 
     <div id="sleep" class="tool-box life-subtab hidden">
@@ -294,7 +288,7 @@
     </div>
   </section>
 
-  <!-- NUMBER TOOLS (NEW TAB) -->
+  <!-- NUMBER TOOLS -->
   <section id="number" class="tab-content">
     <h2>Number Tools</h2>
     <div class="tools-grid">
@@ -308,13 +302,13 @@
 
       <div class="tool-box">
         <h3>Number to Words (Indian system)</h3>
-        <input id="num_words" placeholder="Enter number (up to 9 crore)">
+        <input id="num_words" placeholder="Enter number">
         <button onclick="numberToWords()">Convert</button>
         <div id="words_result" class="result"></div>
       </div>
 
       <div class="tool-box">
-        <h3>Roman ↔ Number Converter</h3>
+        <h3>Roman to Number Converter</h3>
         <input id="roman_input" placeholder="Enter Roman or Number">
         <button onclick="convertRoman()">Convert</button>
         <div id="roman_result" class="result"></div>
@@ -322,7 +316,7 @@
     </div>
   </section>
 
-  <!-- FUN TOOLS (NEW TAB) -->
+  <!-- FUN TOOLS -->
   <section id="fun" class="tab-content">
     <h2>Fun Tools</h2>
     <div class="tools-grid">
@@ -331,7 +325,7 @@
         <input id="dice_min" type="number" value="1" style="width:48%">
         <input id="dice_max" type="number" value="6" style="width:48%">
         <button onclick="rollDice()">Roll</button>
-        <div id="dice_result" class="result" style="font-size:48px;text-align:center"></div>
+        <div id="dice_result" class="result" style="font-size:60px;text-align:center"></div>
       </div>
 
       <div class="tool-box">
@@ -376,7 +370,6 @@
       <button onclick="autoWeather()">Get Weather</button>
       <div id="auto_weather_out" class="result"></div>
     </div>
-
     <div class="tool-box">
       <h3>City Weather</h3>
       <input id="city_in" placeholder="City name">
@@ -403,7 +396,7 @@ function openTab(id, btn){
   document.querySelectorAll(".tab-content").forEach(t => t.classList.remove("active"));
   $id(id)?.classList.add("active");
   document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active-tab"));
-  btn?.classList.add("active-tab");
+  if(btn) btn.classList.add("active-tab");
 }
 
 /* TEXT TOOLS */
@@ -414,20 +407,20 @@ function removeSpaces(){$id('text_out').value = $id('text_in').value.replace(/\s
 /* SMART TOOLS */
 function makeQR(){
   const v = encodeURIComponent($id('qr_text').value||'');
-  $id('qr_box').innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${v}" alt="QR Code">`;
+  $id('qr_box').innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${v}">`;
 }
 function makeBarcode(){
   const v = $id('barcode_text').value || '123456789';
   try{JsBarcode("#barcode_svg", v, {format:"auto",displayValue:true,width:2,height:60});}
-  catch(e){alert('Invalid barcode data');}
+  catch(e){alert('Invalid barcode');}
 }
 async function getIP(){
   try{
     const r = await fetch("https://api.ipify.org?format=json");
     const d = await r.json();
-    $id('ip_box').innerText = d.ip || 'N/A';
+    $id('ip_box').innerText = d.ip;
   }catch(e){
-    $id('ip_box').innerText = 'Unable to fetch IP';
+    $id('ip_box').innerText = 'Failed to fetch IP';
   }
 }
 function getDeviceInfo(){
@@ -441,18 +434,18 @@ function checkPwd(){
   if(/[A-Z]/.test(p)) s++;
   if(/[@#$%^&*!]/.test(p)) s++;
   const labels = ["Very Weak","Weak","Medium","Strong","Very Strong"];
-  $id(',labels[Math.min(s,4)];
+  $id('pwd_box').innerText = labels[Math.min(s,4)];
 }
 
 /* NEW SMART TOOLS */
 function shortenURL(){
   const url = $id('long_url').value.trim();
-  if(!url || !/^https?:\/\//i.test(url)) return $id('short_url').innerText = 'Enter valid URL';
-  const short = "mithun.in/" + btoa(url).substring(0,10).replace(/=/g,'');
-  $id('short_url').innerHTML = `<a href="${url}" target="_blank">${short}</a> (Demo only)`;
+  if(!url || !url.startsWith('http')) return $id('short_url').innerText = 'Enter valid URL';
+  const short = "mithun.in/" + btoa(url).substr(0,10);
+  $id('short_url').innerHTML = `<a href="${url}" target="_blank">${short}</a> (Demo)`;
 }
 function textToPDF(){
-  const text = $id('pdf_text').value || 'Empty document';
+  const text = $id('pdf_text').value || 'Hello from Mithun Tool';
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
   doc.text(text, 10, 10);
@@ -461,7 +454,7 @@ function textToPDF(){
 let recognition = null;
 function toggleVoice(){
   if(!('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)){
-    $id('voice_result').innerText = 'Speech recognition not supported';
+    $id('voice_result').innerText = 'Not supported in your browser';
     return;
   }
   if(!recognition){
@@ -469,7 +462,7 @@ function toggleVoice(){
     recognition = new SR();
     recognition.lang = 'en-IN';
     recognition.onresult = e => $id('voice_result').innerText = e.results[0][0].transcript;
-    recognition.onerror = () => $id('voice_result').innerText = 'Error occurred';
+    recognition.onerror = () => $id('voice_result').innerText = 'Error';
   }
   if(recognition.running){
     recognition.stop();
@@ -486,13 +479,13 @@ function toggleVoice(){
 function takeScreenshot(){
   const url = $id('screenshot_url').value.trim();
   if(!url) return alert('Enter URL');
-  const imgUrl = `https://api.thumbnail.ws/api/${btoa(url)}/thumbnail/get?width=800&height=600`;
-  $id('screenshot_result').innerHTML = `<img src="${imgUrl}" alt="screenshot" style="max-width:100%;border-radius:8px">`;
+  const api = `https://api.thumbnail.ws/api/${btoa(url)}/thumbnail/get?width=800&height=600`;
+  $id('screenshot_result').innerHTML = `<img src="${api}" style="max-width:100%;border-radius:8px">`;
 }
 function calcScientific(){
   try{
-    const result = math.evaluate($id('calc_input').value);
-    $id('calc_result').innerText = result;
+    const res = math.evaluate($id('calc_input').value);
+    $id('calc_result').innerText = res;
   }catch(e){
     $id('calc_result').innerText = 'Invalid expression';
   }
@@ -501,96 +494,227 @@ function calcScientific(){
 /* LIFE TOOLS */
 function openLife(id){
   document.querySelectorAll('.life-subtab').forEach(s=>s.classList.add('hidden'));
-  const el = $id(id);
-  if(el) el.classList.remove('hidden');
-  el?.scrollIntoView({behavior:'smooth', block:'center'});
+  $id(id)?.classList.remove('hidden');
+  $id(id)?.scrollIntoView({behavior:'smooth'});
 }
-function calcAge(){/* unchanged from original */}
-function calcBMI(){/* unchanged */}
-function calcEMI(){/* unchanged */}
-function convertUnit(){/* unchanged */}
-function calcRoot(){/* unchanged */}
-function calcPercent(){/* unchanged */}
-function calcDiscount(){/* unchanged */}
+function calcAge(){
+  const v = $id('age_dob').value;
+  if(!v) return $id('age_out').innerText='Enter DOB';
+  const d = new Date(v);
+  const diff = Date.now() - d.getTime();
+  const age = Math.floor(diff/(365.25*24*3600*1000));
+  $id('age_out').innerText = 'Age: '+age + ' years';
+}
+function calcBMI(){
+  const h = parseFloat($id('bmi_h').value)/100;
+  const w = parseFloat($id('bmi_w').value);
+  if(!h||!w) return $id('bmi_out').innerText='Enter values';
+  $id('bmi_out').innerText = 'BMI: '+(w/(h*h)).toFixed(2);
+}
+function calcEMI(){
+  const P = parseFloat($id('emi_p').value);
+  const r = parseFloat($id('emi_r').value)/1200;
+  const n = parseInt($id('emi_n').value);
+  if(!P||!r||!n) return $id('emi_out').innerText='Enter values';
+  const emi = P*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1);
+  $id('emi_out').innerText = 'EMI: ₹'+emi.toFixed(2);
+}
+function convertUnit(){
+  const v = parseFloat($id('unit_in').value);
+  if(isNaN(v)) return $id('unit_out').innerText='Enter number';
+  $id('unit_out').innerText = $id('unit_type').value==='m-cm' ? (v*100)+' cm' : (v/100)+' m';
+}
+function calcRoot(){
+  const n = parseFloat($id('root_in').value);
+  if(isNaN(n)) return $id('root_out').innerText='Enter number';
+  $id('root_out').innerText = 'Square Root: '+Math.sqrt(n).toFixed(4)+'\nCube Root: '+Math.cbrt(n).toFixed(4);
+}
+function calcPercent(){
+  const a = parseFloat($id('percent_a').value);
+  const b = parseFloat($id('percent_b').value);
+  if(isNaN(a)||isNaN(b)||b===0) return $id('percent_out').innerText='Invalid';
+  $id('percent_out').innerText = ((a/b)*100).toFixed(2)+'%';
+}
+function calcDiscount(){
+  const p = parseFloat($id('d_price').value);
+  const d = parseFloat($id('d_percent').value);
+  if(isNaN(p)||isNaN(d)) return $id('discount_out').innerText='Invalid';
+  const save = p * d / 100;
+  $id('discount_out').innerText = 'You Save: ₹'+save.toFixed(2)+'\nFinal: ₹'+(p-save).toFixed(2);
+}
 
 /* NEW LIFE TOOLS */
 function stepsToCalories(){
-  const steps = parseInt($id('steps_input').value) || 0;
-  const calories = (steps * 0.04).toFixed(1);
-  $id('steps_result').innerText = `${steps} steps ≈ ${calories} calories burned`;
+  const s = parseInt($id('steps_input').value) || 0;
+  const cal = (s * 0.04).toFixed(1);
+  $id('steps_result').innerText = s + ' steps ≈ ' + cal + ' calories burned';
 }
-let swInterval = null, swSeconds = 0;
+let swInt, swSec = 0;
 function startStopwatch(){
-  if(swInterval) return;
-  swInterval = setInterval(()=>{
-    swSeconds++;
-    const h = String(Math.floor(swSeconds/3600)).padStart(2,'0');
-    const m = String(Math.floor((swSeconds%3600)/60)).padStart(2,'0');
-    const s = String(swSeconds%60).padStart(2,'0');
-    $id('stopwatch_display').innerText = `${h}:${m}:${s}`;
+  if(swInt) return;
+  swInt = setInterval(()=>{
+    swSec++;
+    let h = String(Math.floor(swSec/3600)).padStart(2,'0');
+    let m = String(Math.floor((swSec%3600)/60)).padStart(2,'0');
+    let s = String(swSec%60).padStart(2,'0');
+    $id('stopwatch_display').innerText = h+':'+m+':'+s;
   },1000);
 }
-function stopStopwatch(){clearInterval(swInterval); swInterval = null;}
-function resetStopwatch(){stopStopwatch(); swSeconds = 0; $id('stopwatch_display').innerText = "00:00:00";}
+function stopStopwatch(){clearInterval(swInt); swInt=null;}
+function resetStopwatch(){stopStopwatch(); swSec=0; $id('stopwatch_display').innerText='00:00:00';}
 function startTimer(){
-  let min = parseInt($id('timer_min').value) || 0;
-  let sec = parseInt($id('timer_sec').value) || 0;
+  let min = parseInt($id('timer_min').value)||0;
+  let sec = parseInt($id('timer_sec').value)||0;
   let total = min*60 + sec;
-  if(total <= 0) return alert("Set valid time");
-  clearInterval(window.timerInt);
-  window.timerInt = setInterval(()=>{
+  if(total<=0) return alert('Set time');
+  clearInterval(window.tInt);
+  window.tInt = setInterval(()=>{
     total--;
-    if(total <= 0){
-      clearInterval(window.timerInt);
-      $id('timer_display').innerText = "Time Up!";
-      return;
-    }
-    const m = String(Math.floor(total/60)).padStart(2,'0');
-    const s = String(total%60).padStart(2,'0');
-    $id('timer_display').innerText = `${m}:${s}`;
+    if(total<=0){clearInterval(window.tInt); $id('timer_display').innerText='Time Up!'; return;}
+    let m = String(Math.floor(total/60)).padStart(2,'0');
+    let s = String(total%60).padStart(2,'0');
+    $id('timer_display').innerText = m+':'+s;
   },1000);
 }
 function suggestSleep(){
-  const wake = $id('wake_time').value;
-  if(!wake) return $id('sleep_result').innerText = "Select wake time";
-  const [h,m] = wake.split(':');
-  let wakeMins = parseInt(h)*60 + parseInt(m);
-  const cycles = [90,180,270,360,450];
-  let res = "Recommended bedtime:\n";
-  cycles.forEach(c=>{
-    let bed = wakeMins - c - 15;
+  const w = $id('wake_time').value;
+  if(!w) return $id('sleep_result').innerText='Select wake time';
+  const [h,m] = w.split(':');
+  let mins = parseInt(h)*60 + parseInt(m);
+  let res = "Bedtime Suggestions:\n";
+  [1.5,3,4.5,6,7.5].forEach(hours=>{
+    let bed = mins - hours*60 - 15;
     if(bed < 0) bed += 1440;
-    const bh = String(Math.floor(bed/60)%24).padStart(2,'0');
-    const bm = String(bed%60).padStart(2,'0');
-    res += `${bh}:${bm} → ${c/60} hours sleep\n`;
+    let bh = String(Math.floor(bed/60)%24).padStart(2,'0');
+    let bm = String(bed%60).padStart(2,'0');
+    res += `${bh}:${bm} → ${hours} hours sleep\n`;
   });
   $id('sleep_result').innerText = res;
 }
 function calcGST(){
   const amt = parseFloat($id('gst_amount').value);
   const rate = parseFloat($id('gst_rate').value);
-  if(isNaN(amt)) return $id('gst_result').innerText = "Enter amount";
+  if(isNaN(amt)) return $id('gst_result').innerText='Enter amount';
   const gst = amt * rate / 100;
-  const total = amt + gst;
-  $id('gst_result').innerHTML = `GST (${rate}%): ₹${gst.toFixed(2)}<br>Total: ₹${total.toFixed(2)}`;
+  $id('gst_result').innerHTML = `GST (${rate}%): ₹${gst.toFixed(2)}<br>Total: ₹${(amt+gst).toFixed(2)}`;
 }
 
 /* NUMBER TOOLS */
-function calcHCF_LCM(){/* full implementation */}
-function numberToWords(){/* full Indian system */}
-function convertRoman(){/* full converter */}
+function calcHCF_LCM(){
+  let a = parseInt($id('hcf_a').value);
+  let b = parseInt($id('hcf_b').value);
+  if(!a||!b) return $id('hcf_result').innerText='Enter two numbers';
+  let x=a, y=b;
+  while(y){let t=y; y=x%y; x=t;}
+  const hcf = x;
+  const lcm = (a*b)/hcf;
+  $id('hcf_result').innerText = `HCF: ${hcf}\nLCM: ${lcm}`;
+}
+function numberToWords(){
+  const num = parseInt($id('num_words').value);
+  if(isNaN(num) || num > 999999999) return $id('words_result').innerText='0-999999999 only';
+  const a = ['','One ','Two ','Three ','Four ','Five ','Six ','Seven ','Eight ','Nine ','Ten ','Eleven ','Twelve ','Thirteen ','Fourteen ','Fifteen ','Sixteen ','Seventeen ','Eighteen ','Nineteen '];
+  const b = ['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'];
+  const f = n => n<20?a[n]:n<100?b[Math.floor(n/10)]+(n%10?a[n%10]:'')+' ':n<1000?a[Math.floor(n/100)]+'Hundred '+(n%100?f(n%100):'')+'':n<100000?f(Math.floor(n/1000))+'Thousand '+(n%1000?f(n%1000):'')+'':n<10000000?f(Math.floor(n/100000))+'Lakh '+(n%100000?f(n%100000):'')+'':f(Math.floor(n/10000000))+'Crore '+(n%10000000?f(n%10000000):'')+'';
+  $id('words_result').innerText = (num===0?'Zero':f(num)) + 'Rupees Only';
+}
+function convertRoman(){
+  const input = $id('roman_input').value.trim().toUpperCase();
+  if(!input) return;
+  if(!isNaN(input)){
+    let n = parseInt(input);
+    const v = [1000,900,500,400,100,90,50,40,10,9,5,4,1];
+    const s = ["M","CM","D","CD","C","XC","L","XL","X","IX","V","IV","I"];
+    let res = '';
+    for(let i=0;i<v.length;i++) while(n>=v[i]){res+=s[i]; n-=v[i];}
+    $id('roman_result').innerText = res;
+  } else {
+    const map = {I:1,V:5,X:10,L:50,C:100,D:500,M:1000};
+    let num = 0;
+    for(let i=0;i<input.length;i++){
+      if(map[input[i]] < map[input[i+1] || '']) num -= map[input[i]];
+      else num += map[input[i]];
+    }
+    $id('roman_result').innerText = num;
+  }
+}
 
 /* FUN TOOLS */
-function rollDice(){/* full */}
-function scrambleWord(){/* full */}
-function generateNickname(){/* full */}
+function rollDice(){
+  const min = parseInt($id('dice_min').value)||1;
+  const max = parseInt($id('dice_max').value)||6;
+  const res = Math.floor(Math.random()*(max-min+1))+min;
+  $id('dice_result').innerText = res;
+}
+function scrambleWord(){
+  let w = $id('scramble_word').value;
+  let a = w.split('');
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  $id('scrambled_result').innerText = a.join('');
+}
+const adj = ["Cool","Epic","Mystic","Shadow","Blaze","Storm","Ninja","Legend","Pro","Ace"];
+const noun = ["Panda","Tiger","Falcon","Wolf","Dragon","Phoenix","Samurai","Viper","Ghost","Rider"];
+function generateNickname(){
+  const name = $id('nick_name').value.trim();
+  const a = adj[Math.floor(Math.random()*adj.length)];
+  const n = noun[Math.floor(Math.random()*noun.length)];
+  $id('nickname_result').innerText = a + n + (name?' '+name:'');
+}
 
-/* OPERATIONS, WEATHER, QUIZ - 100% original preserved */
-function isPrimeCheck(){/* original */}
-function fact(){/* original */}
-async function cityWeather(){/* original */}
-function autoWeather(){/* original */}
-function startQuiz(){/* original */}
+/* OPERATIONS */
+function isPrimeCheck(){
+  const n = parseInt($id('prime_in').value);
+  if(isNaN(n)||n<2){$id('prime_out').innerText='Not prime';return;}
+  for(let i=2;i*i<=n;i++) if(n%i===0){$id('prime_out').innerText='Not prime';return;}
+  $id('prime_out').innerText='Prime Number';
+}
+function fact(){
+  let n = parseInt($id('fact_in').value);
+  if(isNaN(n)||n<0){$id('fact_out').innerText='Enter non-negative';return;}
+  let f=1;
+  for(let i=2;i<=n;i++) f*=i;
+  $id('fact_out').innerText = f;
+}
+
+/* WEATHER */
+async function cityWeather(){
+  const c = $id('city_in').value.trim();
+  if(!c) return;
+  try{
+    const r = await fetch(`https://wttr.in/${encodeURIComponent(c)}?format=%l:+%t+|+%C`);
+    const t = await r.text();
+    $id('city_weather_out').innerText = t;
+  }catch(e){
+    $id('city_weather_out').innerText = 'Error';
+  }
+}
+function autoWeather(){
+  if(!navigator.geolocation) return $id('auto_weather_out').innerText='Not supported';
+  navigator.geolocation.getCurrentPosition(async pos=>{
+    try{
+      const r = await fetch(`https://wttr.in/@${pos.coords.latitude.toFixed(4)},${pos.coords.longitude.toFixed(4)}?format=%l:+%t+|+%C`);
+      const t = await r.text();
+      $id('auto_weather_out').innerText = t;
+    }catch(e){
+      $id('auto_weather_out').innerText = 'Error';
+    }
+  }, ()=>$id('auto_weather_out').innerText='Permission denied');
+}
+
+/* QUIZ */
+function startQuiz(){
+  const a = Math.floor(Math.random()*20)+1;
+  const b = Math.floor(Math.random()*20)+1;
+  const ans = prompt(`${a} + ${b} = ?`);
+  if(parseInt(ans) === a+b){
+    $id('quiz_box').innerText = 'Correct! Well done';
+  } else {
+    $id('quiz_box').innerText = 'Wrong! Answer was '+(a+b);
+  }
+}
 
 /* INIT */
 document.addEventListener('DOMContentLoaded', function(){
