@@ -510,419 +510,1384 @@
 
 <div class="theme-toggle" onclick="toggleTheme()">Dark Mode</div>
 <script>
-function $id(id){return document.getElementById(id);}
+    // --- Helper Function ---
+    // A simple alias for document.getElementById
+    const $id = (id) => document.getElementById(id);
+    
+    // Helper to format numbers in Indian Rupee format
+    const formatINR = (amount) => {
+        if (isNaN(amount) || amount === null) return '₹ 0';
+        return '₹ ' + amount.toLocaleString('en-IN', {
+            maximumFractionDigits: 2
+        });
+    };
 
-// Tool Data Structure for Search Functionality
-const allTools = [];
-document.addEventListener('DOMContentLoaded', () => {
-    // Populate allTools array from every tool-box's data-tool-name attribute
-    document.querySelectorAll('.tool-box').forEach(box => {
-        const name = box.getAttribute('data-tool-name');
-        if (name) {
-            allTools.push({
-                name: name,
-                tabId: box.closest('.tab-content').id,
-                subtabId: box.classList.contains('life-subtab') ? box.id : null
+    // --- Core UI Functions ---
+
+    // Function to handle tab switching
+    function openTab(tabId, button) {
+        // Hide all tab content
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.remove('active');
+        });
+        // Deactivate all tab buttons
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.remove('active-tab');
+        });
+        // Show the selected tab content
+        $id(tabId).classList.add('active');
+        // Activate the clicked button
+        button.classList.add('active-tab');
+        
+        // Hide all life-subtabs when switching away from the 'life' tab
+        if (tabId !== 'life') {
+             document.querySelectorAll('.life-subtab').forEach(subtab => {
+                subtab.classList.add('hidden');
             });
         }
-    });
-});
 
-function openTab(id, btn){
-  document.querySelectorAll(".tab-content").forEach(t => t.classList.remove("active"));
-  $id(id)?.classList.add("active");
-  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active-tab"));
-  if(btn) btn.classList.add("active-tab");
-
-  // Hide search results and show home content when switching tabs
-  if (id !== 'home') {
-      $id('tool_search_input').value = '';
-      $id('search_results_container').innerHTML = '';
-      $id('home_content').style.display = 'block';
-  }
-}
-
-function openLife(id){
-  document.querySelectorAll('.life-subtab').forEach(s=>s.classList.add('hidden'));
-  $id(id).classList.remove('hidden');
-  $id(id).scrollIntoView({behavior:'smooth'});
-}
-
-/* ========= TOOL SEARCH LOGIC ADDED HERE ========= */
-function searchTools() {
-    const query = $id('tool_search_input').value.toLowerCase().trim();
-    const resultsContainer = $id('search_results_container');
-    const homeContent = $id('home_content');
-
-    if (query.length === 0) {
-        resultsContainer.innerHTML = '';
-        homeContent.style.display = 'block';
-        return;
-    }
-
-    // Filter tools based on query
-    const results = allTools.filter(tool => 
-        tool.name.toLowerCase().includes(query) || tool.name.toLowerCase().replace(/[^a-z0-9]/g, '').includes(query.replace(/[^a-z0-9]/g, ''))
-    );
-
-    // Update display
-    if (results.length > 0) {
-        homeContent.style.display = 'none';
-        let html = '';
-        results.forEach(tool => {
-            const onClickAction = tool.subtabId 
-                ? `openTab('${tool.tabId}', $id('tab-${tool.tabId}-btn')); openLife('${tool.subtabId}');` 
-                : `openTab('${tool.tabId}', $id('tab-${tool.tabId}-btn'));`;
-            
-            html += `<div class="search-result-box" onclick="${onClickAction}">
-                        ${tool.name}
-                    </div>`;
-        });
-        resultsContainer.innerHTML = html;
-    } else {
-        homeContent.style.display = 'none';
-        resultsContainer.innerHTML = '<p style="color:white;text-align:center;">No tools found matching your search.</p>';
-    }
-}
-
-
-/* ========= TEXT TOOLS ========= */
-function upperText(){$id('text_out').value = $id('text_in').value.toUpperCase();}
-function lowerText(){$id('text_out').value = $id('text_in').value.toLowerCase();}
-function removeSpaces(){$id('text_out').value = $id('text_in').value.replace(/\s+/g,' ').trim();}
-function copyResult(){$id('text_out').select();document.execCommand('copy');alert('Copied!');}
-
-/* (All other previously implemented functions like makeQR, getIP, calcHCF_LCM, isPrimeCheck, etc., remain here) */
-
-/* ========= SMART TOOLS ========= */
-function makeQR(){
-  const v = encodeURIComponent($id('qr_text').value||'');
-  $id('qr_box').innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${v}">`;
-}
-function makeBarcode(){
-  const v = $id('barcode_text').value || '123456789';
-  try{JsBarcode("#barcode_svg", v, {format:"auto",displayValue:true,width:2,height:60});}
-  catch(e){alert('Invalid barcode');}
-}
-async function getIP(){
-  try{const r = await fetch("https://api.ipify.org?format=json");const d = await r.json();$id('ip_box').innerText = d.ip;}
-  catch(e){$id('ip_box').innerText = 'Failed';}
-}
-function getDeviceInfo(){$id('device_box').innerText = navigator.userAgent;}
-function checkPwd(){
-  const p = $id('pwd_input').value || '';
-  let s=0;
-  if(p.length>=8) s++;
-  if(/[0-9]/.test(p)) s++;
-  if(/[A-Z]/.test(p)) s++;
-  if(/[@#$%^&*!]/.test(p)) s++;
-  const l = ["Very Weak","Weak","Medium","Strong","Very Strong"];
-  $id('pwd_box').innerText = l[Math.min(s,4)];
-}
-function shortenURL(){
-  const url = $id('long_url').value.trim();
-  if(!url || !url.startsWith('http')) return $id('short_url').innerText = 'Invalid URL';
-  const short = "mithun.in/" + btoa(url).substr(0,10);
-  $id('short_url').innerHTML = `<a href="${url}" target="_blank">${short}</a> (Demo)`;
-}
-function textToPDF(){
-  const text = $id('pdf_text').value || 'Hello';
-  const {jsPDF} = window.jspdf;
-  const doc = new jsPDF();
-  doc.text(text,10,10);
-  doc.save("mithun-tool.pdf");
-}
-let recognition=null;
-function toggleVoice(){
-  if(!('SpeechRecognition' in window || 'webkitSpeechRecognition' in window)){
-    $id('voice_result').innerText='Not supported';return;
-  }
-  if(!recognition){
-    const SR = window.SpeechRecognition || webkitSpeechRecognition;
-    recognition = new SR();
-    recognition.lang='en-IN';
-    recognition.onresult = e => $id('voice_result').innerText = e.results[0][0].transcript;
-    recognition.onerror = () => $id('voice_result').innerText='Error';
-    recognition.running=false; // Initialize custom running state
-  }
-  if(recognition.running){
-    recognition.stop();
-    $id('start_voice').style.display='block';
-    $id('stop_voice').style.display='none';
-    recognition.running=false;
-  } else{
-    recognition.start();
-    $id('start_voice').style.display='none';
-    $id('stop_voice').style.display='block';
-    recognition.running=true;
-  }
-}
-function takeScreenshot(){
-  const url = $id('screenshot_url').value.trim();
-  if(!url) return alert('Enter URL');
-  // NOTE: This API URL is non-functional and is for demonstration/mocking only.
-  const api = `https://api.thumbnail.ws/api/${btoa(url)}/thumbnail/get?width=800&height=600`; 
-  $id('screenshot_result').innerHTML = `<img src="${api}" style="max-width:100%;border-radius:8px">`;
-}
-function calcScientific(){
-  try{const res = math.evaluate($id('calc_input').value);$id('calc_result').innerText = res;}
-  catch(e){$id('calc_result').innerText='Invalid';}
-}
-
-/* ========= LIFE TOOLS ========= */
-function calcAge(){
-  const dob = new Date($id('age_dob').value);
-  const diff = Date.now() - dob.getTime();
-  const age = Math.floor(diff / (1000*60*60*24*365.25));
-  $id('age_out').innerText = `You are ${age} years old`;
-}
-function calcBMI(){
-  const h = parseFloat($id('bmi_h').value)/100;
-  const w = parseFloat($id('bmi_w').value);
-  if(!h||!w) return;
-  const bmi = (w/(h*h)).toFixed(2);
-  $id('bmi_out').innerText = `BMI: ${bmi}`;
-}
-function calcEMI(){
-  const p = parseFloat($id('emi_p').value);
-  const r = parseFloat($id('emi_r').value)/(12*100);
-  const n = parseInt($id('emi_n').value);
-  if(!p||!r||!n) return;
-  const emi = (p*r*Math.pow(1+r,n))/(Math.pow(1+r,n)-1);
-  $id('emi_out').innerText = `Monthly EMI: ₹${emi.toFixed(0)}`;
-}
-function convertUnit(){
-  const val = parseFloat($id('unit_in').value);
-  const type = $id('unit_type').value;
-  let result = '';
-  if(type==='m-cm') result = val*100 + ' cm';
-  else if(type==='cm-m') result = (val/100).toFixed(4) + ' m';
-  else if(type==='kg-g') result = val*1000 + ' g';
-  else if(type==='g-kg') result = (val/1000).toFixed(4) + ' kg';
-  $id('unit_out').innerText = result;
-}
-function calcRoot(){
-  const n = parseFloat($id('root_in').value);
-  if(isNaN(n)) return;
-  $id('root_out').innerText = `Square root of ${n} = ${Math.sqrt(n).toFixed(4)}\nCube root of ${n} = ${Math.cbrt(n).toFixed(4)}`;
-}
-function calcPercent(){
-  const a = parseFloat($id('percent_a').value);
-  const b = parseFloat($id('percent_b').value);
-  if(isNaN(a) || isNaN(b) || b === 0) return;
-  $id('percent_out').innerText = `${a} is ${(a/b*100).toFixed(2)}% of ${b}`;
-}
-function calcDiscount(){
-  const p = parseFloat($id('d_price').value);
-  const d = parseFloat($id('d_percent').value);
-  if(isNaN(p) || isNaN(d)) return;
-  const save = p*(d/100);
-  $id('discount_out').innerText = `You Save: ₹${save.toFixed(2)}\nFinal Price: ₹${(p-save).toFixed(2)}`;
-}
-function stepsToCalories(){
-  const steps = parseInt($id('steps_input').value) || 0;
-  const cal = (steps * 0.04).toFixed(1);
-  $id('steps_result').innerText = `${steps} steps ≈ ${cal} calories burned`;
-}
-let swInterval, swSeconds = 0;
-function startStopwatch(){if(swInterval)return;swInterval=setInterval(()=>{swSeconds++;let h=String(Math.floor(swSeconds/3600)).padStart(2,'0');let m=String(Math.floor((swSeconds%3600)/60)).padStart(2,'0');let s=String(swSeconds%60).padStart(2,'0');$id('stopwatch_display').innerText=`${h}:${m}:${s}`;},1000);}
-function stopStopwatch(){clearInterval(swInterval);swInterval=null;}
-function resetStopwatch(){stopStopwatch();swSeconds=0;$id('stopwatch_display').innerText='00:00:00';}
-function startTimer(){
-  let m = parseInt($id('timer_min').value)||0;
-  let s = parseInt($id('timer_sec').value)||0;
-  let total = m*60 + s;
-  if(total<=0) return alert('Set time');
-  clearInterval(window.timerInt);
-  window.timerInt = setInterval(()=>{
-    total--;
-    if(total<=0){clearInterval(window.timerInt);$id('timer_display').innerText='Time Up!';return;}
-    let mm = String(Math.floor(total/60)).padStart(2,'0');
-    let ss = String(total%60).padStart(2,'0');
-    $id('timer_display').innerText = `${mm}:${ss}`;
-  },1000);
-}
-function suggestSleep(){
-  const time = $id('wake_time').value;
-  if(!time) return;
-  const [h,m] = time.split(':').map(Number);
-  let mins = h*60 + m;
-  let result = "Recommended bedtime:\n";
-  [90,180,270,360,450].forEach(cycle=>{  
-    let bed = mins - cycle - 15; // 15 mins to fall asleep + sleep cycle time
-    if(bed < 0) bed += 1440; // 1440 minutes in a day
-    let bh = Math.floor(bed/60)%24; let bm = bed%60;
-    result += `${bh.toString().padStart(2,'0')}:${bm.toString().padStart(2,'0')} (${cycle/90} cycles)\n`;
-  });
-  $id('sleep_result').innerText = result;
-}
-function calcGST(){
-  const amt = parseFloat($id('gst_amount').value);
-  const rate = parseFloat($id('gst_rate').value);
-  if(isNaN(amt)) return;
-  const gst = amt * rate / 100;
-  $id('gst_result').innerHTML = `GST (${rate}%): ₹${gst.toFixed(2)}<br>Total: ₹${(amt+gst).toFixed(2)}`;
-}
-
-/* ========= INDIA TOOLS ========= */
-function generateUPI(){
-  const name = $id('upi_name').value || "Customer";
-  const upi = $id('upi_id').value;
-  const amt = $id('upi_amount').value || "";
-  if(!upi.includes('@')) return alert("Enter valid UPI ID");
-  const url = `upi://pay?pa=${upi}&pn=${encodeURIComponent(name)}&am=${amt}&cu=INR`;
-  $id('upi_qr').innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(url)}">`;
-}
-function generateGST(){
-  const name=$id('gst_name').value||"Customer";
-  const items=$id('gst_items').value||"Items";
-  const amt=parseFloat($id('invoice_gst_amount').value)||0;
-  const rate=parseFloat($id('invoice_gst_rate').value);
-  const gst=amt*rate/100;
-  const total=amt+gst;
-  $id('gst_invoice').innerHTML = `<b>${name}</b><br>${items}<br>Amount: ₹${amt}<br>GST (${rate}%): ₹${gst.toFixed(2)}<br><b>Total: ₹${total.toFixed(2)}</b><br><button class="copy-btn" onclick="navigator.clipboard.writeText(this.parentNode.innerText)">Copy</button>`;
-}
-function checkOfficialPNR(){
-  const pnr = $id('pnr_input').value.trim();
-  if(pnr.length!==10 || isNaN(pnr)) return alert("Enter valid 10-digit PNR");
-  window.open(`https://www.indianrail.gov.in/enquiry/PNR/PnrEnquiry.html?pnrNumber=${pnr}`, '_blank');
-}
-async function getGoldRate(){
-  $id('gold_rate').innerHTML = "Fetching...";
-  try{
-    // NOTE: This API URL is non-functional and is for demonstration/mocking only.
-    const res = await fetch("https://api.metals.live/v1/spot"); 
-    const d = await res.json();
-    const rate = d[0]?.price || 7200; // Mock rate if API fails
-    $id('gold_rate').innerHTML = "24K Gold (10g): ≈ ₹72,000 (Mock Data)";
-  }catch(e){
-    $id('gold_rate').innerHTML = "24K Gold (10g): ≈ ₹72,000 (Mock Data)";
-  }
-}
-function openWhatsApp(){
-  const num = $id('wa_num').value.trim();
-  const msg = encodeURIComponent($id('wa_msg').value);
-  if(!num) return alert("Enter number");
-  window.open(`https://wa.me/${num}?text=${msg}`, '_blank');
-}
-function validatePAN(){
-  const pan = $id('pan').value.toUpperCase();
-  const regex = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
-  $id('pan_result').innerText = regex.test(pan) ? "Valid PAN format" : "Invalid PAN format";
-}
-
-/* ========= NUMBER TOOLS LOGIC ========= */
-function gcd(a, b) {
-    a = Math.abs(a);
-    b = Math.abs(b);
-    while (b) {
-        [a, b] = [b, a % b];
-    }
-    return a;
-}
-function lcm(a, b) {
-    if (a === 0 || b === 0) return 0;
-    return Math.abs(a * b) / gcd(a, b);
-}
-function calcHCF_LCM() {
-    const num1 = parseInt($id('hcf_a').value);
-    const num2 = parseInt($id('hcf_b').value);
-    const resultBox = $id('hcf_result');
-
-    if (isNaN(num1) || isNaN(num2) || num1 < 0 || num2 < 0) {
-        resultBox.innerText = "Please enter two valid, non-negative integers.";
-        return;
-    }
-
-    const hcfValue = gcd(num1, num2);
-    const lcmValue = lcm(num1, num2);
-
-    resultBox.innerHTML = `
-        **HCF (GCD):** ${hcfValue}<br>
-        **LCM:** ${lcmValue}
-    `;
-}
-
-/* ========= OPERATIONS LOGIC ========= */
-function isPrimeCheck(){
-    const n = parseInt($id('prime_in').value);
-    const resultBox = $id('prime_out');
-    
-    if (isNaN(n) || n < 1) {
-        resultBox.innerText = "Please enter a positive integer.";
-        return;
-    }
-    if (n === 1) {
-        resultBox.innerText = "1 is neither prime nor composite.";
-        return;
-    }
-    if (n === 2) {
-        resultBox.innerText = "2 is a Prime Number.";
-        return;
-    }
-    for (let i = 2; i <= Math.sqrt(n); i++) {
-        if (n % i === 0) {
-            resultBox.innerText = `${n} is a Composite (Not Prime) Number (Divisible by ${i}).`;
-            return;
+        // On certain tabs, fetch data immediately
+        if (tabId === 'weather') {
+            // Optional: Call autoWeather() here if preferred, but only on user action to avoid permission prompt loop.
+        }
+        if (tabId === 'time') {
+            // Optional: Call getGlobalTime() if you implement it
         }
     }
-    resultBox.innerText = `${n} is a Prime Number.`;
-}
-function fact(){
-    const n = parseInt($id('fact_in').value);
-    const resultBox = $id('fact_out');
-    
-    if (isNaN(n) || n < 0) {
-        resultBox.innerText = "Please enter a non-negative integer.";
-        return;
+
+    // Function to handle Life Tools sub-tab switching
+    function openLife(subTabId) {
+        document.querySelectorAll('.life-subtab').forEach(subtab => {
+            subtab.classList.add('hidden');
+        });
+        $id(subTabId).classList.remove('hidden');
+    }
+
+    // Function to toggle Dark/Light Theme
+    function toggleTheme() {
+        const currentTheme = document.body.getAttribute('data-theme');
+        if (currentTheme === 'dark') {
+            document.body.removeAttribute('data-theme');
+            document.querySelector('.theme-toggle').innerText = 'Dark Mode';
+        } else {
+            document.body.setAttribute('data-theme', 'dark');
+            document.querySelector('.theme-toggle').innerText = 'Light Mode';
+        }
+    }
+
+    // Function to copy text from a result box
+    function copyResult() {
+        const resultBox = $id('text_out');
+        if (resultBox.value) {
+            resultBox.select();
+            document.execCommand('copy');
+            alert('Result copied to clipboard!');
+        }
     }
     
-    if (n > 20) {
-        resultBox.innerText = "Input too large. Result may exceed safe integer limits (n! for n > 20 is approximated).";
+    // --- Tool Search Function ---
+    function searchTools() {
+        const query = $id('tool_search_input').value.toLowerCase();
+        const container = $id('search_results_container');
+        container.innerHTML = '';
+        
+        if (query.length < 2) {
+            $id('home_content').style.display = 'block';
+            return;
+        }
+
+        $id('home_content').style.display = 'none';
+
+        const allTools = document.querySelectorAll('.tool-box[data-tool-name]');
+        let resultsFound = 0;
+
+        allTools.forEach(toolBox => {
+            const toolName = toolBox.getAttribute('data-tool-name').toLowerCase();
+            const parentTab = toolBox.closest('.tab-content').id;
+
+            if (toolName.includes(query)) {
+                resultsFound++;
+                const resultBox = document.createElement('div');
+                resultBox.className = 'search-result-box';
+                resultBox.innerText = toolName.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '); // Title Case
+                
+                // Clicking the result switches to the tool's tab
+                resultBox.onclick = () => {
+                    openTab(parentTab, $id(`tab-${parentTab}-btn`));
+                    // Optionally scroll to the tool
+                    toolBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                };
+                container.appendChild(resultBox);
+            }
+        });
+
+        if (resultsFound === 0) {
+            container.innerHTML = `<div style="text-align:center;color:white;padding:20px;">No tools found matching "${query}".</div>`;
+        }
     }
 
-    let result = 1;
-    for (let i = 2; i <= n; i++) {
-        result *= i;
+
+    // ------------------------------------
+    //          HOME TAB FUNCTIONS
+    // ------------------------------------
+    
+    function upperText() {
+        const text = $id('text_in').value;
+        $id('text_out').value = text.toUpperCase();
     }
 
-    resultBox.innerText = `${n}! = ${result.toLocaleString('en-IN')}`;
-}
+    function lowerText() {
+        const text = $id('text_in').value;
+        $id('text_out').value = text.toLowerCase();
+    }
 
-/* ========= DUMMY FUNCTIONS (Not Implemented) ========= */
-function getCricketScore(){ $id('cricket_result').innerText = "Live Cricket Score API integration is not implemented in this code."; }
-function calcTax(){ $id('tax_result').innerText = "Income Tax calculation logic is not implemented in this code."; }
-function calcSIP(){ $id('sip_result').innerText = "SIP calculation logic is not implemented in this code."; }
-function loveCalc(){ $id('love_result').innerText = "Love % calculation logic is not implemented in this code."; }
-function numberToWords(){ $id('words_result').innerText = "Number to Words conversion is not implemented in this code."; }
-function convertRoman(){ $id('roman_result').innerText = "Roman/Number conversion logic is not implemented in this code."; }
-function autoWeather(){ $id('auto_weather_out').innerText = "Auto Location Weather API integration is not implemented in this code."; }
-function cityWeather(){ $id('city_weather_out').innerText = "City Weather API integration is not implemented in this code."; }
+    function removeSpaces() {
+        const text = $id('text_in').value;
+        $id('text_out').value = text.replace(/\s+/g, '');
+    }
 
 
-/* ========= THEME & INITIALIZATION ========= */
-function toggleTheme(){
-  document.body.dataset.theme = document.body.dataset.theme==="dark" ? "" : "dark";
-  localStorage.setItem('theme', document.body.dataset.theme||"light");
-}
-if(localStorage.getItem('theme')==="dark") document.body.dataset.theme="dark";
+    // ------------------------------------
+    //          SMART TOOLS FUNCTIONS
+    // ------------------------------------
 
-document.addEventListener('DOMContentLoaded', ()=>{
-  document.querySelectorAll('.life-subtab').forEach(s=>s.classList.add('hidden'));
-  openTab('home', $id('tab-home-btn')); 
-});
- <section id="time" class="tab-content">
-    <h2 style="color:white">World Clock & Time Zone</h2>
-    <div class="tools-grid">
-      <div class="tool-box" data-tool-name="World Clock Time Zone Finder">
-        <h3>Time Zone Finder (Public API) </h3>
-        <input id="city_time_in" placeholder="Enter City (e.g., London, New York, Tokyo)">
-        <button onclick="getCityTime()">Find Time</button>
-        <div id="city_time_out" class="result">Enter a city/time zone and click Find Time.</div>
-        <p class="disclaimer">Note: Uses **World Time API** (http://worldtimeapi.org) for reliable time zone lookups.</p>
-      </div>
-    </div>
-  </section>
+    // QR Code Generator (Uses external Google Charts API)
+    function makeQR() {
+        const text = $id('qr_text').value.trim();
+        const qrBox = $id('qr_box');
+        qrBox.innerHTML = '';
+
+        if (!text) {
+            qrBox.innerText = 'Please enter text or a URL.';
+            return;
+        }
+        
+        // Google Charts API for QR code generation
+        const qrUrl = `https://chart.googleapis.com/chart?cht=qr&chs=200x200&chl=${encodeURIComponent(text)}`;
+        qrBox.innerHTML = `<img src="${qrUrl}" alt="QR Code" style="width:200px; height:200px; margin: 10px auto;">`;
+    }
+
+    // Barcode Generator (Requires JsBarcode library)
+    function makeBarcode() {
+        const text = $id('barcode_text').value.trim();
+        const barcodeSvg = $id('barcode_svg');
+
+        if (!text) {
+            barcodeSvg.innerHTML = '';
+            barcodeSvg.parentElement.innerText = 'Please enter numbers/text for the barcode.';
+            return;
+        }
+
+        try {
+            JsBarcode(barcodeSvg, text, {
+                displayValue: true,
+                margin: 0,
+                height: 50,
+                width: 2
+            });
+            barcodeSvg.parentElement.innerText = ''; // Clear text if successful
+            barcodeSvg.parentElement.appendChild(barcodeSvg); // Re-add SVG to show the barcode
+        } catch (e) {
+            barcodeSvg.parentElement.innerText = 'Error generating barcode. Try numbers only for certain types.';
+            console.error(e);
+        }
+    }
+
+    // IP Address Checker (Placeholder - requires a server-side proxy or external API)
+    async function getIP() {
+        const ipBox = $id('ip_box');
+        ipBox.innerText = 'Fetching IP address...';
+        
+        try {
+            // Using a public IP API
+            const response = await fetch('https://api.ipify.org?format=json');
+            const data = await response.json();
+            ipBox.innerText = `Your Public IP Address: ${data.ip}`;
+        } catch (e) {
+            ipBox.innerText = 'Error fetching IP. (API failed or blocked)';
+        }
+    }
+
+    // Device Info
+    function getDeviceInfo() {
+        const dBox = $id('device_box');
+        dBox.innerText = `
+            Browser: ${navigator.userAgent}
+            Platform: ${navigator.platform}
+            Language: ${navigator.language}
+            Screen Size: ${window.screen.width}x${window.screen.height}
+            Cookies Enabled: ${navigator.cookieEnabled ? 'Yes' : 'No'}
+        `;
+    }
+
+    // Password Strength Checker (Simple Check)
+    function checkPwd() {
+        const pwd = $id('pwd_input').value;
+        let strength = 0;
+        let feedback = 'Weak. ';
+
+        if (pwd.length >= 8) {
+            strength++;
+        }
+        if (pwd.match(/[a-z]/) && pwd.match(/[A-Z]/)) {
+            strength++;
+        }
+        if (pwd.match(/[0-9]/)) {
+            strength++;
+        }
+        if (pwd.match(/[^a-zA-Z0-9\s]/)) {
+            strength++;
+        }
+
+        switch (strength) {
+            case 0:
+            case 1:
+                feedback = 'Very Weak';
+                break;
+            case 2:
+                feedback = 'Medium';
+                break;
+            case 3:
+                feedback = 'Strong';
+                break;
+            case 4:
+                feedback = 'Very Strong 💪';
+                break;
+        }
+
+        $id('pwd_box').innerText = `Strength: ${feedback} (Score: ${strength}/4)`;
+    }
+    
+    // URL Shortener (Placeholder - requires a server-side proxy or external API)
+    function shortenURL() {
+        const longUrl = $id('long_url').value.trim();
+        const resultBox = $id('short_url');
+        resultBox.innerText = 'This tool requires a working URL shortening service API key which is not available in a client-side snippet. Please use a service like TinyURL directly.';
+    }
+
+    // Text to PDF (Requires jsPDF library)
+    function textToPDF() {
+        const text = $id('pdf_text').value;
+        if (!text) {
+            alert('Please enter some text to generate a PDF.');
+            return;
+        }
+
+        // The library is available as window.jspdf.jsPDF due to the UMD module
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        doc.setFontSize(12);
+        // Split text into lines to fit on the PDF
+        const lines = doc.splitTextToSize(text, 180); // 180mm width
+        doc.text(lines, 10, 10);
+        doc.save("document.pdf");
+    }
+
+    // Voice to Text (Browser Web Speech API)
+    let recognition = null;
+    let isRecording = false;
+
+    function toggleVoice() {
+        const startBtn = $id('start_voice');
+        const stopBtn = $id('stop_voice');
+        const resultBox = $id('voice_result');
+
+        if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+            resultBox.innerText = 'Voice recognition is not supported in this browser.';
+            return;
+        }
+
+        if (!recognition) {
+            recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.lang = 'en-IN'; // Set to Indian English for better recognition
+
+            recognition.onstart = () => {
+                isRecording = true;
+                startBtn.style.display = 'none';
+                stopBtn.style.display = 'inline-block';
+                resultBox.innerText = 'Listening... Speak now.';
+            };
+
+            recognition.onresult = (event) => {
+                let interimTranscript = '';
+                let finalTranscript = '';
+                for (let i = event.resultIndex; i < event.results.length; ++i) {
+                    if (event.results[i].isFinal) {
+                        finalTranscript += event.results[i][0].transcript;
+                    } else {
+                        interimTranscript += event.results[i][0].transcript;
+                    }
+                }
+                resultBox.innerText = finalTranscript || interimTranscript;
+            };
+
+            recognition.onerror = (event) => {
+                isRecording = false;
+                startBtn.style.display = 'inline-block';
+                stopBtn.style.display = 'none';
+                resultBox.innerText = `Error: ${event.error}`;
+                console.error('Speech recognition error:', event.error);
+            };
+
+            recognition.onend = () => {
+                isRecording = false;
+                startBtn.style.display = 'inline-block';
+                stopBtn.style.display = 'none';
+                if (resultBox.innerText.includes('Listening...')) {
+                    resultBox.innerText = 'Recording stopped. (No input detected)';
+                }
+            };
+        }
+
+        if (isRecording) {
+            recognition.stop();
+        } else {
+            recognition.start();
+        }
+    }
+
+    // Website Screenshot (Placeholder - requires a server-side proxy)
+    function takeScreenshot() {
+        const url = $id('screenshot_url').value.trim();
+        const resultBox = $id('screenshot_result');
+        if (!url) {
+            resultBox.innerText = 'Please enter a URL.';
+            return;
+        }
+        resultBox.innerHTML = `Screenshot generation requires a secure, paid external API or server-side tool, which cannot be implemented in client-side JavaScript.`;
+    }
+
+    // Scientific Calculator (Requires mathjs library)
+    function calcScientific() {
+        const expression = $id('calc_input').value;
+        const resultBox = $id('calc_result');
+        
+        if (!expression) {
+            resultBox.innerText = 'Enter an expression (e.g., sin(45), 2^10).';
+            return;
+        }
+
+        try {
+            // math.evaluate is available globally since it's loaded via CDN
+            const result = math.evaluate(expression);
+            resultBox.innerText = `Result: ${result}`;
+        } catch (e) {
+            resultBox.innerText = `Error: Invalid expression. ${e.message}`;
+        }
+    }
+    
+    
+    // ------------------------------------
+    //        LIFE TOOLS FUNCTIONS
+    // ------------------------------------
+    
+    function calcAge() {
+        const dobInput = $id('age_dob').value;
+        const resultBox = $id('age_out');
+        if (!dobInput) {
+            resultBox.innerText = 'Please select your Date of Birth.';
+            return;
+        }
+
+        const dob = new Date(dobInput);
+        const today = new Date();
+        
+        let age = today.getFullYear() - dob.getFullYear();
+        const monthDiff = today.getMonth() - dob.getMonth();
+        
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+            age--;
+        }
+        
+        // Calculate months and days for more detail
+        let month = today.getMonth();
+        let day = today.getDate();
+        let month_dob = dob.getMonth();
+        let day_dob = dob.getDate();
+        
+        let months = month - month_dob;
+        if (months < 0 || (months === 0 && day < day_dob)) {
+            months += 12;
+        }
+        
+        let days = day - day_dob;
+        if (days < 0) {
+            months--;
+            const daysInLastMonth = new Date(today.getFullYear(), today.getMonth(), 0).getDate();
+            days += daysInLastMonth;
+        }
+        
+        resultBox.innerText = `You are ${age} years old. \n(Or: ${age} years, ${months} months, and ${days} days)`;
+    }
+
+    function calcBMI() {
+        const heightCm = parseFloat($id('bmi_h').value);
+        const weightKg = parseFloat($id('bmi_w').value);
+        const resultBox = $id('bmi_out');
+
+        if (isNaN(heightCm) || isNaN(weightKg) || heightCm <= 0 || weightKg <= 0) {
+            resultBox.innerText = 'Please enter valid height (cm) and weight (kg).';
+            return;
+        }
+
+        const heightM = heightCm / 100;
+        const bmi = weightKg / (heightM * heightM);
+        const bmi_rounded = bmi.toFixed(2);
+
+        let category = '';
+        if (bmi < 18.5) {
+            category = 'Underweight';
+        } else if (bmi >= 18.5 && bmi < 24.9) {
+            category = 'Healthy Weight';
+        } else if (bmi >= 25 && bmi < 29.9) {
+            category = 'Overweight';
+        } else {
+            category = 'Obesity';
+        }
+
+        resultBox.innerText = `Your BMI is: ${bmi_rounded}\nCategory: ${category}`;
+    }
+    
+    function calcEMI() {
+        const P = parseFloat($id('emi_p').value); // Principal
+        const R = parseFloat($id('emi_r').value); // Annual Interest Rate %
+        const N = parseFloat($id('emi_n').value); // Tenure in Months
+        const resultBox = $id('emi_out');
+
+        if (isNaN(P) || isNaN(R) || isNaN(N) || P <= 0 || N <= 0) {
+            resultBox.innerText = 'Please enter valid loan amount, rate, and tenure.';
+            return;
+        }
+
+        const r = R / (12 * 100); // Monthly Interest Rate
+        
+        if (r === 0) {
+            // Simple division if interest rate is 0
+            const emi = P / N;
+            const totalPayment = P;
+            const totalInterest = 0;
+            resultBox.innerText = `Monthly EMI: ${formatINR(emi)}\nTotal Principal: ${formatINR(P)}\nTotal Interest: ${formatINR(0)}\nTotal Payment: ${formatINR(totalPayment)}`;
+            return;
+        }
+
+        // EMI Formula: P * r * (1 + r)^n / ((1 + r)^n - 1)
+        const emi = P * r * (Math.pow(1 + r, N)) / (Math.pow(1 + r, N) - 1);
+        const totalPayment = emi * N;
+        const totalInterest = totalPayment - P;
+
+        resultBox.innerText = `Monthly EMI: ${formatINR(emi)}\nTotal Principal: ${formatINR(P)}\nTotal Interest: ${formatINR(totalInterest)}\nTotal Payment: ${formatINR(totalPayment)}`;
+    }
+
+    function convertUnit() {
+        const value = parseFloat($id('unit_in').value);
+        const type = $id('unit_type').value;
+        const resultBox = $id('unit_out');
+
+        if (isNaN(value)) {
+            resultBox.innerText = 'Please enter a valid number.';
+            return;
+        }
+
+        let result = 0;
+        let unitOut = '';
+        let unitIn = '';
+
+        switch (type) {
+            case 'm-cm':
+                result = value * 100;
+                unitIn = 'Meter';
+                unitOut = 'CM';
+                break;
+            case 'cm-m':
+                result = value / 100;
+                unitIn = 'CM';
+                unitOut = 'Meter';
+                break;
+            case 'kg-g':
+                result = value * 1000;
+                unitIn = 'KG';
+                unitOut = 'Gram';
+                break;
+            case 'g-kg':
+                result = value / 1000;
+                unitIn = 'Gram';
+                unitOut = 'KG';
+                break;
+            default:
+                resultBox.innerText = 'Invalid conversion type.';
+                return;
+        }
+
+        resultBox.innerText = `${value} ${unitIn} = ${result.toFixed(3)} ${unitOut}`;
+    }
+
+    function calcRoot() {
+        const num = parseFloat($id('root_in').value);
+        const resultBox = $id('root_out');
+
+        if (isNaN(num)) {
+            resultBox.innerText = 'Please enter a valid number.';
+            return;
+        }
+        
+        const squareRoot = Math.sqrt(num);
+        const cubeRoot = Math.cbrt(num);
+
+        resultBox.innerText = `Square Root: ${squareRoot.toFixed(5)}\nCube Root: ${cubeRoot.toFixed(5)}`;
+    }
+
+    function calcPercent() {
+        const part = parseFloat($id('percent_a').value);
+        const total = parseFloat($id('percent_b').value);
+        const resultBox = $id('percent_out');
+
+        if (isNaN(part) || isNaN(total) || total === 0) {
+            resultBox.innerText = 'Please enter valid numbers, where the total is non-zero.';
+            return;
+        }
+
+        const percentage = (part / total) * 100;
+        resultBox.innerText = `${part} is ${percentage.toFixed(2)}% of ${total}`;
+    }
+
+    function calcDiscount() {
+        const price = parseFloat($id('d_price').value);
+        const percent = parseFloat($id('d_percent').value);
+        const resultBox = $id('discount_out');
+
+        if (isNaN(price) || isNaN(percent) || price <= 0 || percent < 0) {
+            resultBox.innerText = 'Please enter valid price and discount percentage.';
+            return;
+        }
+
+        const discountAmount = price * (percent / 100);
+        const finalPrice = price - discountAmount;
+
+        resultBox.innerText = `Discount Amount: ${formatINR(discountAmount)}\nFinal Price: ${formatINR(finalPrice)}`;
+    }
+    
+    // Steps to Calories (Estimate: 1 step ≈ 0.04 calories for average person)
+    function stepsToCalories() {
+        const steps = parseInt($id('steps_input').value);
+        const resultBox = $id('steps_result');
+
+        if (isNaN(steps) || steps < 0) {
+            resultBox.innerText = 'Please enter a valid number of steps.';
+            return;
+        }
+
+        const calories = steps * 0.04;
+        resultBox.innerText = `${steps} steps ≈ ${calories.toFixed(2)} calories burned. (Estimate based on average 0.04 kcal/step)`;
+    }
+
+    // Stopwatch logic
+    let startTime;
+    let elapsedTime = 0;
+    let stopwatchInterval;
+    const sDisplay = $id('stopwatch_display');
+
+    function updateStopwatch() {
+        elapsedTime = Date.now() - startTime;
+        const totalSeconds = Math.floor(elapsedTime / 1000);
+        const ms = Math.floor((elapsedTime % 1000) / 10);
+        const seconds = totalSeconds % 60;
+        const minutes = Math.floor(totalSeconds / 60) % 60;
+        const hours = Math.floor(totalSeconds / 3600);
+
+        sDisplay.innerText = 
+            `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}.${String(ms).padStart(2, '0')}`;
+    }
+
+    function startStopwatch() {
+        if (!stopwatchInterval) {
+            startTime = Date.now() - elapsedTime;
+            stopwatchInterval = setInterval(updateStopwatch, 10);
+        }
+    }
+
+    function stopStopwatch() {
+        clearInterval(stopwatchInterval);
+        stopwatchInterval = null;
+    }
+
+    function resetStopwatch() {
+        clearInterval(stopwatchInterval);
+        stopwatchInterval = null;
+        elapsedTime = 0;
+        sDisplay.innerText = '00:00:00';
+    }
+
+    // Timer logic
+    let timerInterval;
+    let timeRemaining = 0;
+    const tDisplay = $id('timer_display');
+
+    function updateTimer() {
+        const minutes = Math.floor(timeRemaining / 60);
+        const seconds = timeRemaining % 60;
+        tDisplay.innerText = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+
+        if (timeRemaining <= 0) {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            tDisplay.innerText = 'TIME UP!';
+            alert('Timer finished!');
+            return;
+        }
+        timeRemaining--;
+    }
+
+    function startTimer() {
+        const min = parseInt($id('timer_min').value) || 0;
+        const sec = parseInt($id('timer_sec').value) || 0;
+        timeRemaining = min * 60 + sec;
+
+        if (timeRemaining <= 0) {
+            tDisplay.innerText = 'Please set a time.';
+            return;
+        }
+
+        if (timerInterval) {
+            clearInterval(timerInterval);
+        }
+
+        timerInterval = setInterval(updateTimer, 1000);
+        updateTimer(); // Initial call to display time immediately
+    }
+
+    // Sleep Cycle Calculator (90 min per cycle)
+    function suggestSleep() {
+        const wakeTime = $id('wake_time').value;
+        const resultBox = $id('sleep_result');
+
+        if (!wakeTime) {
+            resultBox.innerText = 'Please set your desired wake up time.';
+            return;
+        }
+        
+        const [hour, minute] = wakeTime.split(':').map(Number);
+        
+        // Start from wake time, go back by 6, 5, 4, 3 sleep cycles (90 mins each)
+        const cycles = [6, 5, 4, 3];
+        const suggestions = cycles.map(c => {
+            let totalMinutes = (c * 90) + 15; // Add 15 mins to fall asleep
+            let bedtime = new Date();
+            bedtime.setHours(hour, minute, 0, 0);
+            bedtime.setMinutes(bedtime.getMinutes() - totalMinutes);
+
+            // Format as HH:MM AM/PM
+            return bedtime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+        }).join('\n');
+
+        resultBox.innerText = `Optimal Bedtimes for a 90-minute sleep cycle (assuming 15 min to fall asleep):\n${suggestions}`;
+    }
+
+    function calcGST() {
+        const amount = parseFloat($id('gst_amount').value);
+        const rate = parseFloat($id('gst_rate').value);
+        const resultBox = $id('gst_result');
+
+        if (isNaN(amount) || isNaN(rate) || amount < 0) {
+            resultBox.innerText = 'Please enter a valid amount and select a rate.';
+            return;
+        }
+
+        const gstAmount = amount * (rate / 100);
+        const totalAmount = amount + gstAmount;
+
+        resultBox.innerText = `GST Rate: ${rate}%\nGST Amount: ${formatINR(gstAmount)}\nOriginal Amount: ${formatINR(amount)}\nTotal Amount (incl. GST): ${formatINR(totalAmount)}`;
+    }
+
+
+    // ------------------------------------
+    //        INDIA TOOLS FUNCTIONS
+    // ------------------------------------
+
+    /**
+     * UPI QR Code Generator
+     * Generates a UPI Deep Link and converts it to a QR code image URL.
+     */
+    function generateUPI() {
+        const name = $id('upi_name').value.trim();
+        const vpa = $id('upi_id').value.trim();
+        const amount = parseFloat($id('upi_amount').value) || 0;
+        const qrBox = $id('upi_qr');
+        qrBox.innerHTML = '';
+
+        if (!vpa) {
+            qrBox.innerText = 'Please enter a valid UPI ID (VPA).';
+            return;
+        }
+
+        // Standard UPI link format
+        const upi_uri = `upi://pay?pa=${encodeURIComponent(vpa)}&pn=${encodeURIComponent(name || 'Receiver')}&am=${amount.toFixed(2)}&cu=INR`;
+        
+        // Use Google Charts API to generate the QR code image
+        const qrUrl = `https://chart.googleapis.com/chart?cht=qr&chs=200x200&chl=${encodeURIComponent(upi_uri)}`;
+
+        qrBox.innerHTML = `
+            <img src="${qrUrl}" alt="UPI QR Code" style="width:200px; height:200px; margin: 10px auto;">
+            <p style="font-size:12px;margin-top:5px;word-break:break-all;">URI: ${upi_uri}</p>
+        `;
+    }
+
+    /**
+     * GST Invoice Generator
+     * Generates a simple text invoice and offers to print it as PDF using jsPDF.
+     */
+    function generateGST() {
+        const customerName = $id('gst_name').value.trim();
+        const itemsInput = $id('gst_items').value.trim();
+        const baseAmount = parseFloat($id('invoice_gst_amount').value);
+        const rate = parseFloat($id('invoice_gst_rate').value);
+        const resultBox = $id('gst_invoice');
+
+        if (!customerName || !itemsInput || isNaN(baseAmount) || baseAmount <= 0) {
+            resultBox.innerText = 'Please fill in Customer Name, Items, and Total Amount.';
+            return;
+        }
+
+        const gstRate = rate / 100;
+        const gstAmount = baseAmount * gstRate;
+        const totalAmount = baseAmount + gstAmount;
+        
+        const invoiceDate = new Date().toLocaleDateString('en-IN');
+        const itemsList = itemsInput.split(',').map(item => `- ${item.trim()}`).join('\n');
+
+        const invoiceText = 
+            `--- GST Invoice ---
+Date: ${invoiceDate}
+Customer: ${customerName}
+Items:\n${itemsList}
+
+-------------------------
+Base Amount: ${formatINR(baseAmount)}
+GST (${rate}%): ${formatINR(gstAmount)}
+-------------------------
+Total Payable: ${formatINR(totalAmount)}
+-------------------------
+
+(This is a system generated text invoice.)`;
+        
+        resultBox.innerText = invoiceText;
+        
+        // Add a button to download the invoice as PDF
+        resultBox.innerHTML += `
+            <button onclick="downloadGSTInvoiceAsPDF('${customerName}', '${invoiceDate}', ${baseAmount}, ${rate}, ${gstAmount}, ${totalAmount}, '${itemsList.replace(/\n/g, '\\n')}')" class="copy-btn" style="background:#007bff">Download PDF</button>
+        `;
+    }
+    
+    // Helper function for PDF download (must be outside generateGST to be called from onclick)
+    function downloadGSTInvoiceAsPDF(name, date, base, rate, gst, total, itemsList) {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        const lineHeight = 10;
+        let y = 10;
+
+        doc.setFontSize(16);
+        doc.text("Tax Invoice", 105, y, null, null, "center");
+        y += lineHeight * 2;
+
+        doc.setFontSize(12);
+        doc.text(`Date: ${date}`, 10, y);
+        y += lineHeight;
+        doc.text(`Customer: ${name}`, 10, y);
+        y += lineHeight * 2;
+
+        doc.setFontSize(14);
+        doc.text("Items:", 10, y);
+        y += lineHeight;
+
+        doc.setFontSize(12);
+        const items = itemsList.replace(/\\n/g, '\n'); // Restore newlines
+        const lines = doc.splitTextToSize(items, 180);
+        doc.text(lines, 10, y);
+        y += lines.length * 7 + lineHeight;
+        
+        doc.text("----------------------------------------------------------------------------------------------------------------", 10, y);
+        y += lineHeight;
+        
+        doc.text(`Base Amount:`, 10, y);
+        doc.text(`${formatINR(base)}`, 200, y, null, null, "right");
+        y += lineHeight;
+        
+        doc.text(`GST (${rate}%):`, 10, y);
+        doc.text(`${formatINR(gst)}`, 200, y, null, null, "right");
+        y += lineHeight;
+        
+        doc.text("----------------------------------------------------------------------------------------------------------------", 10, y);
+        y += lineHeight;
+        
+        doc.setFontSize(16);
+        doc.text(`Total Payable:`, 10, y);
+        doc.text(`${formatINR(total)}`, 200, y, null, null, "right");
+        y += lineHeight;
+
+        doc.save(`Invoice_${date.replace(/\//g, '-')}.pdf`);
+    }
+
+    /**
+     * Train PNR Status Checker
+     * Opens the official IRCTC website link with the PNR number.
+     */
+    function checkOfficialPNR() {
+        const pnr = $id('pnr_input').value.trim();
+        
+        if (!pnr || pnr.length !== 10 || isNaN(pnr)) {
+            alert('Please enter a valid 10-digit PNR number.');
+            return;
+        }
+
+        // Official IRCTC PNR status checking link
+        const url = `https://www.irctc.co.in/train-pnr-status?pnr=${pnr}`;
+        window.open(url, '_blank');
+    }
+
+    /**
+     * Live Gold Rate (Placeholder)
+     * Provides a mock rate as real-time APIs require a server-side proxy.
+     */
+    function getGoldRate() {
+        const resultBox = $id('gold_rate');
+        resultBox.innerText = 'Fetching latest rate...';
+        
+        // --- MOCK API CALL ---
+        setTimeout(() => {
+            const today = new Date();
+            const mockRate = (5000 + (today.getMinutes() % 10) * 100).toFixed(0);
+            resultBox.innerText = `
+                Date: ${today.toLocaleDateString('en-IN')}
+                Rate (24K / 10gm): ${formatINR(mockRate)}
+                City: Mumbai (Mock Data)
+
+                (Real-time rates require a secure external API which cannot be called directly from a public snippet.)
+            `;
+        }, 1500);
+    }
+
+    /**
+     * WhatsApp Direct Message
+     * Opens the WhatsApp Web/App link for direct messaging.
+     */
+    function openWhatsApp() {
+        const number = $id('wa_num').value.trim().replace(/[^0-9]/g, ''); // Remove non-numeric
+        const message = $id('wa_msg').value.trim();
+
+        if (!number) {
+            alert('Please enter a phone number (e.g., 919876543210).');
+            return;
+        }
+
+        // WhatsApp API format
+        const url = `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
+        window.open(url, '_blank');
+    }
+
+    /**
+     * PAN Card Validator (Format Check only)
+     * Checks if the format matches the standard PAN regex: AAAAA####A
+     */
+    function validatePAN() {
+        const pan = $id('pan').value.trim().toUpperCase();
+        const resultBox = $id('pan_result');
+        
+        // PAN Regex: 5 letters, 4 numbers, 1 letter.
+        const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
+        
+        if (panRegex.test(pan)) {
+            // Note: This only validates the format, not the actual existence/validity of the PAN
+            resultBox.innerText = `Valid PAN format! (Format Check Only)`;
+            resultBox.style.color = '#28a745';
+        } else {
+            resultBox.innerText = `Invalid PAN format. Must be 5 letters, 4 numbers, 1 letter (e.g., ABCDE1234F).`;
+            resultBox.style.color = '#dc3545';
+        }
+    }
+
+    /**
+     * Live Cricket Score (Placeholder)
+     * Provides a mock score as real-time APIs require a server-side proxy.
+     */
+    function getCricketScore() {
+        const resultBox = $id('cricket_result');
+        resultBox.innerText = 'Fetching live score...';
+        
+        // --- MOCK API CALL ---
+        setTimeout(() => {
+            const mockScore = `
+                INDIA vs AUSTRALIA (T20 Match)
+                Live Score:
+                IND: 187/5 (19.4 ov)
+                AUS: 186/6 (20.0 ov)
+                
+                India won by 5 wickets.
+                Player of the Match: R. Sharma (75 runs)
+                
+                (Real-time scores require a secure external API which cannot be called directly from a public snippet.)
+            `;
+            resultBox.innerText = mockScore;
+        }, 2000);
+    }
+    
+    // ------------------------------------
+    //        FINANCE TOOLS FUNCTIONS
+    // ------------------------------------
+    
+    function calcTax() {
+        const income = parseFloat($id('income').value);
+        const regime = $id('regime').value;
+        const resultBox = $id('tax_result');
+
+        if (isNaN(income) || income < 0) {
+            resultBox.innerText = 'Please enter a valid annual income.';
+            return;
+        }
+        
+        let tax = 0;
+        let slabInfo = '';
+
+        if (regime === 'New Regime') {
+            // New Regime (FY 2024-25 / AY 2025-26) - assuming standard deduction is not factored here for simplicity.
+            if (income <= 700000) {
+                tax = 0; // Full rebate for income up to 7 lakh
+                slabInfo = 'Zero Tax due to Section 87A rebate.';
+            } else if (income <= 300000) {
+                tax = 0;
+                slabInfo = 'Nil Tax.';
+            } else if (income <= 600000) {
+                tax = (income - 300000) * 0.05;
+                slabInfo = '5% on income above ₹3,00,000.';
+            } else if (income <= 900000) {
+                tax = 15000 + (income - 600000) * 0.10; // 15k is tax on 6 lakh
+                slabInfo = '5% + 10% on income above ₹6,00,000.';
+            } else if (income <= 1200000) {
+                tax = 45000 + (income - 900000) * 0.15; // 45k is tax on 9 lakh
+                slabInfo = '5%, 10% + 15% on income above ₹9,00,000.';
+            } else if (income <= 1500000) {
+                tax = 90000 + (income - 1200000) * 0.20; // 90k is tax on 12 lakh
+                slabInfo = '5%, 10%, 15% + 20% on income above ₹12,00,000.';
+            } else {
+                tax = 150000 + (income - 1500000) * 0.30; // 150k is tax on 15 lakh
+                slabInfo = '30% on income above ₹15,00,000.';
+            }
+        } else {
+            // Old Regime (Simplified for illustrative purposes)
+            if (income <= 250000) {
+                tax = 0;
+                slabInfo = 'Nil Tax.';
+            } else if (income <= 500000) {
+                tax = (income - 250000) * 0.05;
+                slabInfo = '5% on income above ₹2,50,000.';
+            } else if (income <= 1000000) {
+                tax = 12500 + (income - 500000) * 0.20; // 12.5k is tax on 5 lakh
+                slabInfo = '5% + 20% on income above ₹5,00,000.';
+            } else {
+                tax = 112500 + (income - 1000000) * 0.30; // 1.125 lakh is tax on 10 lakh
+                slabInfo = '30% on income above ₹10,00,000.';
+            }
+            if (income <= 500000) {
+                tax = 0; // Rebate for old regime up to 5 lakh
+                slabInfo = 'Zero Tax due to Section 87A rebate.';
+            }
+        }
+        
+        // Add 4% Health and Education Cess
+        const cess = tax * 0.04;
+        const totalTax = tax + cess;
+        
+        resultBox.innerText = `Regime: ${regime}
+Tax (before Cess): ${formatINR(tax)}
+Health & Education Cess (4%): ${formatINR(cess)}
+Total Tax Payable: ${formatINR(totalTax)}
+Tax Slab Info: ${slabInfo}`;
+    }
+
+    function calcSIP() {
+        const monthlyInvestment = parseFloat($id('sip_monthly').value);
+        const years = parseFloat($id('sip_years').value);
+        const annualRate = parseFloat($id('sip_rate').value);
+        const resultBox = $id('sip_result');
+
+        if (isNaN(monthlyInvestment) || isNaN(years) || isNaN(annualRate) || monthlyInvestment <= 0 || years <= 0 || annualRate < 0) {
+            resultBox.innerText = 'Please enter valid values for all fields.';
+            return;
+        }
+
+        const months = years * 12;
+        const monthlyRate = annualRate / 12 / 100;
+
+        // Future Value of Annuity formula: FV = P * [ ((1 + r)^n - 1) / r ] * (1 + r)
+        const futureValue = monthlyInvestment * (Math.pow(1 + monthlyRate, months) - 1) / monthlyRate * (1 + monthlyRate);
+        const investedAmount = monthlyInvestment * months;
+        const estimatedReturn = futureValue - investedAmount;
+
+        resultBox.innerText = `Total Invested: ${formatINR(investedAmount)}\nEst. Return: ${formatINR(estimatedReturn)}\nTotal Value: ${formatINR(futureValue)}`;
+    }
+
+    // ------------------------------------
+    //          FUN TOOLS FUNCTIONS
+    // ------------------------------------
+    
+    function loveCalc() {
+        const name1 = $id('love1').value.trim().toLowerCase();
+        const name2 = $id('love2').value.trim().toLowerCase();
+        const resultBox = $id('love_result');
+
+        if (!name1 || !name2) {
+            resultBox.innerText = 'Enter both names.';
+            return;
+        }
+        
+        // Simple, non-scientific but fun percentage calculation
+        const seed = name1.length * name2.length + new Date().getDate();
+        const lovePercent = (seed % 100) + 1; // 1 to 100
+        
+        let message = '';
+        if (lovePercent > 90) {
+            message = 'A perfect match! ❤️';
+        } else if (lovePercent > 70) {
+            message = 'Great chemistry! ✨';
+        } else if (lovePercent > 50) {
+            message = 'A good foundation. 😊';
+        } else {
+            message = 'Keep trying! 💔';
+        }
+
+        resultBox.innerHTML = `💘 ${lovePercent}% <div style="font-size:14px; margin-top:5px;">${message}</div>`;
+    }
+
+    // ------------------------------------
+    //        NUMBER TOOLS FUNCTIONS
+    // ------------------------------------
+    
+    // Greatest Common Divisor (GCD/HCF)
+    function gcd(a, b) {
+        if (!b) return a;
+        return gcd(b, a % b);
+    }
+
+    // HCF & LCM Calculator
+    function calcHCF_LCM() {
+        const num1 = parseInt($id('hcf_a').value);
+        const num2 = parseInt($id('hcf_b').value);
+        const resultBox = $id('hcf_result');
+
+        if (isNaN(num1) || isNaN(num2) || num1 <= 0 || num2 <= 0) {
+            resultBox.innerText = 'Please enter two positive integers.';
+            return;
+        }
+
+        const hcf = gcd(num1, num2);
+        // LCM formula: (a * b) / GCD(a, b)
+        const lcm = (num1 * num2) / hcf;
+
+        resultBox.innerText = `Numbers: ${num1}, ${num2}\nHCF (GCD): ${hcf}\nLCM: ${lcm}`;
+    }
+
+    // Number to Words (Indian System)
+    const indianScale = ['', 'thousand', 'lakh', 'crore'];
+    const units = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
+    const tens = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+
+    function numberToWordsBelow100(n) {
+        if (n < 20) return units[n];
+        return tens[Math.floor(n / 10)] + (n % 10 !== 0 ? ' ' + units[n % 10] : '');
+    }
+
+    function numberToWordsBelow1000(n) {
+        if (n < 100) return numberToWordsBelow100(n);
+        return units[Math.floor(n / 100)] + ' hundred' + (n % 100 !== 0 ? ' and ' + numberToWordsBelow100(n % 100) : '');
+    }
+
+    function numberToWords() {
+        let numStr = $id('num_words').value.trim();
+        const resultBox = $id('words_result');
+        let num = parseInt(numStr);
+
+        if (isNaN(num) || num < 0) {
+            resultBox.innerText = 'Please enter a positive number.';
+            return;
+        }
+
+        if (num === 0) {
+            resultBox.innerText = 'Zero';
+            return;
+        }
+
+        let words = [];
+        let chunk = 0;
+        let scaleIndex = 0;
+
+        // Process first three digits
+        let temp = num % 1000;
+        if (temp > 0) {
+            words.push(numberToWordsBelow1000(temp));
+        }
+        num = Math.floor(num / 1000);
+
+        // Process remaining digits in groups of two (Indian system: thousands, lakhs, crores)
+        while (num > 0) {
+            chunk = num % 100;
+            if (chunk > 0) {
+                words.push(numberToWordsBelow100(chunk) + ' ' + indianScale[scaleIndex + 1]);
+            }
+            num = Math.floor(num / 100);
+            scaleIndex++;
+        }
+
+        resultBox.innerText = words.reverse().join(' ').trim().replace(/\s+/g, ' ') + ' Rupees Only.';
+    }
+
+    // Roman to Number Converter
+    const romanMap = { 'I': 1, 'V': 5, 'X': 10, 'L': 50, 'C': 100, 'D': 500, 'M': 1000 };
+
+    function romanToNumber(roman) {
+        let result = 0;
+        for (let i = 0; i < roman.length; i++) {
+            const current = romanMap[roman[i]];
+            const next = romanMap[roman[i + 1]];
+            
+            if (next && current < next) {
+                result += next - current;
+                i++;
+            } else {
+                result += current;
+            }
+        }
+        return result;
+    }
+
+    function numberToRoman(num) {
+        if (num > 3999 || num < 1) return 'N/A';
+        const numerals = [
+            { value: 1000, symbol: 'M' },
+            { value: 900, symbol: 'CM' },
+            { value: 500, symbol: 'D' },
+            { value: 400, symbol: 'CD' },
+            { value: 100, symbol: 'C' },
+            { value: 90, symbol: 'XC' },
+            { value: 50, symbol: 'L' },
+            { value: 40, symbol: 'XL' },
+            { value: 10, symbol: 'X' },
+            { value: 9, symbol: 'IX' },
+            { value: 5, symbol: 'V' },
+            { value: 4, symbol: 'IV' },
+            { value: 1, symbol: 'I' }
+        ];
+        let roman = '';
+        for (let i = 0; i < numerals.length; i++) {
+            while (num >= numerals[i].value) {
+                roman += numerals[i].symbol;
+                num -= numerals[i].value;
+            }
+        }
+        return roman;
+    }
+
+    function convertRoman() {
+        const input = $id('roman_input').value.trim().toUpperCase();
+        const resultBox = $id('roman_result');
+
+        if (!input) {
+            resultBox.innerText = 'Enter a Roman numeral or a number.';
+            return;
+        }
+
+        if (!isNaN(parseInt(input))) {
+            // Convert Number to Roman
+            const num = parseInt(input);
+            const roman = numberToRoman(num);
+            resultBox.innerText = `${num} = ${roman}`;
+        } else {
+            // Convert Roman to Number
+            // Basic check for valid Roman characters
+            if (!/^[IVXLCDM]+$/.test(input)) {
+                resultBox.innerText = 'Invalid Roman numeral format.';
+                return;
+            }
+            const number = romanToNumber(input);
+            resultBox.innerText = `${input} = ${number}`;
+        }
+    }
+
+    // ------------------------------------
+    //       OPERATIONS FUNCTIONS
+    // ------------------------------------
+
+    function isPrimeCheck() {
+        const num = parseInt($id('prime_in').value);
+        const resultBox = $id('prime_out');
+
+        if (isNaN(num) || num <= 1) {
+            resultBox.innerText = 'Please enter an integer greater than 1.';
+            return;
+        }
+
+        if (num <= 3) {
+            resultBox.innerText = `${num} is a Prime Number.`;
+            return;
+        }
+
+        if (num % 2 === 0 || num % 3 === 0) {
+            resultBox.innerText = `${num} is NOT a Prime Number (divisible by ${num % 2 === 0 ? 2 : 3}).`;
+            return;
+        }
+
+        for (let i = 5; i * i <= num; i = i + 6) {
+            if (num % i === 0 || num % (i + 2) === 0) {
+                resultBox.innerText = `${num} is NOT a Prime Number (divisible by ${num % i === 0 ? i : i + 2}).`;
+                return;
+            }
+        }
+
+        resultBox.innerText = `${num} is a Prime Number.`;
+    }
+
+    function fact() {
+        const num = parseInt($id('fact_in').value);
+        const resultBox = $id('fact_out');
+
+        if (isNaN(num) || num < 0) {
+            resultBox.innerText = 'Please enter a non-negative integer.';
+            return;
+        }
+        
+        if (num === 0) {
+            resultBox.innerText = 'Factorial of 0 is 1';
+            return;
+        }
+
+        if (num > 20) {
+            // JavaScript's Number type can't reliably calculate factorials beyond 20!
+            resultBox.innerText = 'Warning: Input number is too large (max 20). Calculating approximate value...';
+        }
+
+        let result = 1;
+        for (let i = 2; i <= num; i++) {
+            result *= i;
+        }
+
+        resultBox.innerText = `Factorial of ${num} is ${result.toLocaleString()}`;
+    }
+
+    // ------------------------------------
+    //        WEATHER FUNCTIONS
+    // ------------------------------------
+
+    // API Key Placeholder
+    const WEATHER_API_KEY = "YOUR_OPENWEATHERMAP_API_KEY"; // Replace with a real key for live functionality
+
+    function displayWeatherError(resultBox, message) {
+        resultBox.innerText = message;
+    }
+
+    async function fetchWeather(lat, lon, city = 'Your Location') {
+        const resultBox = city === 'Your Location' ? $id('auto_weather_out') : $id('city_weather_out');
+        
+        if (WEATHER_API_KEY === "YOUR_OPENWEATHERMAP_API_KEY") {
+            displayWeatherError(resultBox, `Cannot fetch weather. Please replace the placeholder WEATHER_API_KEY with a valid OpenWeatherMap API key.`);
+            return;
+        }
+
+        const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${WEATHER_API_KEY}&units=metric`;
+        
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error('City not found or API issue.');
+            }
+            const data = await response.json();
+            
+            const temp = data.main.temp;
+            const description = data.weather[0].description;
+            const windSpeed = (data.wind.speed * 3.6).toFixed(1); // Convert m/s to km/h
+            const humidity = data.main.humidity;
+            
+            resultBox.innerText = `
+                Weather in ${data.name || city}:
+                Temp: ${temp}°C
+                Conditions: ${description.charAt(0).toUpperCase() + description.slice(1)}
+                Wind: ${windSpeed} km/h
+                Humidity: ${humidity}%
+            `;
+        } catch (error) {
+            displayWeatherError(resultBox, `Failed to fetch weather: ${error.message}`);
+        }
+    }
+
+    function autoWeather() {
+        const resultBox = $id('auto_weather_out');
+        resultBox.innerText = 'Getting location and fetching weather...';
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    fetchWeather(position.coords.latitude, position.coords.longitude);
+                },
+                (error) => {
+                    displayWeatherError(resultBox, `Geolocation failed: ${error.message}. Please allow location access.`);
+                }
+            );
+        } else {
+            displayWeatherError(resultBox, 'Geolocation is not supported by this browser.');
+        }
+    }
+
+    async function cityWeather() {
+        const city = $id('city_in').value.trim();
+        const resultBox = $id('city_weather_out');
+        if (!city) {
+            displayWeatherError(resultBox, 'Please enter a city name.');
+            return;
+        }
+        
+        resultBox.innerText = `Fetching weather for ${city}...`;
+
+        if (WEATHER_API_KEY === "YOUR_OPENWEATHERMAP_API_KEY") {
+            displayWeatherError(resultBox, `Cannot fetch weather. Please replace the placeholder WEATHER_API_KEY with a valid OpenWeatherMap API key.`);
+            return;
+        }
+
+        // Geocoding: Convert city name to coordinates
+        const geoUrl = `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${WEATHER_API_KEY}`;
+        try {
+            const geoResponse = await fetch(geoUrl);
+            const geoData = await geoResponse.json();
+            
+            if (geoData.length === 0) {
+                throw new Error('City not found.');
+            }
+
+            const { lat, lon } = geoData[0];
+            fetchWeather(lat, lon, city);
+
+        } catch (error) {
+            displayWeatherError(resultBox, `Failed to find city: ${error.message}`);
+        }
+    }
+
+    // ------------------------------------
+    //        INITIALIZATION
+    // ------------------------------------
+    document.addEventListener('DOMContentLoaded', () => {
+        // Check for saved theme preference
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            document.body.setAttribute('data-theme', 'dark');
+            document.querySelector('.theme-toggle').innerText = 'Light Mode';
+        }
+        
+        // Ensure the initial tab is active
+        const homeTabBtn = $id('tab-home-btn');
+        if (homeTabBtn) {
+            openTab('home', homeTabBtn);
+        }
+    });
+
 </script>
 </body>
 </html>
