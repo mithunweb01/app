@@ -8,7 +8,6 @@
   <meta name="description" content="Mithun Tools - 70+ Free Online Tools - UPI QR, GST Invoice, Gold Rate, Live Cricket, Income Tax | Made in India by Mithun"/>
   <title>Mithun Tools - 70+ Free Online Tools (Made in India)</title>
 
-  <!-- Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjs@12.0.0/lib/browser/math.min.js"></script>
@@ -79,7 +78,7 @@
 <body>
 
 <div class="tabs">
-  <button class="tab-btn active-tab" data-tab="home" onclick="openTab('home',this)">Home</button>
+  <button class="tab-btn active-tab" data-tab="home" id="tab-home-btn" onclick="openTab('home',this)">Home</button>
   <button class="tab-btn" data-tab="smart" onclick="openTab('smart',this)">Smart Tools</button>
   <button class="tab-btn" data-tab="life" onclick="openTab('life',this)">Life Tools</button>
   <button class="tab-btn" data-tab="india" onclick="openTab('india',this)">India Tools</button>
@@ -92,7 +91,6 @@
 
 <div class="container">
 
-  <!-- HOME -->
   <section id="home" class="tab-content active">
     <h1 style="text-align:center;font-size:2.5em;margin:20px 0;color:white">Mithun Tools</h1>
     <p style="text-align:center;color:white;font-size:1.3em">70+ Free Online Tools • Made in India • No Ads • Works Offline</p>
@@ -109,7 +107,6 @@
     </div>
   </section>
 
-  <!-- SMART TOOLS -->
   <section id="smart" class="tab-content">
     <h2 style="color:white">Smart Tools</h2>
     <div class="tools-grid">
@@ -184,8 +181,7 @@
     </div>
   </section>
 
-   <!-- LIFE TOOLS - FULLY RESTORED & WORKING -->
-  <section id="life" class="tab-content">
+    <section id="life" class="tab-content">
     <h2 style="color:white">Life Tools</h2>
     <div class="life-grid">
       <div class="life-btn" onclick="openLife('age')">Age</div>
@@ -310,7 +306,6 @@
     </div>
   </section>
 
-  <!-- INDIA TOOLS -->
   <section id="india" class="tab-content">
     <h2 style="color:white">India Tools</h2>
     <div class="tools-grid">
@@ -329,8 +324,8 @@
         <h3>GST Invoice Generator</h3>
         <input id="gst_name" placeholder="Customer Name">
         <input id="gst_items" placeholder="Items (comma separated)">
-        <input id="gst_amount" type="number" placeholder="Total Amount (excl GST)">
-        <select id="gst_rate">
+        <input id="invoice_gst_amount" type="number" placeholder="Total Amount (excl GST)">
+        <select id="invoice_gst_rate">
           <option value="5">5%</option>
           <option value="12">12%</option>
           <option value="18" selected>18%</option>
@@ -376,7 +371,6 @@
     </div>
   </section>
 
-  <!-- FINANCE & TAX -->
   <section id="finance" class="tab-content">
     <h2 style="color:white">Finance & Tax</h2>
     <div class="tools-grid">
@@ -398,7 +392,6 @@
     </div>
   </section>
 
-  <!-- FUN & VIRAL -->
   <section id="fun" class="tab-content">
     <h2 style="color:white">Fun & Viral</h2>
     <div class="tools-grid">
@@ -412,7 +405,6 @@
     </div>
   </section>
 
-  <!-- NUMBER TOOLS -->
   <section id="number" class="tab-content">
     <h2 style="color:white">Number Tools</h2>
     <div class="tools-grid">
@@ -440,7 +432,6 @@
     </div>
   </section>
 
-  <!-- OPERATIONS -->
   <section id="operations" class="tab-content">
     <h2 style="color:white">Number Operations</h2>
     <div class="tools-grid">
@@ -460,7 +451,6 @@
     </div>
   </section>
 
-  <!-- WEATHER -->
   <section id="weather" class="tab-content">
     <h2 style="color:white">Weather</h2>
     <div class="tools-grid">
@@ -552,6 +542,7 @@ function toggleVoice(){
     recognition.lang='en-IN';
     recognition.onresult = e => $id('voice_result').innerText = e.results[0][0].transcript;
     recognition.onerror = () => $id('voice_result').innerText='Error';
+    recognition.running=false; // Initialize custom running state
   }
   if(recognition.running){
     recognition.stop();
@@ -568,7 +559,8 @@ function toggleVoice(){
 function takeScreenshot(){
   const url = $id('screenshot_url').value.trim();
   if(!url) return alert('Enter URL');
-  const api = `https://api.thumbnail.ws/api/${btoa(url)}/thumbnail/get?width=800&height=600`;
+  // NOTE: This API URL is non-functional and is for demonstration/mocking only.
+  const api = `https://api.thumbnail.ws/api/${btoa(url)}/thumbnail/get?width=800&height=600`; 
   $id('screenshot_result').innerHTML = `<img src="${api}" style="max-width:100%;border-radius:8px">`;
 }
 function calcScientific(){
@@ -603,23 +595,26 @@ function convertUnit(){
   const type = $id('unit_type').value;
   let result = '';
   if(type==='m-cm') result = val*100 + ' cm';
-  if(type==='cm-m') result = (val/100).toFixed(4) + ' m';
-  if(type==='kg-g') result = val*1000 + ' g';
-  if(type==='g-kg') result = (val/1000).toFixed(4) + ' kg';
+  else if(type==='cm-m') result = (val/100).toFixed(4) + ' m';
+  else if(type==='kg-g') result = val*1000 + ' g';
+  else if(type==='g-kg') result = (val/1000).toFixed(4) + ' kg';
   $id('unit_out').innerText = result;
 }
 function calcRoot(){
   const n = parseFloat($id('root_in').value);
+  if(isNaN(n)) return;
   $id('root_out').innerText = `Square root of ${n} = ${Math.sqrt(n).toFixed(4)}\nCube root of ${n} = ${Math.cbrt(n).toFixed(4)}`;
 }
 function calcPercent(){
   const a = parseFloat($id('percent_a').value);
   const b = parseFloat($id('percent_b').value);
+  if(isNaN(a) || isNaN(b) || b === 0) return;
   $id('percent_out').innerText = `${a} is ${(a/b*100).toFixed(2)}% of ${b}`;
 }
 function calcDiscount(){
   const p = parseFloat($id('d_price').value);
   const d = parseFloat($id('d_percent').value);
+  if(isNaN(p) || isNaN(d)) return;
   const save = p*(d/100);
   $id('discount_out').innerText = `You Save: ₹${save.toFixed(2)}\nFinal Price: ₹${(p-save).toFixed(2)}`;
 }
@@ -652,9 +647,9 @@ function suggestSleep(){
   const [h,m] = time.split(':').map(Number);
   let mins = h*60 + m;
   let result = "Recommended bedtime:\n";
-  [90,180,270,360,450].forEach(cycle=>{ 
-    let bed = mins - cycle - 15;
-    if(bed < 0) bed += 1440;
+  [90,180,270,360,450].forEach(cycle=>{  
+    let bed = mins - cycle - 15; // 15 mins to fall asleep + sleep cycle time
+    if(bed < 0) bed += 1440; // 1440 minutes in a day
     let bh = Math.floor(bed/60)%24; let bm = bed%60;
     result += `${bh.toString().padStart(2,'0')}:${bm.toString().padStart(2,'0')} (${cycle/90} cycles)\n`;
   });
@@ -680,8 +675,9 @@ function generateUPI(){
 function generateGST(){
   const name=$id('gst_name').value||"Customer";
   const items=$id('gst_items').value||"Items";
-  const amt=parseFloat($id('gst_amount').value)||0;
-  const rate=parseFloat($id('gst_rate').value);
+  // Using the unique ID for the India Tools section
+  const amt=parseFloat($id('invoice_gst_amount').value)||0;
+  const rate=parseFloat($id('invoice_gst_rate').value);
   const gst=amt*rate/100;
   const total=amt+gst;
   $id('gst_invoice').innerHTML = `<b>${name}</b><br>${items}<br>Amount: ₹${amt}<br>GST (${rate}%): ₹${gst.toFixed(2)}<br><b>Total: ₹${total.toFixed(2)}</b><br><button class="copy-btn" onclick="navigator.clipboard.writeText(this.parentNode.innerText)">Copy</button>`;
@@ -694,12 +690,13 @@ function checkOfficialPNR(){
 async function getGoldRate(){
   $id('gold_rate').innerHTML = "Fetching...";
   try{
-    const res = await fetch("https://api.metals.live/v1/spot");
+    // NOTE: This API URL is non-functional and is for demonstration/mocking only.
+    const res = await fetch("https://api.metals.live/v1/spot"); 
     const d = await res.json();
-    const rate = d[0]?.price || 7200;
+    const rate = d[0]?.price || 7200; // Mock rate if API fails
     $id('gold_rate').innerHTML = `24K Gold (10g): ₹${(rate*10).toFixed(0)}<br>22K Gold (10g): ₹${(rate*10*0.916).toFixed(0)}`;
   }catch(e){
-    $id('gold_rate').innerHTML = "24K Gold (10g): ≈ ₹72,000";
+    $id('gold_rate').innerHTML = "24K Gold (10g): ≈ ₹72,000 (Mock Data)";
   }
 }
 function openWhatsApp(){
@@ -714,6 +711,105 @@ function validatePAN(){
   $id('pan_result').innerText = regex.test(pan) ? "Valid PAN format" : "Invalid PAN format";
 }
 
+/* ========= NUMBER TOOLS LOGIC ========= */
+
+// HCF (GCD) using Euclidean algorithm
+function gcd(a, b) {
+    a = Math.abs(a);
+    b = Math.abs(b);
+    while (b) {
+        [a, b] = [b, a % b];
+    }
+    return a;
+}
+
+// LCM using the formula: LCM(a, b) = |a * b| / GCD(a, b)
+function lcm(a, b) {
+    if (a === 0 || b === 0) return 0;
+    return Math.abs(a * b) / gcd(a, b);
+}
+
+function calcHCF_LCM() {
+    const num1 = parseInt($id('hcf_a').value);
+    const num2 = parseInt($id('hcf_b').value);
+    const resultBox = $id('hcf_result');
+
+    if (isNaN(num1) || isNaN(num2) || num1 < 0 || num2 < 0) {
+        resultBox.innerText = "Please enter two valid, non-negative integers.";
+        return;
+    }
+
+    const hcfValue = gcd(num1, num2);
+    const lcmValue = lcm(num1, num2);
+
+    resultBox.innerHTML = `
+        **HCF (GCD):** ${hcfValue}<br>
+        **LCM:** ${lcmValue}
+    `;
+}
+
+/* ========= OPERATIONS LOGIC ========= */
+
+function isPrimeCheck(){
+    const n = parseInt($id('prime_in').value);
+    const resultBox = $id('prime_out');
+    
+    if (isNaN(n) || n < 1) {
+        resultBox.innerText = "Please enter a positive integer.";
+        return;
+    }
+    if (n === 1) {
+        resultBox.innerText = "1 is neither prime nor composite.";
+        return;
+    }
+    if (n === 2) {
+        resultBox.innerText = "2 is a Prime Number.";
+        return;
+    }
+    for (let i = 2; i <= Math.sqrt(n); i++) {
+        if (n % i === 0) {
+            resultBox.innerText = `${n} is a Composite (Not Prime) Number (Divisible by ${i}).`;
+            return;
+        }
+    }
+    resultBox.innerText = `${n} is a Prime Number.`;
+}
+
+function fact(){
+    const n = parseInt($id('fact_in').value);
+    const resultBox = $id('fact_out');
+    
+    if (isNaN(n) || n < 0) {
+        resultBox.innerText = "Please enter a non-negative integer.";
+        return;
+    }
+    
+    if (n > 20) {
+        resultBox.innerText = "Input too large. Result may exceed safe integer limits (n! for n > 20 is approximated).";
+    }
+
+    let result = 1;
+    for (let i = 2; i <= n; i++) {
+        result *= i;
+    }
+
+    // Use BigInt for potentially huge factorials if necessary (optional advanced feature)
+    // For now, sticking to standard number output.
+
+    resultBox.innerText = `${n}! = ${result.toLocaleString('en-IN')}`;
+}
+
+/* ========= DUMMY FUNCTIONS (Not Implemented) ========= */
+// These remain as stubs to prevent errors, but their core logic requires complex implementation/APIs.
+function getCricketScore(){ $id('cricket_result').innerText = "Live Cricket Score API integration is not implemented in this code."; }
+function calcTax(){ $id('tax_result').innerText = "Income Tax calculation logic is not implemented in this code."; }
+function calcSIP(){ $id('sip_result').innerText = "SIP calculation logic is not implemented in this code."; }
+function loveCalc(){ $id('love_result').innerText = "Love % calculation logic is not implemented in this code."; }
+function numberToWords(){ $id('words_result').innerText = "Number to Words conversion is not implemented in this code."; }
+function convertRoman(){ $id('roman_result').innerText = "Roman/Number conversion logic is not implemented in this code."; }
+function autoWeather(){ $id('auto_weather_out').innerText = "Auto Location Weather API integration is not implemented in this code."; }
+function cityWeather(){ $id('city_weather_out').innerText = "City Weather API integration is not implemented in this code."; }
+
 /* ========= THEME & INITIALIZATION ========= */
 function toggleTheme(){
   document.body.dataset.theme = document.body.dataset.theme==="dark" ? "" : "dark";
@@ -723,6 +819,8 @@ if(localStorage.getItem('theme')==="dark") document.body.dataset.theme="dark";
 
 document.addEventListener('DOMContentLoaded', ()=>{
   document.querySelectorAll('.life-subtab').forEach(s=>s.classList.add('hidden'));
-  openTab('home');
+  openTab('home', $id('tab-home-btn')); 
 });
 </script>
+</body>
+</html>
