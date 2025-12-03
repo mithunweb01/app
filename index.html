@@ -1,18 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta name="google-adsense-account" content="ca-pub-1195321182602348">
-  <meta name="google-site-verification" content="YUqkf7c7YEs8IuaoGH_YEbtAlTwlNHAr_Oj2RhOhdmE" />
-
-  <meta name="description" 
-content="Mithun Tools - Home, Smart Tools, Life Tools, India Tools, Finance & Tax, Fun & Viral, Number Tools, Operations & Weather tools. 70+ free online tools made in India."/>
-
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="description" content="70+ Free Online Tools - UPI QR, GST Invoice, Gold Rate, Live Cricket, Income Tax | Made in India by Mithun"/>
-  <title>multi tool web with every daily day tools</title>
+  <meta name="google-adsense-account" content="ca-pub-1195321182602348">
+  <meta name="google-site-verification" content="YUqkf7c7YEs8IuaoGH_YEbtAlTwlNHAr_Oj2RhOhdmE" />
+  <meta name="description" content="Mithun Tools - 70+ Free Online Tools - UPI QR, GST Invoice, Gold Rate, Live Cricket, Income Tax | Made in India by Mithun"/>
+  <title>Mithun Tools - 70+ Free Online Tools (Made in India)</title>
 
-  <!-- Libraries 
+  <!-- Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjs@12.0.0/lib/browser/math.min.js"></script>
@@ -26,14 +22,21 @@ content="Mithun Tools - Home, Smart Tools, Life Tools, India Tools, Finance & Ta
       --bg1:#0f0f1e;--bg2:#1a1a2e;--accent:#ff3366;--glass:rgba(0,0,0,0.4);
       --glass-border:rgba(255,255,255,0.1);--text:#fff;--shadow:rgba(0,0,0,0.5);
     }
-    *{box-sizing:border-box;margin:0;padding:0}
-    html,body{height:100%;margin:0;font-family:Arial,Helvetica,sans-serif;
-      background:linear-gradient(135deg,var(--bg1),var(--bg2));color:var(--text);}
-    
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      margin: 0; padding: 0; min-height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(135deg, var(--bg1), var(--bg2));
+      color: var(--text);
+      line-height: 1.5;
+    }
+
     .tabs{position:sticky;top:0;z-index:1000;display:flex;gap:8px;padding:10px;overflow-x:auto;
       background:rgba(0,0,0,0.25);backdrop-filter:blur(6px);}
     .tab-btn{flex:0 0 auto;padding:10px 14px;border-radius:14px;background:var(--glass);
-      border:1px solid var(--glass-border);cursor:pointer;font-weight:700;color:#fff;white-space:nowrap;}
+      border:1px solid var(--glass-border);cursor:pointer;font-weight:700;color:#fff;white-space:nowrap;transition:0.3s;}
     .tab-btn:hover{transform:translateY(-2px)}
     .tab-btn.active-tab{background:var(--accent);}
 
@@ -42,11 +45,13 @@ content="Mithun Tools - Home, Smart Tools, Life Tools, India Tools, Finance & Ta
     .tab-content.active{display:block;}
 
     .tool-box{background:var(--glass);border:1px solid var(--glass-border);
-      padding:14px;border-radius:14px;margin-bottom:16px;box-shadow:0 8px 20px var(--shadow);color:var(--text);}
-    
+      padding:14px;border-radius:14px;margin-bottom:16px;box-shadow:0 8px 20px var(--shadow);color:var(--text);backdrop-filter:blur(10px);}
+
     input,select,textarea,button{
       padding:10px;border-radius:8px;border:1px solid rgba(0,0,0,0.12);
-      margin-top:8px;width:100%;font-size:15px;}
+      margin-top:8px;width:100%;font-size:15px;background:#fff;color:#000;}
+    button{background:var(--accent);color:white;border:none;cursor:pointer;font-weight:bold;}
+    button:hover{opacity:0.9;}
     textarea{min-height:100px;resize:vertical;}
     .result{background:#fff;color:#000;border-radius:10px;padding:10px;margin-top:10px;
       white-space:pre-wrap;border-left:4px solid var(--accent);}
@@ -54,7 +59,8 @@ content="Mithun Tools - Home, Smart Tools, Life Tools, India Tools, Finance & Ta
     .tools-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-top:12px;}
     .life-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;}
     .life-btn{background:rgba(255,255,255,0.12);border:1px solid var(--glass-border);
-      padding:14px;border-radius:12px;text-align:center;cursor:pointer;font-weight:700;color:#fff;}
+      padding:14px;border-radius:12px;text-align:center;cursor:pointer;font-weight:700;color:#fff;transition:0.3s;}
+    .life-btn:hover{background:var(--accent);}
 
     .theme-toggle{position:fixed;bottom:20px;right:20px;background:var(--accent);color:white;
       width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;
@@ -88,7 +94,7 @@ content="Mithun Tools - Home, Smart Tools, Life Tools, India Tools, Finance & Ta
 
   <!-- HOME -->
   <section id="home" class="tab-content active">
-    <h1 style="text-align:center;font-size:2.5em;margin:20px 0">Mithun Tools</h1>
+    <h1 style="text-align:center;font-size:2.5em;margin:20px 0;color:white">Mithun Tools</h1>
     <p style="text-align:center;color:white;font-size:1.3em">70+ Free Online Tools • Made in India • No Ads • Works Offline</p>
     <div class="tool-box">
       <h3>Text Tools</h3>
@@ -105,7 +111,7 @@ content="Mithun Tools - Home, Smart Tools, Life Tools, India Tools, Finance & Ta
 
   <!-- SMART TOOLS -->
   <section id="smart" class="tab-content">
-    <h2>Smart Tools</h2>
+    <h2 style="color:white">Smart Tools</h2>
     <div class="tools-grid">
 
       <div class="tool-box">
@@ -179,8 +185,8 @@ content="Mithun Tools - Home, Smart Tools, Life Tools, India Tools, Finance & Ta
   </section>
 
   <!-- LIFE TOOLS -->
-  <section id="life" class="tab-content">
-    <h2>Life Tools</h2>
+  <section id="$$life" class="tab-content">
+    <h2 style="color:white">Life Tools</h2>
     <div class="life-grid">
       <div class="life-btn" onclick="openLife('age')">Age</div>
       <div class="life-btn" onclick="openLife('bmi')">BMI</div>
@@ -303,7 +309,7 @@ content="Mithun Tools - Home, Smart Tools, Life Tools, India Tools, Finance & Ta
 
   <!-- INDIA TOOLS -->
   <section id="india" class="tab-content">
-    <h2>India Tools</h2>
+    <h2 style="color:white">India Tools</h2>
     <div class="tools-grid">
 
       <div class="tool-box">
@@ -336,7 +342,6 @@ content="Mithun Tools - Home, Smart Tools, Life Tools, India Tools, Finance & Ta
         <p class="disclaimer">Opens official IRCTC website</p>
         <input id="pnr_input" placeholder="Enter 10-digit PNR">
         <button onclick="checkOfficialPNR()">Check on IRCTC</button>
-        <div id="pnr_link" class="result"></div>
       </div>
 
       <div class="tool-box">
@@ -370,7 +375,7 @@ content="Mithun Tools - Home, Smart Tools, Life Tools, India Tools, Finance & Ta
 
   <!-- FINANCE & TAX -->
   <section id="finance" class="tab-content">
-    <h2>Finance & Tax</h2>
+    <h2 style="color:white">Finance & Tax</h2>
     <div class="tools-grid">
       <div class="tool-box">
         <h3>Income Tax Calculator 2025-26</h3>
@@ -392,7 +397,7 @@ content="Mithun Tools - Home, Smart Tools, Life Tools, India Tools, Finance & Ta
 
   <!-- FUN & VIRAL -->
   <section id="fun" class="tab-content">
-    <h2>Fun & Viral</h2>
+    <h2 style="color:white">Fun & Viral</h2>
     <div class="tools-grid">
       <div class="tool-box">
         <h3>Love Calculator</h3>
@@ -406,7 +411,7 @@ content="Mithun Tools - Home, Smart Tools, Life Tools, India Tools, Finance & Ta
 
   <!-- NUMBER TOOLS -->
   <section id="number" class="tab-content">
-    <h2>Number Tools</h2>
+    <h2 style="color:white">Number Tools</h2>
     <div class="tools-grid">
       <div class="tool-box">
         <h3>HCF & LCM Calculator</h3>
@@ -434,7 +439,7 @@ content="Mithun Tools - Home, Smart Tools, Life Tools, India Tools, Finance & Ta
 
   <!-- OPERATIONS -->
   <section id="operations" class="tab-content">
-    <h2>Number Operations</h2>
+    <h2 style="color:white">Number Operations</h2>
     <div class="tools-grid">
       <div class="tool-box">
         <h3>Prime Checker</h3>
@@ -454,7 +459,7 @@ content="Mithun Tools - Home, Smart Tools, Life Tools, India Tools, Finance & Ta
 
   <!-- WEATHER -->
   <section id="weather" class="tab-content">
-    <h2>Weather</h2>
+    <h2 style="color:white">Weather</h2>
     <div class="tools-grid">
       <div class="tool-box">
         <h3>Auto Location Weather</h3>
@@ -484,7 +489,7 @@ function openTab(id, btn){
   if(btn) btn.classList.add("active-tab");
 }
 
-/* ALL YOUR ORIGINAL + NEW FUNCTIONS - 100% COMPLETE */
+/* ALL YOUR ORIGINAL FUNCTIONS - 100% COMPLETE */
 function upperText(){$id('text_out').value = $id('text_in').value.toUpperCase();}
 function lowerText(){$id('text_out').value = $id('text_in').value.toLowerCase();}
 function removeSpaces(){$id('text_out').value = $id('text_in').value.replace(/\s+/g,' ').trim();}
@@ -861,93 +866,6 @@ document.addEventListener('DOMContentLoaded', function(){
   document.querySelectorAll('.life-subtab').forEach(s=>s.classList.add('hidden'));
   openTab('home');
 });
-</script>
-  <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "name": "Mithun Tools",
-  "url": "https://mithunweb01.github.io/campus-finder-hub/",
-  "description": "Mithun Tools - 70+ free online tools including Smart Tools, Life Tools, India Tools, Finance & Tax Tools, Fun Tools, Number Tools, Operation Tools and Weather.",
-  "creator": {
-    "@type": "Person",
-    "name": "Mithun Karthikeyan"
-  },
-  "publisher": {
-    "@type": "Person",
-    "name": "Mithun Karthikeyan"
-  },
-  "potentialAction": {
-    "@type": "SearchAction",
-    "target": "https://mithunweb01.github.io/campus-finder-hub/?q={search_term_string}",
-    "query-input": "required name=search_term_string"
-  },
-  "hasPart": [
-    {
-      "@type": "WebPage",
-      "name": "Smart Tools",
-      "url": "https://mithunweb01.github.io/campus-finder-hub/#smart_tools",
-      "description": "Smart Tools like QR Code Generator, Barcode Tool, Text Tools, Currency Tools."
-    },
-    {
-      "@type": "WebPage",
-      "name": "Life Tools",
-      "url": "https://mithunweb01.github.io/campus-finder-hub/#life_tools",
-      "description": "Life tools including BMI Calculator, Health Tools, Age Calculator, Calorie Tools."
-    },
-    {
-      "@type": "WebPage",
-      "name": "India Tools",
-      "url": "https://mithunweb01.github.io/campus-finder-hub/#india_tools",
-      "description": "Useful tools for India such as PIN Code Finder, IFSC Finder, RTO Code Finder, STD Code Finder."
-    },
-    {
-      "@type": "WebPage",
-      "name": "Number Tools",
-      "url": "https://mithunweb01.github.io/campus-finder-hub/#number_tools",
-      "description": "Number tools including calculators, converter tools, random number generators and more."
-    },
-    {
-      "@type": "WebPage",
-      "name": "Fun & Viral Tools",
-      "url": "https://mithunweb01.github.io/campus-finder-hub/#fun_tools",
-      "description": "Fun tools like prank tests, love calculator, luck meter and random fun generators."
-    },
-    {
-      "@type": "WebPage",
-      "name": "Finance & Tax Tools",
-      "url": "https://mithunweb01.github.io/campus-finder-hub/#finance_tools",
-      "description": "Finance tools including GST calculator, income tax estimator, loan calculator, EMI calculator."
-    },
-    {
-      "@type": "WebPage",
-      "name": "Operations Tools",
-      "url": "https://mithunweb01.github.io/campus-finder-hub/#operations_tools",
-      "description": "Operation tools like sorting, unit conversion, PDF tools, text filters and searching tools."
-    },
-    {
-      "@type": "WebPage",
-      "name": "Weather Tools",
-      "url": "https://mithunweb01.github.io/campus-finder-hub/#weather",
-      "description": "Weather tool showing temperature, humidity, wind speed and live weather updates."
-    }
-  ],
-  "tool": [
-    { "@type": "SoftwareApplication", "name": "QR Code Generator", "url": "https://mithunweb01.github.io/campus-finder-hub/#qr" },
-    { "@type": "SoftwareApplication", "name": "Barcode Generator", "url": "https://mithunweb01.github.io/campus-finder-hub/#barcode" },
-    { "@type": "SoftwareApplication", "name": "Age Calculator", "url": "https://mithunweb01.github.io/campus-finder-hub/#age" },
-    { "@type": "SoftwareApplication", "name": "BMI Calculator", "url": "https://mithunweb01.github.io/campus-finder-hub/#bmi" },
-    { "@type": "SoftwareApplication", "name": "UPI QR Generator", "url": "https://mithunweb01.github.io/campus-finder-hub/#upi_qr" },
-    { "@type": "SoftwareApplication", "name": "PIN Code Finder", "url": "https://mithunweb01.github.io/campus-finder-hub/#pincode" },
-    { "@type": "SoftwareApplication", "name": "IFSC Finder", "url": "https://mithunweb01.github.io/campus-finder-hub/#ifsc" },
-    { "@type": "SoftwareApplication", "name": "Loan Calculator", "url": "https://mithunweb01.github.io/campus-finder-hub/#loan" },
-    { "@type": "SoftwareApplication", "name": "GST Calculator", "url": "https://mithunweb01.github.io/campus-finder-hub/#gst" },
-    { "@type": "SoftwareApplication", "name": "Love Calculator", "url": "https://mithunweb01.github.io/campus-finder-hub/#love" },
-    { "@type": "SoftwareApplication", "name": "Random Number Generator", "url": "https://mithunweb01.github.io/campus-finder-hub/#rng" },
-    { "@type": "SoftwareApplication", "name": "Text Case Converter", "url": "https://mithunweb01.github.io/campus-finder-hub/#case" },
-    { "@type": "SoftwareApplication", "name": "Weather Checker", "url": "https://mithunweb01.github.io/campus-finder-hub/#weather" }
-  ]
-}
 </script>
 
 </body>
