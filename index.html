@@ -184,8 +184,8 @@
     </div>
   </section>
 
-  <!-- LIFE TOOLS -->
-  <section id="$$life" class="tab-content">
+   <!-- LIFE TOOLS - FULLY RESTORED & WORKING -->
+  <section id="life" class="tab-content">
     <h2 style="color:white">Life Tools</h2>
     <div class="life-grid">
       <div class="life-btn" onclick="openLife('age')">Age</div>
@@ -195,43 +195,45 @@
       <div class="life-btn" onclick="openLife('square')">Root</div>
       <div class="life-btn" onclick="openLife('percent')">Percentage</div>
       <div class="life-btn" onclick="openLife('discount')">Discount</div>
-      <div class="life-btn" onclick="openLife('steps')">Steps to Calories</div>
+      <div class="life-btn" onclick="openLife('steps')">Steps → Cal</div>
       <div class="life-btn" onclick="openLife('stopwatch')">Stopwatch</div>
       <div class="life-btn" onclick="openLife('timer')">Timer</div>
       <div class="life-btn" onclick="openLife('sleep')">Sleep Time</div>
-      <div class="life-btn" onclick="openLife('gst')">GST Calculator</div>
+      <div class="life-btn" onclick="openLife('gst')">GST Calc</div>
     </div>
 
     <div id="age" class="tool-box life-subtab hidden">
       <h3>Age Calculator</h3>
       <input type="date" id="age_dob">
-      <button onclick="calcAge()">Calculate</button>
+      <button onclick="calcAge()">Calculate Age</button>
       <div id="age_out" class="result"></div>
     </div>
 
     <div id="bmi" class="tool-box life-subtab hidden">
       <h3>BMI Calculator</h3>
-      <input id="bmi_h" placeholder="Height (cm)">
-      <input id="bmi_w" placeholder="Weight (kg)">
+      <input id="bmi_h" placeholder="Height (cm)" type="number">
+      <input id="bmi_w" placeholder="Weight (kg)" type="number">
       <button onclick="calcBMI()">Calculate</button>
       <div id="bmi_out" class="result"></div>
     </div>
 
     <div id="emi" class="tool-box life-subtab hidden">
       <h3>EMI Calculator</h3>
-      <input id="emi_p" placeholder="Principal">
-      <input id="emi_r" placeholder="Rate % (annual)">
-      <input id="emi_n" placeholder="Months">
-      <button onclick="calcEMI()">Calculate</button>
+      <input id="emi_p" placeholder="Loan Amount ₹" type="number">
+      <input id="emi_r" placeholder="Interest Rate % (yearly)" type="number" step="0.1">
+      <input id="emi_n" placeholder="Tenure (months)" type="number">
+      <button onclick="calcEMI()">Calculate EMI</button>
       <div id="emi_out" class="result"></div>
     </div>
 
     <div id="unit" class="tool-box life-subtab hidden">
-      <h3>Unit Converter (m to cm)</h3>
-      <input id="unit_in" placeholder="Value">
+      <h3>Unit Converter</h3>
+      <input id="unit_in" placeholder="Enter value" type="number">
       <select id="unit_type">
-        <option value="m-cm">Meter to CM</option>
-        <option value="cm-m">CM to Meter</option>
+        <option value="m-cm">Meter → CM</option>
+        <option value="cm-m">CM → Meter</option>
+        <option value="kg-g">KG → Gram</option>
+        <option value="g-kg">Gram → KG</option>
       </select>
       <button onclick="convertUnit()">Convert</button>
       <div id="unit_out" class="result"></div>
@@ -239,38 +241,38 @@
 
     <div id="square" class="tool-box life-subtab hidden">
       <h3>Square / Cube Root</h3>
-      <input id="root_in" placeholder="Enter number">
+      <input id="root_in" placeholder="Enter number" type="number">
       <button onclick="calcRoot()">Calculate</button>
       <div id="root_out" class="result"></div>
     </div>
 
     <div id="percent" class="tool-box life-subtab hidden">
-      <h3>Percentage Finder</h3>
-      <input id="percent_a" placeholder="Value">
-      <input id="percent_b" placeholder="Total">
-      <button onclick="calcPercent()">Find</button>
+      <h3>Percentage Calculator</h3>
+      <input id="percent_a" placeholder="Part value" type="number">
+      <input id="percent_b" placeholder="Total value" type="number">
+      <button onclick="calcPercent()">Calculate %</button>
       <div id="percent_out" class="result"></div>
     </div>
 
     <div id="discount" class="tool-box life-subtab hidden">
       <h3>Discount Calculator</h3>
-      <input id="d_price" placeholder="Price">
-      <input id="d_percent" placeholder="Discount %">
-      <button onclick="calcDiscount()">Find</button>
+      <input id="d_price" placeholder="Original Price ₹" type="number">
+      <input id="d_percent" placeholder="Discount % (e.g. 20)" type="number">
+      <button onclick="calcDiscount()">Calculate</button>
       <div id="discount_out" class="result"></div>
     </div>
 
     <div id="steps" class="tool-box life-subtab hidden">
       <h3>Steps to Calories</h3>
-      <input id="steps_input" type="number" placeholder="Number of steps">
+      <input id="steps_input" placeholder="Enter steps" type="number">
       <button onclick="stepsToCalories()">Convert</button>
       <div id="steps_result" class="result"></div>
     </div>
 
     <div id="stopwatch" class="tool-box life-subtab hidden">
       <h3>Stopwatch</h3>
-      <div style="font-size:42px;text-align:center;font-weight:bold" id="stopwatch_display">00:00:00</div>
-      <div style="text-align:center;margin-top:15px">
+      <div style="font-size:48px;text-align:center;margin:20px 0;font-weight:bold;color:white" id="stopwatch_display">00:00:00</div>
+      <div style="text-align:center;gap:10px;display:flex;justify-content:center">
         <button onclick="startStopwatch()">Start</button>
         <button onclick="stopStopwatch()">Stop</button>
         <button onclick="resetStopwatch()">Reset</button>
@@ -278,23 +280,24 @@
     </div>
 
     <div id="timer" class="tool-box life-subtab hidden">
-      <h3>Timer</h3>
-      <input id="timer_min" type="number" placeholder="Minutes" min="0">
-      <input id="timer_sec" type="number" placeholder="Seconds" min="0" max="59" value="0">
+      <h3>Countdown Timer</h3>
+      <input id="timer_min" placeholder="Minutes" type="number" min="0">
+      <input id="timer_sec" placeholder="Seconds" type="number" min="0" max="59">
       <button onclick="startTimer()">Start Timer</button>
-      <div id="timer_display" style="font-size:36px;text-align:center;margin:15px 0">00:00</div>
+      <div id="timer_display" style="font-size:42px;text-align:center;margin:20px 0;color:white">00:00</div>
     </div>
 
     <div id="sleep" class="tool-box life-subtab hidden">
-      <h3>Sleep Time Calculator</h3>
+      <h3>Sleep Cycle Calculator</h3>
+      <label>Wake up time:</label>
       <input type="time" id="wake_time">
-      <button onclick="suggestSleep()">Suggest Bed Time</button>
+      <button onclick="suggestSleep()">Suggest Bedtime</button>
       <div id="sleep_result" class="result"></div>
     </div>
 
     <div id="gst" class="tool-box life-subtab hidden">
       <h3>GST Calculator</h3>
-      <input id="gst_amount" type="number" placeholder="Amount (excl. GST)">
+      <input id="gst_amount" placeholder="Amount (excluding GST)" type="number">
       <select id="gst_rate">
         <option value="0">0%</option>
         <option value="5">5%</option>
@@ -302,7 +305,7 @@
         <option value="18" selected>18%</option>
         <option value="28">28%</option>
       </select>
-      <button onclick="calcGST()">Calculate</button>
+      <button onclick="calcGST()">Calculate GST</button>
       <div id="gst_result" class="result"></div>
     </div>
   </section>
@@ -577,114 +580,101 @@ function calcScientific(){
   }catch(e){
     $id('calc_result').innerText = 'Invalid expression';
   }
-}
-
-/* LIFE TOOLS */
 function openLife(id){
   document.querySelectorAll('.life-subtab').forEach(s=>s.classList.add('hidden'));
-  $id(id)?.classList.remove('hidden');
-  $id(id)?.scrollIntoView({behavior:'smooth'});
+  document.getElementById(id).classList.remove('hidden');
+  document.getElementById(id).scrollIntoView({behavior:'smooth'});
 }
 function calcAge(){
-  const v = $id('age_dob').value;
-  if(!v) return $id('age_out').innerText='Enter DOB';
-  const d = new Date(v);
-  const diff = Date.now() - d.getTime();
-  const age = Math.floor(diff/(365.25*24*3600*1000));
-  $id('age_out').innerText = 'Age: '+age + ' years';
+  const dob = new Date(document.getElementById('age_dob').value);
+  const diff = Date.now() - dob.getTime();
+  const age = Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25));
+  document.getElementById('age_out').innerText = `You are ${age} years old`;
 }
 function calcBMI(){
-  const h = parseFloat($id('bmi_h').value)/100;
-  const w = parseFloat($id('bmi_w').value);
-  if(!h||!w) return $id('bmi_out').innerText='Enter values';
-  $id('bmi_out').innerText = 'BMI: '+(w/(h*h)).toFixed(2);
+  const h = parseFloat(document.getElementById('bmi_h').value)/100;
+  const w = parseFloat(document.getElementById('bmi_w').value);
+  if(!h||!w) return;
+  const bmi = (w/(h*h)).toFixed(2);
+  document.getElementById('bmi_out').innerText = `BMI: ${bmi}`;
 }
 function calcEMI(){
-  const P = parseFloat($id('emi_p').value);
-  const r = parseFloat($id('emi_r').value)/1200;
-  const n = parseInt($id('emi_n').value);
-  if(!P||!r||!n) return $id('emi_out').innerText='Enter values';
-  const emi = P*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1);
-  $id('emi_out').innerText = 'EMI: ₹'+emi.toFixed(2);
+  const p = parseFloat(document.getElementById('emi_p').value);
+  const r = parseFloat(document.getElementById('emi_r').value)/(12*100);
+  const n = parseInt(document.getElementById('emi_n').value);
+  if(!p||!r||!n) return;
+  const emi = (p*r*Math.pow(1+r,n))/(Math.pow(1+r,n)-1);
+  document.getElementById('emi_out').innerText = `Monthly EMI: ₹${emi.toFixed(0)}`;
 }
 function convertUnit(){
-  const v = parseFloat($id('unit_in').value);
-  if(isNaN(v)) return $id('unit_out').innerText='Enter number';
-  $id('unit_out').innerText = $id('unit_type').value==='m-cm' ? (v*100)+' cm' : (v/100)+' m';
+  const val = parseFloat(document.getElementById('unit_in').value);
+  const type = document.getElementById('unit_type').value;
+  let result = '';
+  if(type==='m-cm') result = val*100 + ' cm';
+  if(type==='cm-m') result = (val/100).toFixed(4) + ' m';
+  if(type==='kg-g') result = val*1000 + ' g';
+  if(type==='g-kg') result = (val/1000).toFixed(4) + ' kg';
+  document.getElementById('unit_out').innerText = result;
 }
 function calcRoot(){
-  const n = parseFloat($id('root_in').value);
-  if(isNaN(n)) return $id('root_out').innerText='Enter number';
-  $id('root_out').innerText = 'Square Root: '+Math.sqrt(n).toFixed(4)+'\nCube Root: '+Math.cbrt(n).toFixed(4);
+  const n = parseFloat(document.getElementById('root_in').value);
+  document.getElementById('root_out').innerText = `√${n} = ${Math.sqrt(n).toFixed(4)}\n∛${n} = ${Math.cbrt(n).toFixed(4)}`;
 }
 function calcPercent(){
-  const a = parseFloat($id('percent_a').value);
-  const b = parseFloat($id('percent_b').value);
-  if(isNaN(a)||isNaN(b)||b===0) return $id('percent_out').innerText='Invalid';
-  $id('percent_out').innerText = ((a/b)*100).toFixed(2)+'%';
+  const a = parseFloat(document.getElementById('percent_a').value);
+  const b = parseFloat(document.getElementById('percent_b').value);
+  document.getElementById('percent_out').innerText = `${a} is ${(a/b*100).toFixed(2)}% of ${b}`;
 }
 function calcDiscount(){
-  const p = parseFloat($id('d_price').value);
-  const d = parseFloat($id('d_percent').value);
-  if(isNaN(p)||isNaN(d)) return $id('discount_out').innerText='Invalid';
-  const save = p * d / 100;
-  $id('discount_out').innerText = 'You Save: ₹'+save.toFixed(2)+'\nFinal: ₹'+(p-save).toFixed(2);
+  const p = parseFloat(document.getElementById('d_price').value);
+  const d = parseFloat(document.getElementById('d_percent').value);
+  const save = p*(d/100);
+  document.getElementById('discount_out').innerText = `You Save: ₹${save.toFixed(2)}\nFinal Price: ₹${(p-save).toFixed(2)}`;
 }
 function stepsToCalories(){
-  const s = parseInt($id('steps_input').value) || 0;
-  const cal = (s * 0.04).toFixed(1);
-  $id('steps_result').innerText = s + ' steps ≈ ' + cal + ' calories burned';
+  const steps = parseInt(document.getElementById('steps_input').value) || 0;
+  const cal = (steps * 0.04).toFixed(1);
+  document.getElementById('steps_result').innerText = `${steps} steps ≈ ${cal} calories burned`;
 }
-let swInt, swSec = 0;
-function startStopwatch(){
-  if(swInt) return;
-  swInt = setInterval(()=>{
-    swSec++;
-    let h = String(Math.floor(swSec/3600)).padStart(2,'0');
-    let m = String(Math.floor((swSec%3600)/60)).padStart(2,'0');
-    let s = String(swSec%60).padStart(2,'0');
-    $id('stopwatch_display').innerText = h+':'+m+':'+s;
-  },1000);
-}
-function stopStopwatch(){clearInterval(swInt); swInt=null;}
-function resetStopwatch(){stopStopwatch(); swSec=0; $id('stopwatch_display').innerText='00:00:00';}
+let swInterval, swSeconds = 0;
+function startStopwatch(){ if(swInterval) return; swInterval = setInterval(()=>{ swSeconds++; let h = String(Math.floor(swSeconds/3600)).padStart(2,'0'); let m = String(Math.floor((swSeconds%3600)/60)).padStart(2,'0'); let s = String(swSeconds%60).padStart(2,'0'); document.getElementById('stopwatch_display').innerText = `${h}:${m}:${s}`; },1000); }
+function stopStopwatch(){ clearInterval(swInterval); swInterval=null; }
+function resetStopwatch(){ stopStopwatch(); swSeconds=0; document.getElementById('stopwatch_display').innerText='00:00:00'; }
 function startTimer(){
-  let min = parseInt($id('timer_min').value)||0;
-  let sec = parseInt($id('timer_sec').value)||0;
-  let total = min*60 + sec;
-  if(total<=0) return alert('Set time');
-  clearInterval(window.tInt);
-  window.tInt = setInterval(()=>{
+  let m = parseInt(document.getElementById('timer_min').value)||0;
+  let s = parseInt(document.getElementById('timer_sec').value)||0;
+  let total = m*60 + s;
+  if(total<=0) return alert("Set time!");
+  clearInterval(window.timerInt);
+  window.timerInt = setInterval(()=>{
     total--;
-    if(total<=0){clearInterval(window.tInt); $id('timer_display').innerText='Time Up!'; return;}
-    let m = String(Math.floor(total/60)).padStart(2,'0');
-    let s = String(total%60).padStart(2,'0');
-    $id('timer_display').innerText = m+':'+s;
+    if(total<=0){ clearInterval(window.timerInt); document.getElementById('timer_display').innerText="Time Up!"; return; }
+    let mm = String(Math.floor(total/60)).padStart(2,'0');
+    let ss = String(total%60).padStart(2,'0');
+    document.getElementById('timer_display').innerText = `${mm}:${ss}`;
   },1000);
 }
 function suggestSleep(){
-  const w = $id('wake_time').value;
-  if(!w) return $id('sleep_result').innerText='Select wake time';
-  const [h,m] = w.split(':');
-  let mins = parseInt(h)*60 + parseInt(m);
-  let res = "Bedtime Suggestions:\n";
-  [1.5,3,4.5,6,7.5].forEach(hours=>{
-    let bed = mins - hours*60 - 15;
+  const time = document.getElementById('wake_time').value;
+  if(!time) return;
+  const [h,m] = time.split(':').map(Number);
+  let mins = h*60 + m;
+  let result = "Recommended bedtime:\n";
+  [90,180,270,360,450].forEach(cycle=>{ 
+    let bed = mins - cycle - 15; // 15 min to fall asleep
     if(bed < 0) bed += 1440;
-    let bh = String(Math.floor(bed/60)%24).padStart(2,'0');
-    let bm = String(bed%60).padStart(2,'0');
-    res += `${bh}:${bm} → ${hours} hours sleep\n`;
+    let bh = Math.floor(bed/60)%24; let bm = bed%60;
+    result += `${bh.toString().padStart(2,'0')}:${bm.toString().padStart(2,'0')} (for ${cycle/90} cycles)\n`;
   });
-  $id('sleep_result').innerText = res;
+  document.getElementById('sleep_result').innerText = result;
 }
 function calcGST(){
-  const amt = parseFloat($id('gst_amount').value);
-  const rate = parseFloat($id('gst_rate').value);
-  if(isNaN(amt)) return $id('gst_result').innerText='Enter amount';
+  const amt = parseFloat(document.getElementById('gst_amount').value);
+  const rate = parseFloat(document.getElementById('gst_rate').value);
+  if(isNaN(amt)) return;
   const gst = amt * rate / 100;
-  $id('gst_result').innerHTML = `GST (${rate}%): ₹${gst.toFixed(2)}<br>Total: ₹${(amt+gst).toFixed(2)}`;
+  document.getElementById('gst_result').innerHTML = `GST (${rate}%): ₹${gst.toFixed(2)}<br>Total Amount: ₹${(amt+gst).toFixed(2)}`;
 }
-
 /* INDIA TOOLS */
 function generateUPI(){
   const name = $id('upi_name').value || "Customer";
