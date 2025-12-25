@@ -105,6 +105,24 @@
         background: var(--accent);
     }
   </style>
+ <style>
+.tab-content {
+  display: none;
+}
+
+.tab-btn {
+  padding: 10px 20px;
+  cursor: pointer;
+  border: none;
+  background: #eee;
+}
+
+.tab-btn.active {
+  background: #007bff;
+  color: white;
+}
+</style>
+
    <script src="https://cmp.gatekeeperconsent.com/min.js" data-cfasync="false"></script>
 <script src="https://the.gatekeeperconsent.com/cmp.min.js" data-cfasync="false"></script>
   
@@ -126,6 +144,10 @@
   <button class="tab-btn" data-tab="number" onclick="openTab('number',this)">Number Tools</button>
   <button class="tab-btn" data-tab="operations" onclick="openTab('operations',this)">Operations</button>
   <button class="tab-btn" data-tab="weather" onclick="openTab('weather',this)">Weather</button>
+  <button class="tab-btn" data-tab="ABOUT-US" onclick="openTab('ABOUT-US', this)">
+  ABOUT US
+</button>
+
   <button class="tab-btn" data-tab="time" id="tab-time-btn" onclick="openTab('time',this)">World Clock(COMING SOON)</button>
 
 </div>
@@ -543,7 +565,17 @@
     </div>
   </section>
 
+</div
+ <div class="tab-content" id="ABOUT-US">
+  <h2>About Us</h2>
+  <p>This is About Us content</p>
+  <pre>This is Contact content.the web is created by K.Mithun from chennai
+  iam only 11 years  when i created it.Every tools where not there when 
+  created the web.the official reeleaase datee was :December 2025</pre>
+  <P>email id:k9994270777@gmail.com
+ </P>
 </div>
+
 
 <div class="theme-toggle" onclick="toggleTheme()">Dark Mode</div>
 <script>
@@ -1070,5 +1102,25 @@
         }
         openTab('home', $id('tab-home-btn'));
     });
+ 
+function openTab(tabId, btn) {
+  // Hide all tab contents
+  document.querySelectorAll('.tab-content').forEach(tab => {
+    tab.style.display = 'none';
+  });
+
+  // Remove active class from all buttons
+  document.querySelectorAll('.tab-btn').forEach(button => {
+    button.classList.remove('active');
+  });
+
+  // Show selected tab
+  document.getElementById(tabId).style.display = 'block';
+
+  // Activate clicked button
+  btn.classList.add('active');
+}
+
+
 </script>
 </body>
