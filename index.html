@@ -173,6 +173,7 @@
     <div id="home_content">
         <div class="tool-box">
           <h3>Text Tools</h3>
+         <h4>these tools helps you to make modification to your sentences by making every thing small ,big case and removing extra space </h4>
           <textarea id="text_in" placeholder="Type or paste text here..."></textarea>
           <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
             <button onclick="upperText()">UPPERCASE</button>
@@ -201,46 +202,44 @@
 
       <div class="tool-box" data-tool-name="QR Code Generator">
         <h3>QR Code</h3>
+       <h4>here you caan create your own qr for any webs with their url</h4>
         <input id="qr_text" placeholder="Text or URL for QR">
         <button onclick="makeQR()">Generate</button>
         <div id="qr_box" class="result" style="text-align:center"></div>
       </div>
 
-      <div class="tool-box" data-tool-name="Barcode Generator">
-        <h3>Barcode</h3>
-        <input id="barcode_text" placeholder="Enter numbers/text for barcode">
-        <button onclick="makeBarcode()">Generate</button>
-        <div class="result" style="text-align:center"><svg id="barcode_svg"></svg></div>
-      </div>
 
       <div class="tool-box" data-tool-name="IP Address Checker">
+      
         <h3>Your IP</h3>
+       <h4>you can find yoour ip address here</h4>
         <button onclick="getIP()">Show IP</button>
         <div id="ip_box" class="result"></div>
       </div>
 
       <div class="tool-box" data-tool-name="Device Info">
         <h3>Device Info</h3>
+       <h4>you can see your cool device's detail here</h4>
         <button onclick="getDeviceInfo()">Show</button>
         <div id="device_box" class="result"></div>
       </div>
 
       <div class="tool-box" data-tool-name="Password Strength Checker">
         <h3>Password Strength</h3>
+       <h4>here you can check your passwords strenght</h4>
         <input id="pwd_input" type="password" placeholder="Enter password">
         <button onclick="checkPwd()">Check</button>
         <div id="pwd_box" class="result"></div>
       </div>
 
-      <div class="tool-box" data-tool-name="URL Shortener">
-        <h3>URL Shortener</h3>
-        <input id="long_url" placeholder="Enter long URL">
-        <button onclick="shortenURL()">Shorten</button>
-        <div id="short_url" class="result"></div>
-      </div>
+      
 
       <div class="tool-box" data-tool-name="Text to PDF Converter">
         <h3>Text to PDF</h3>
+       <h4>you can write down sentences and make it into pdf</h4>
+       <pre>note:the pdf would be downloaded automatically after clicking download pdf button,
+       if you using  downloading tool more than one time .it will ask do you want to download the file again click yes this replaces the old one
+        if you do not want to rename the file after downloading,</pre>
         <textarea id="pdf_text" placeholder="Enter text to convert to PDF"></textarea>
         <button onclick="textToPDF()">Download PDF</button>
       </div>
